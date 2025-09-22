@@ -1,0 +1,11 @@
+A camada de repositories deve ser responsável por funcionalidades dedicadas ao banco de dados:
+
+- Boa parte das funcionalidades necessarias como filtragem, seleção, ordenação já possuem palavras
+chaves no Spring JPA 
+https://medium.com/@bubu.tripathy/best-practices-creating-repository-interfaces-with-jpa-d904bee64397
+https://medium.com/@aissatoub4228/a-beginners-guide-to-spring-boot-jpa-repositories-simplifying-database-access-151a74a772db
+
+Manter o padrão de programação dedicada as Interfaces, caso necessite de algo personalizado o Spring Boot
+possui uma palavra chave pra isso: @QUERY
+
+https://medium.com/@kalanamalshan98/repository-layer-and-custom-queries-in-spring-boot-1b26d3545c8c

@@ -1,0 +1,2 @@
+Aqui estaram classes personalizadas para tratamento de exceções especificos.
+

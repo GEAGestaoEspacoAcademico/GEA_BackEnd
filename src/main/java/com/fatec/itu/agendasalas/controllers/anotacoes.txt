@@ -1,0 +1,8 @@
+Essa aba será dedicada aos controladores.
+
+Os controllers são responsáveis por fazer o intermédio entre REQUISIÇÕES do CLIENTE (FRONT)
+e SERVICES BACK-END.
+
+
+Requisição cliente -> Controllers -> Services -> Repository -> BD.
+

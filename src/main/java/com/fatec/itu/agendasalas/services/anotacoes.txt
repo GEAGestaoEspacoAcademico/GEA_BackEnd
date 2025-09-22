@@ -1,0 +1,14 @@
+Essa pasta irá abranger os services do nosso projeto.
+
+Aqui deverão estar definidas as regras de negócio do nosso projeto.
+
+Atenção:
+- Caso use métodos genéricos da Repository, pode usar direto como serviços.
+- Caso métodos sejam especificos que não possuam uma abordagem na Interface Repository do Spring Boot,
+faça a implementação na classe Repository e o Service que invoque essa funcionalidade.
+
+
+Repository -> Destinado a métodos para persistencia de DADOS no Banco de DADOS (INSERÇÃO, ATUALIZAÇÃO, DELEÇÃO e CONSULTAS)
+
+https://medium.com/@aissatoub4228/a-beginners-guide-to-spring-boot-jpa-repositories-simplifying-database-access-151a74a772db
+https://medium.com/@bubu.tripathy/best-practices-creating-repository-interfaces-with-jpa-d904bee64397

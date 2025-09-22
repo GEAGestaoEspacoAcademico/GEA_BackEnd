@@ -1,0 +1,7 @@
+Essa aba será dedicada a implementacao das entidades.
+
+Como estamos trabalhando com o Spring Boot e a JPA, usaremos a modelagem ORM.
+
+Basicamente toda tabela do Banco de Dados tornar-se-á uma entidade aqui.
+Implementar os GETTERS e SETTERS
+EQUALS E HASHCODE
