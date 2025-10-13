@@ -12,16 +12,16 @@ import jakarta.persistence.Table;
 
 @Table(name="USUARIOS")
 @Entity
-public class Usuarios implements Serializable{
+public class Usuario implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private long id;
 
-    @Column(name="password", nullable = false)
+    @Column(name="senha", nullable = false)
     //falta colocar criptografia
-    private String password;
+    private String senha;
 
     @Column(name="email", nullable = false)
     private String email;
@@ -40,12 +40,12 @@ public class Usuarios implements Serializable{
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getEmail() {
@@ -92,7 +92,7 @@ public class Usuarios implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Usuarios other = (Usuarios) obj;
+        Usuario other = (Usuario) obj;
         if (id != other.id)
             return false;
         if (password == null) {
