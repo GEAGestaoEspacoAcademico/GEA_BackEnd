@@ -11,8 +11,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/usuarios/**").permitAll() // libera o H2
+                .requestMatchers("/h2-console/**").permitAll() // libera o H2
+                .requestMatchers("/usuarios/**").permitAll() //Por enquanto apenas para teste.
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf.disable()) // desabilita CSRF para o console

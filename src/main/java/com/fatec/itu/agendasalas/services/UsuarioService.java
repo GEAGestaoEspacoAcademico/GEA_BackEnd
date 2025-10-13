@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,12 +29,15 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
     
-    public void atualizarUsuario(Usuario usuario, long id){
+    public void atualizarUsuario(Map<String, Object> usuario, long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
-        auxiliar.setEmail(usuario.getEmail());
-        auxiliar.setNome(usuario.getNome());
-        auxiliar.setLogin(usuario.getLogin());
-
+        
+        if(usuario.containsKey("nome")) auxiliar.setNome((String) usuario.get("nome"));
+        if(usuario.containsKey("email")) auxiliar.setEmail((String) usuario.get("email"));
+        if(usuario.containsKey("login")) auxiliar.setLogin((String) usuario.get("login"));
+        
         usuarioRepository.save(auxiliar);
     }
+
+
 }
