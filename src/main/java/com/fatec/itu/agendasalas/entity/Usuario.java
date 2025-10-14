@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -14,23 +16,35 @@ import jakarta.persistence.Table;
 @Entity
 public class Usuario implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+
+    public Usuario(String login, String email, String nome, String senha) {
+        this.nome = nome;
+        this.login = login;
+        this.email = email;
+        this.senha = senha;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private long id;
 
     @Column(name="senha", nullable = false)
-    //falta colocar criptografia
     private String senha;
 
-    @Column(name="email", nullable = false)
+    @Column(name="email", nullable = false, unique=true)
     private String email;
 
-    @Column(name="login", nullable = false)
+    @Column(name="login", nullable = false, unique=true)
     private String login;
 
     @Column(name="nome", nullable = false)
     private String nome;
+
+    @ManyToOne
+    @JoinColumn(name="cargo_id", referencedColumnName = "id")
+    private Cargo cargo;
 
     public long getId() {
         return id;
@@ -72,15 +86,19 @@ public class Usuario implements Serializable{
         this.nome = nome;
     }
 
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((senha == null) ? 0 : senha.hashCode());
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result + ((login == null) ? 0 : login.hashCode());
-        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
         return result;
     }
 
@@ -95,29 +113,10 @@ public class Usuario implements Serializable{
         Usuario other = (Usuario) obj;
         if (id != other.id)
             return false;
-        if (senha == null) {
-            if (other.senha != null)
-                return false;
-        } else if (!senha.equals(other.senha))
-            return false;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (login == null) {
-            if (other.login != null)
-                return false;
-        } else if (!login.equals(other.login))
-            return false;
-        if (nome == null) {
-            if (other.nome != null)
-                return false;
-        } else if (!nome.equals(other.nome))
-            return false;
         return true;
     }
 
+    
 
     
 }

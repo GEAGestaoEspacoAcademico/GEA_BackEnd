@@ -19,11 +19,15 @@ import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("usuarios")
 public class UsuarioController {
     
-    @Autowired
+    
     private UsuarioService usuarioService;
+    
+    public UsuarioController(UsuarioService usuarioService){
+        this.usuarioService = usuarioService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarUsuarios(){
@@ -31,12 +35,14 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
+    
     @PostMapping 
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario){
         return ResponseEntity.created(null).body(usuarioService.cadastrarUsuario(usuario));
     } 
 
-    @PatchMapping("/{id}")
+
+    @PatchMapping("{id}")
     public ResponseEntity<Void> atualizarUsuario(@PathVariable long id, @RequestBody Map<String, Object> usuario){
         usuarioService.atualizarUsuario(usuario, id);
         return ResponseEntity.noContent().build();

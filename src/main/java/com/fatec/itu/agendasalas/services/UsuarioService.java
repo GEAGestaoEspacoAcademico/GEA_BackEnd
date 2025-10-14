@@ -3,24 +3,36 @@ package com.fatec.itu.agendasalas.services;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class UsuarioService {
     
-    @Autowired
+    public UsuarioService(UsuarioRepository usuarioRepository, CargoRepository cargoRepository, PasswordEncoder cryptPasswordEncoder){
+        this.usuarioRepository = usuarioRepository;
+        this.cargoRepository = cargoRepository;
+        this.cryptPasswordEncoder = cryptPasswordEncoder;
+    }
+    
     private UsuarioRepository usuarioRepository;
-
+    private CargoRepository cargoRepository;
+    private PasswordEncoder cryptPasswordEncoder;
     
     public Usuario cadastrarUsuario(Usuario usuario){
-        BCryptPasswordEncoder criptografar = new BCryptPasswordEncoder();
-        String senhaCriptografada = criptografar.encode(usuario.getSenha());
+       
+        String senhaCriptografada = cryptPasswordEncoder.encode(usuario.getSenha());
+
         usuario.setSenha(senhaCriptografada);
+        Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
+        usuario.setCargo(cargo);
 
         return usuarioRepository.save(usuario);
     }
