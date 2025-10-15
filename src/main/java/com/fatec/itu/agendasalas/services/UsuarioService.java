@@ -2,9 +2,8 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,13 +40,23 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
     
+    public Usuario buscarUsuarioPorId(long id){
+        return usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+    }
+
     public void atualizarUsuario(Map<String, Object> usuario, long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
         
         if(usuario.containsKey("nome")) auxiliar.setNome((String) usuario.get("nome"));
         if(usuario.containsKey("email")) auxiliar.setEmail((String) usuario.get("email"));
         if(usuario.containsKey("login")) auxiliar.setLogin((String) usuario.get("login"));
-        
+        if(usuario.containsKey("cargo")){
+            String cargoNome = (String)usuario.get("cargo");
+            Optional<Cargo> cargoOptional = cargoRepository.findByNome(cargoNome);
+            Cargo cargo = cargoOptional.orElseThrow(()->new RuntimeException("cargo nao encontrado"));
+            auxiliar.setCargo(cargo); 
+        }
+
         usuarioRepository.save(auxiliar);
     }
 

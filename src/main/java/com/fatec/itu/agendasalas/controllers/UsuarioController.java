@@ -1,19 +1,19 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.UsuarioDTO;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
@@ -23,23 +23,41 @@ import com.fatec.itu.agendasalas.services.UsuarioService;
 public class UsuarioController {
     
     
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
     
     public UsuarioController(UsuarioService usuarioService){
         this.usuarioService = usuarioService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
         List<Usuario> usuarios = usuarioService.listarUsuarios();
-        return ResponseEntity.ok(usuarios);
+        List<UsuarioDTO> responseDTOList = new ArrayList<>();
+        usuarios.forEach(usuario -> {
+            UsuarioDTO responseDTO = new UsuarioDTO();
+            responseDTO.setId(usuario.getId());
+            responseDTO.setNome(usuario.getNome());
+            responseDTO.setEmail(usuario.getEmail());
+            responseDTO.setLogin(usuario.getLogin());
+            responseDTO.setCargo(usuario.getCargo());  
+            responseDTOList.add(responseDTO);
+        });
+
+        return ResponseEntity.ok(responseDTOList);
     }
 
-    
-    @PostMapping 
-    public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario){
-        return ResponseEntity.created(null).body(usuarioService.cadastrarUsuario(usuario));
+    @GetMapping({"id"})
+    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable long id){
+        Usuario user = usuarioService.buscarUsuarioPorId(id); 
+        UsuarioDTO responseDTO = new UsuarioDTO();
+        responseDTO.setId(user.getId());
+        responseDTO.setNome(user.getNome());
+        responseDTO.setEmail(user.getEmail());
+        responseDTO.setLogin(user.getLogin());
+        responseDTO.setCargo(user.getCargo());
+        return ResponseEntity.ok(responseDTO);
     } 
+
 
 
     @PatchMapping("{id}")
