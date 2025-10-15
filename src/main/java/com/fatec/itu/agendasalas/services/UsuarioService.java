@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
@@ -37,10 +39,20 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> listarUsuarios(){
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> listarUsuarios(){
+        List<Usuario> listaUsuarios = usuarioRepository.findAll();
+        List<UsuarioResponseDTO> listaUsuariosResponseDTO =  new ArrayList<>(); 
+        for(Usuario usuario :listaUsuarios){
+            UsuarioResponseDTO usuarioResponseDTO = conversaoUsuarioParaDTO(usuario); 
+            listaUsuariosResponseDTO.add(usuarioResponseDTO);
+        }
+        return listaUsuariosResponseDTO;
     }
     
+    private UsuarioResponseDTO conversaoUsuarioParaDTO(Usuario usuario){
+
+    }
+
     public Usuario buscarUsuarioPorId(long id){
         return usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
     }

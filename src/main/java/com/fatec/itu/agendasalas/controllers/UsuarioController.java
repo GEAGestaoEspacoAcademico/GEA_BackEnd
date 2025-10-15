@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.UsuarioDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
@@ -28,15 +29,14 @@ public class UsuarioController {
     
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
         List<Usuario> usuarios = usuarioService.listarUsuarios();
-        List<UsuarioDTO> responseDTOList = new ArrayList<>();
+        List<UsuarioResponseDTO> responseDTOList = new ArrayList<>();
         usuarios.forEach(usuario -> {
-            UsuarioDTO responseDTO = new UsuarioDTO();
+            UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
             responseDTO.setId(usuario.getId());
             responseDTO.setNome(usuario.getNome());
             responseDTO.setEmail(usuario.getEmail());
-            responseDTO.setLogin(usuario.getLogin());
             responseDTO.setCargoId(usuario.getCargo().getId());  
             responseDTOList.add(responseDTO);
         });
