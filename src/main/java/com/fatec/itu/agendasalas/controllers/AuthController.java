@@ -33,7 +33,7 @@ public class AuthController {
         responseDTO.setNome(usuarioSalvo.getNome());
         responseDTO.setEmail(usuarioSalvo.getEmail());
         responseDTO.setLogin(usuarioSalvo.getLogin());
-        responseDTO.setCargo(usuarioSalvo.getCargo());
+        responseDTO.setCargoId(usuarioSalvo.getCargo().getId());
         return ResponseEntity.created(null).body(responseDTO);
     }
 

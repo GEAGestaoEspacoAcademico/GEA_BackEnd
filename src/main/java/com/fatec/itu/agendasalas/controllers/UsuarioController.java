@@ -37,7 +37,7 @@ public class UsuarioController {
             responseDTO.setNome(usuario.getNome());
             responseDTO.setEmail(usuario.getEmail());
             responseDTO.setLogin(usuario.getLogin());
-            responseDTO.setCargo(usuario.getCargo());  
+            responseDTO.setCargoId(usuario.getCargo().getId());  
             responseDTOList.add(responseDTO);
         });
 
@@ -52,7 +52,7 @@ public class UsuarioController {
         responseDTO.setNome(user.getNome());
         responseDTO.setEmail(user.getEmail());
         responseDTO.setLogin(user.getLogin());
-        responseDTO.setCargo(user.getCargo());
+        responseDTO.setCargoId(user.getCargo().getId());
         return ResponseEntity.ok(responseDTO);
     } 
 
