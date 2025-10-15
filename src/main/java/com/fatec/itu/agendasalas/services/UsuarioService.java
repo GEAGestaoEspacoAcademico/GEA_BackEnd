@@ -58,8 +58,11 @@ public class UsuarioService {
         return responseDTO;
     }
 
-    public Usuario buscarUsuarioPorId(long id){
-        return usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+    public UsuarioResponseDTO buscarUsuarioPorId(long id){
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+        UsuarioResponseDTO responseDTO = conversaoUsuarioParaDTO(usuario)
+        return conversaoUsuarioParaDTO(usuario);
+        
     }
 
     public void atualizarUsuario(Map<String, Object> usuario, long id){

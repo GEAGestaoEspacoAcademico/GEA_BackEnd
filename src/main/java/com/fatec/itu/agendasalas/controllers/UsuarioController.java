@@ -1,6 +1,5 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.UsuarioDTO;
 import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
-import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin
@@ -30,29 +27,15 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
-        List<UsuarioResponseDTO> responseDTOList = new ArrayList<>();
-        usuarios.forEach(usuario -> {
-            UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
-            responseDTO.setId(usuario.getId());
-            responseDTO.setNome(usuario.getNome());
-            responseDTO.setEmail(usuario.getEmail());
-            responseDTO.setCargoId(usuario.getCargo().getId());  
-            responseDTOList.add(responseDTO);
-        });
 
+        List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
+        
         return ResponseEntity.ok(responseDTOList);
     }
 
     @GetMapping({"id"})
-    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable long id){
-        Usuario user = usuarioService.buscarUsuarioPorId(id); 
-        UsuarioDTO responseDTO = new UsuarioDTO();
-        responseDTO.setId(user.getId());
-        responseDTO.setNome(user.getNome());
-        responseDTO.setEmail(user.getEmail());
-        responseDTO.setLogin(user.getLogin());
-        responseDTO.setCargoId(user.getCargo().getId());
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable long id){
+        UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
         return ResponseEntity.ok(responseDTO);
     } 
 
