@@ -22,11 +22,10 @@ public class Usuario implements Serializable{
 
     }
     
-    public Usuario(String login, String email, String nome, String senha) {
+    public Usuario(String login, String email, String nome) {
         this.nome = nome;
         this.login = login;
         this.email = email;
-        this.senha = senha;
     }
 
     @Id

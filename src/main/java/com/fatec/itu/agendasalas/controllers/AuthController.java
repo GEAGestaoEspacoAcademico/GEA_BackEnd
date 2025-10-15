@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.UsuarioDTO;
-import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin
@@ -23,17 +23,11 @@ public class AuthController {
    
     
     @PostMapping("register")
-    public ResponseEntity<UsuarioDTO> register(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioResponseDTO> register(@RequestBody UsuarioDTO usuarioDTO){
         
-        Usuario user = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(),usuarioDTO.getNome(), usuarioDTO.getSenha());
-        
-        Usuario usuarioSalvo = usuarioService.cadastrarUsuario(user);
-        UsuarioDTO responseDTO = new UsuarioDTO();
-        responseDTO.setId(usuarioSalvo.getId());
-        responseDTO.setNome(usuarioSalvo.getNome());
-        responseDTO.setEmail(usuarioSalvo.getEmail());
-        responseDTO.setLogin(usuarioSalvo.getLogin());
-        responseDTO.setCargoId(usuarioSalvo.getCargo().getId());
+      
+        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
+       
         return ResponseEntity.created(null).body(responseDTO);
     }
 

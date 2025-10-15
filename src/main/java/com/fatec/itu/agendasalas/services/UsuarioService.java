@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.UsuarioDTO;
 import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
@@ -28,28 +29,30 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder cryptPasswordEncoder;
     
-    public Usuario cadastrarUsuario(Usuario usuario){
-       
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuario.getSenha());
-
+    public UsuarioResponseDTO cadastrarUsuario(UsuarioDTO usuarioDTO){
+        
+        Usuario usuario = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(), usuarioDTO.getNome());
+        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.getSenha());
         usuario.setSenha(senhaCriptografada);
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 
-        return usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
+        return conversaoUsuarioParaResponseDTO(usuario);
+
     }
 
     public List<UsuarioResponseDTO> listarUsuarios(){
         List<Usuario> listaUsuarios = usuarioRepository.findAll();
         List<UsuarioResponseDTO> listaUsuariosResponseDTO =  new ArrayList<>(); 
         for(Usuario usuario :listaUsuarios){
-            UsuarioResponseDTO usuarioResponseDTO = conversaoUsuarioParaDTO(usuario); 
+            UsuarioResponseDTO usuarioResponseDTO = conversaoUsuarioParaResponseDTO(usuario); 
             listaUsuariosResponseDTO.add(usuarioResponseDTO);
         }
         return listaUsuariosResponseDTO;
     }
     
-    private UsuarioResponseDTO conversaoUsuarioParaDTO(Usuario usuario){
+    private UsuarioResponseDTO conversaoUsuarioParaResponseDTO(Usuario usuario){
         UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
         responseDTO.setId(usuario.getId());
         responseDTO.setNome(usuario.getNome());
@@ -60,8 +63,7 @@ public class UsuarioService {
 
     public UsuarioResponseDTO buscarUsuarioPorId(long id){
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
-        UsuarioResponseDTO responseDTO = conversaoUsuarioParaDTO(usuario)
-        return conversaoUsuarioParaDTO(usuario);
+        return conversaoUsuarioParaResponseDTO(usuario);
         
     }
 
