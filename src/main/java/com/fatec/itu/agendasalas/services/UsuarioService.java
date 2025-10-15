@@ -50,7 +50,12 @@ public class UsuarioService {
     }
     
     private UsuarioResponseDTO conversaoUsuarioParaDTO(Usuario usuario){
-
+        UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
+        responseDTO.setId(usuario.getId());
+        responseDTO.setNome(usuario.getNome());
+        responseDTO.setEmail(usuario.getEmail());
+        responseDTO.setCargoId(usuario.getCargo().getId());  
+        return responseDTO;
     }
 
     public Usuario buscarUsuarioPorId(long id){
