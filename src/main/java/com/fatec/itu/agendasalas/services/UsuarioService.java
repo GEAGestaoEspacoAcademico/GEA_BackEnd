@@ -21,9 +21,9 @@ public class UsuarioService {
         this.cryptPasswordEncoder = cryptPasswordEncoder;
     }
     
-    private UsuarioRepository usuarioRepository;
-    private CargoRepository cargoRepository;
-    private PasswordEncoder cryptPasswordEncoder;
+    private final UsuarioRepository usuarioRepository;
+    private final CargoRepository cargoRepository;
+    private final PasswordEncoder cryptPasswordEncoder;
     
     public Usuario cadastrarUsuario(Usuario usuario){
        
