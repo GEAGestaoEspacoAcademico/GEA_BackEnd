@@ -2,12 +2,17 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
+@Service
 public class CargoService {
 
-    private final CargoRepository cargoRepository;
+    @Autowired
+    private CargoRepository cargoRepository;
 
     public CargoService(CargoRepository cargoRepository) {
         this.cargoRepository = cargoRepository;

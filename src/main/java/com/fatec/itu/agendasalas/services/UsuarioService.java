@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +15,16 @@ import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class UsuarioService {
+
     
-    public UsuarioService(UsuarioRepository usuarioRepository, CargoRepository cargoRepository, PasswordEncoder cryptPasswordEncoder){
-        this.usuarioRepository = usuarioRepository;
-        this.cargoRepository = cargoRepository;
-        this.cryptPasswordEncoder = cryptPasswordEncoder;
-    }
-    
-    private final UsuarioRepository usuarioRepository;
-    private final CargoRepository cargoRepository;
-    private final PasswordEncoder cryptPasswordEncoder;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CargoRepository cargoRepository;
+
+    @Autowired
+    private PasswordEncoder cryptPasswordEncoder;
     
     public Usuario cadastrarUsuario(Usuario usuario){
        

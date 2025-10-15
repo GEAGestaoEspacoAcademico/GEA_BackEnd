@@ -1,6 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import org.apache.catalina.mapper.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +18,9 @@ import com.fatec.itu.agendasalas.services.UsuarioService;
 @RequestMapping("auth")
 public class AuthController {
 
+    @Autowired
     private UsuarioService usuarioService;
-    public AuthController(UsuarioService usuarioService){
-        this.usuarioService = usuarioService;
-    }
+   
     
     @PostMapping("register")
     public ResponseEntity<UsuarioDTO> register(@RequestBody UsuarioDTO usuarioDTO){
@@ -38,7 +37,7 @@ public class AuthController {
         return ResponseEntity.created(null).body(responseDTO);
     }
 
-    @PostMapping("login")
+    @GetMapping("login")
     public String teste() {
         return "Auth controller funciona!";
     }
