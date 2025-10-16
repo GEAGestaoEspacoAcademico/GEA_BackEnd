@@ -7,12 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UsuarioCreationDTO {
+public class UsuarioAuthenticationDTO {
     
-    private Long id;
-    
-    private String nome;
-    private String email;
     private String login;
     private String senha;
 
