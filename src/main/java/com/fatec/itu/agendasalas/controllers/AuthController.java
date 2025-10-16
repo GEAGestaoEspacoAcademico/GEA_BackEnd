@@ -29,7 +29,7 @@ public class AuthController {
         return ResponseEntity.created(null).body(responseDTO);
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     public String teste() {
         return "Auth controller funciona!";
     }

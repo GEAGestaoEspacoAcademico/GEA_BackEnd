@@ -1,6 +1,11 @@
 package com.fatec.itu.agendasalas.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 //aqui somente admins poderão usar, pois não queremos que um usuario mude seu cargo.
+@Getter
+@Setter
 public class UsuarioUpdateAdminDTO {
     private String nome;
     private String email;
