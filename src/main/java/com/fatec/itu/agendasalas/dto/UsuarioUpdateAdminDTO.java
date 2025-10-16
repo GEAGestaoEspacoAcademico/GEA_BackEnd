@@ -1,17 +1,11 @@
 package com.fatec.itu.agendasalas.dto;
 
-public class UsuarioResponseDTO {
-    private Long id;
+//aqui somente admins poderão usar, pois não queremos que um usuario mude seu cargo.
+public class UsuarioUpdateAdminDTO {
     private String nome;
     private String email;
     private Long cargoId;
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public String getNome() {
         return nome;
     }
@@ -24,12 +18,14 @@ public class UsuarioResponseDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+    
     public Long getCargoId() {
         return cargoId;
     }
     public void setCargoId(Long cargoId) {
         this.cargoId = cargoId;
     }
+
 
     
 }

@@ -1,23 +1,18 @@
 package com.fatec.itu.agendasalas.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-public class UsuarioDTO {
-    private long id;
+public class UsuarioCreationDTO {
+    private Long id;
     private String nome;
     private String email;
     private String login;
-
-    @JsonIgnore
     private String senha;
-    
-    private long cargoId;
+
     
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getNome() {
@@ -39,13 +34,6 @@ public class UsuarioDTO {
         this.login = login;
     }
 
-
-    public long getCargoId() {
-        return cargoId;
-    }
-    public void setCargoId(long cargoId) {
-        this.cargoId = cargoId;
-    }
     public String getSenha() {
         return senha;
     }

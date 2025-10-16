@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin
@@ -27,14 +27,12 @@ public class UsuarioController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
-
         List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
-        
         return ResponseEntity.ok(responseDTOList);
     }
 
-    @GetMapping({"id"})
-    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable long id){
+    @GetMapping("{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id){
         UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
         return ResponseEntity.ok(responseDTO);
     } 
@@ -42,8 +40,8 @@ public class UsuarioController {
 
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> atualizarUsuario(@PathVariable long id, @RequestBody Map<String, Object> usuario){
-        usuarioService.atualizarUsuario(usuario, id);
+    public ResponseEntity<Void> atualizarUsuarioAdmin(@PathVariable Long id, @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO){
+        usuarioService.atualizarUsuario(usuarioUpdateAdminDTO, id);
         return ResponseEntity.noContent().build();
     }
 

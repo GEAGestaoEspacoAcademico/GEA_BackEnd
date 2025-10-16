@@ -31,7 +31,7 @@ public class Usuario implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name="senha", nullable = false)
     private String senha;
@@ -49,11 +49,11 @@ public class Usuario implements Serializable{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
