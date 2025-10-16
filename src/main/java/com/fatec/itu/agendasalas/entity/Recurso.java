@@ -14,6 +14,7 @@ import lombok.Setter;
 
 @Table(name = "RECURSOS")
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 public class Recurso implements Serializable {
