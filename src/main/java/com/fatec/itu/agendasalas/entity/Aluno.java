@@ -1,23 +1,27 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.util.List;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "alunos")
+@DiscriminatorValue("ALUNO")
 public class Aluno extends Usuario{
     private int ra;
-    private List<AlunoDisciplina> disciplinas;
     
-    public Aluno(String nome, String email, String senha, int ra, List<AlunoDisciplina> disciplinas){
-        super(nome, email, senha);
+    public Aluno() {
+        super();
+    }
+    
+    public Aluno(String login, String email, String nome, int ra){
+        super(login, email, nome);
         this.ra = ra;
-        this.disciplinas = disciplinas;
     }
 
     public int getRa() {
         return ra;
     }
 
-    public List<AlunoDisciplina> getDisciplinas() {
-        return disciplinas;
-    }
 
 }
