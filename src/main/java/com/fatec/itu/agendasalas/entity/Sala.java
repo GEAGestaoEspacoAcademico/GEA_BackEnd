@@ -16,6 +16,7 @@ import lombok.Setter;
 
 @Table(name = "SALAS")
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 public class Sala implements Serializable {
