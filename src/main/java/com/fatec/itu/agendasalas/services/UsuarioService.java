@@ -1,13 +1,15 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
@@ -15,39 +17,73 @@ import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class UsuarioService {
+
     
-    public UsuarioService(UsuarioRepository usuarioRepository, CargoRepository cargoRepository, PasswordEncoder cryptPasswordEncoder){
-        this.usuarioRepository = usuarioRepository;
-        this.cargoRepository = cargoRepository;
-        this.cryptPasswordEncoder = cryptPasswordEncoder;
-    }
-    
+    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private CargoRepository cargoRepository;
+
+    @Autowired
     private PasswordEncoder cryptPasswordEncoder;
     
-    public Usuario cadastrarUsuario(Usuario usuario){
-       
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuario.getSenha());
-
+    public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
+        
+        Usuario usuario = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(), usuarioDTO.getNome());
+        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.getSenha());
         usuario.setSenha(senhaCriptografada);
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 
-        return usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
+        return conversaoUsuarioParaResponseDTO(usuario);
+
     }
 
-    public List<Usuario> listarUsuarios(){
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> listarUsuarios(){
+        List<Usuario> listaUsuarios = usuarioRepository.findAll();
+        List<UsuarioResponseDTO> listaUsuariosResponseDTO =  new ArrayList<>(); 
+        for(Usuario usuario :listaUsuarios){
+            UsuarioResponseDTO usuarioResponseDTO = conversaoUsuarioParaResponseDTO(usuario); 
+            listaUsuariosResponseDTO.add(usuarioResponseDTO);
+        }
+        return listaUsuariosResponseDTO;
     }
     
-    public void atualizarUsuario(Map<String, Object> usuario, long id){
+    private UsuarioResponseDTO conversaoUsuarioParaResponseDTO(Usuario usuario){
+        UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
+        responseDTO.setId(usuario.getId());
+        responseDTO.setNome(usuario.getNome());
+        responseDTO.setEmail(usuario.getEmail());
+        responseDTO.setCargoId(usuario.getCargo().getId());  
+        return responseDTO;
+    }
+
+    public UsuarioResponseDTO buscarUsuarioPorId(Long id){
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+        return conversaoUsuarioParaResponseDTO(usuario);
+        
+    }
+
+    public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
         
-        if(usuario.containsKey("nome")) auxiliar.setNome((String) usuario.get("nome"));
-        if(usuario.containsKey("email")) auxiliar.setEmail((String) usuario.get("email"));
-        if(usuario.containsKey("login")) auxiliar.setLogin((String) usuario.get("login"));
-        
+        if(usuarioUpdateAdminDTO.getNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.getNome());
+        if(usuarioUpdateAdminDTO.getEmail()!=null){
+            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.getEmail(), id)){
+                auxiliar.setEmail(usuarioUpdateAdminDTO.getEmail());
+            }
+            else{
+                throw new RuntimeException("Tentando usar email já cadastrado");
+            }
+        } 
+        if(usuarioUpdateAdminDTO.getCargoId() != null){
+            Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.getCargoId())
+            .orElseThrow(()-> new RuntimeException("Não encontrado cargo desejado"));
+            auxiliar.setCargo(cargo);
+        }
+
         usuarioRepository.save(auxiliar);
     }
 
