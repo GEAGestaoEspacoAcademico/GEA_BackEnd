@@ -13,6 +13,7 @@ import lombok.Setter;
 
 @Table(name = "RECURSOSSALAS")
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 public class RecursoSala implements Serializable {
