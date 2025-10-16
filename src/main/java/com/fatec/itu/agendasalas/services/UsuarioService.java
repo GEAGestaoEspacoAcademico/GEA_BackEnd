@@ -21,14 +21,14 @@ public class UsuarioService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordEncoder cryptPasswordEncoder;
 
     @Autowired
     private CargoRepository cargoRepository;
 
-    @Autowired
-    private PasswordEncoder cryptPasswordEncoder;
-    
-    public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
+
+       public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
         
         Usuario usuario = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(), usuarioDTO.getNome());
         String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.getSenha());
@@ -40,6 +40,7 @@ public class UsuarioService {
         return conversaoUsuarioParaResponseDTO(usuario);
 
     }
+    
 
     public List<UsuarioResponseDTO> listarUsuarios(){
         List<Usuario> listaUsuarios = usuarioRepository.findAll();
