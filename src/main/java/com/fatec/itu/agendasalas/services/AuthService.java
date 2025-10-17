@@ -3,8 +3,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationResponseDTO;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
