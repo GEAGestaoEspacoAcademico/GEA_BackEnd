@@ -5,10 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,8 +23,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "AGENDAMENTOS")
 @Entity
+@Table(name = "AGENDAMENTOS")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 public class Agendamento implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -52,7 +58,7 @@ public class Agendamento implements Serializable {
     @Column(name="hora_fim", nullable = false)
     private LocalTime horaFim;   
 
-    @Column(name="tipo", nullable=false)
+    @Column(name = "tipo", insertable = false, updatable = false)
     private String tipo;
 
 }
