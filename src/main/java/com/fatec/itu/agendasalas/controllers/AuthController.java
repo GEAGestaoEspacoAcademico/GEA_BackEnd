@@ -1,16 +1,18 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import org.apache.catalina.mapper.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.UsuarioDTO;
-import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationResponseDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.services.AuthService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin
@@ -18,28 +20,28 @@ import com.fatec.itu.agendasalas.services.UsuarioService;
 @RequestMapping("auth")
 public class AuthController {
 
+    @Autowired
     private UsuarioService usuarioService;
-    public AuthController(UsuarioService usuarioService){
-        this.usuarioService = usuarioService;
-    }
+   
+    @Autowired
+    private AuthService authService;
     
     @PostMapping("register")
-    public ResponseEntity<UsuarioDTO> register(@RequestBody UsuarioDTO usuarioDTO){
-        
-        Usuario user = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(),usuarioDTO.getNome(), usuarioDTO.getSenha());
-        
-        Usuario usuarioSalvo = usuarioService.cadastrarUsuario(user);
-        UsuarioDTO responseDTO = new UsuarioDTO();
-        responseDTO.setId(usuarioSalvo.getId());
-        responseDTO.setNome(usuarioSalvo.getNome());
-        responseDTO.setEmail(usuarioSalvo.getEmail());
-        responseDTO.setLogin(usuarioSalvo.getLogin());
-        responseDTO.setCargo(usuarioSalvo.getCargo());
+    public ResponseEntity<UsuarioResponseDTO> register(@RequestBody UsuarioCreationDTO usuarioDTO){
+
+        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.created(null).body(responseDTO);
     }
 
-    @GetMapping("test")
-    public String teste() {
-        return "Auth controller funciona!";
+    @PostMapping("login")
+    public ResponseEntity<UsuarioAuthenticationResponseDTO> login (@RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
+        
+        try {
+            UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
+            return ResponseEntity.ok(authDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        
     }
 }

@@ -10,26 +10,26 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
 
+@NoArgsConstructor
 @Table(name="USUARIOS")
 @Entity
 public class Usuario implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
-    protected Usuario() { }
-    public Usuario(String login, String email, String nome, String senha) {
+    public Usuario(String login, String email, String nome) {
         this.nome = nome;
         this.login = login;
         this.email = email;
-        this.senha = senha;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name="senha", nullable = false)
     private String senha;
@@ -47,11 +47,11 @@ public class Usuario implements Serializable{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
