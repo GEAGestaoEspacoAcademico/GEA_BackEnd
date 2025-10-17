@@ -2,18 +2,18 @@ package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "PROFESSORES")
-public class Professor implements Serializable {
+@DiscriminatorValue("PROFESSORES")
+public class Professor extends Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long registroProfessor;
     private Usuario usuario;
     //private Disciplina[] Disciplinas;
