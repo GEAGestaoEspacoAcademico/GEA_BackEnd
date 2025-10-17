@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,46 +13,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.entity.Curso;
-import com.fatec.itu.agendasalas.repositories.CursoRepository;
+import com.fatec.itu.agendasalas.services.CursoService;
 
 @RestController
 @RequestMapping("cursos")
 public class CursoController {
 
     @Autowired
-    private CursoRepository cursoRepository;
+    private CursoService cursoService;
 
     @PostMapping
     public Curso criarCurso(@RequestBody Curso curso) {
-        return cursoRepository.save(curso);
+        return cursoService.criar(curso);
     }
 
     @GetMapping
     public List<Curso> listarCursos() {
-        return cursoRepository.findAll();
+        return cursoService.listar();
     }
 
     @GetMapping("{id}")
-    public Optional<Curso> buscarPorId(@PathVariable Long id) {
-        return cursoRepository.findById(id);
+    public Curso buscarPorId(@PathVariable Long id) {
+        return cursoService.buscarPorId(id);
     }
 
     @PutMapping("{id}")
     public Curso editarCurso(@PathVariable Long id, @RequestBody Curso novoCurso) {
-        return cursoRepository.findById(id)
-                .map(c -> {
-                    c.setNomeCurso(novoCurso.getNomeCurso());
-                    c.setCoordenador(novoCurso.getCoordenador());
-                    return cursoRepository.save(c);
-                })
-                .orElseGet(() -> {
-                    novoCurso.setId(id);
-                    return cursoRepository.save(novoCurso);
-                });
+        return cursoService.atualizar(id, novoCurso);
     }
 
     @DeleteMapping("{id}")
     public void excluirCurso(@PathVariable Long id) {
-        cursoRepository.deleteById(id);
+        cursoService.excluir(id);
     }
 }
