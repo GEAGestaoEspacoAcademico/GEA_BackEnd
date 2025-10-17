@@ -18,6 +18,7 @@ public class Usuario implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
+    protected Usuario() { }
     public Usuario(String login, String email, String nome, String senha) {
         this.nome = nome;
         this.login = login;

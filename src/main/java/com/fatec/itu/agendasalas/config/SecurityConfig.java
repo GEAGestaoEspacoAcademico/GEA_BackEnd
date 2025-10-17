@@ -16,8 +16,9 @@ public class SecurityConfig {
                 
                 .requestMatchers("/h2-console/**").permitAll() // libera o H2
                 .requestMatchers("/usuarios/**").permitAll()//Por enquanto apenas para teste.
+                .requestMatchers("/professores/**").permitAll()//Por enquanto apenas para teste.
                 .requestMatchers("/auth/**").permitAll() 
-                .anyRequest().authenticated()
+                
             )
             .csrf(csrf -> csrf.disable()) // desabilita CSRF para o console
             .headers(headers -> headers.frameOptions(frame -> frame.disable())); // permite iframes
