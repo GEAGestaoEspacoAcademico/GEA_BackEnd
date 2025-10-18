@@ -23,7 +23,10 @@ public class CoordenadorService {
 	@Autowired
 	private CargoRepository cargoRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
+	@Transactional
 	public Coordenador promoverParaCoordenador(CoordenadorCreationDTO dto) {
 		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -33,25 +36,31 @@ public class CoordenadorService {
 		usuario.setCargo(cargoRepository.findByNome("COORDENADOR")
 				.orElseThrow(() -> new RuntimeException("Cargo COORDENADOR não encontrado")));
 		usuarioRepository.save(usuario);
-		
-		Coordenador coordenador = new Coordenador(usuario.getLogin(), usuario.getEmail(), usuario.getNome(), dto.getRegistroCoordenacao());
-		coordenador.setId(usuario.getId());
-		return coordenadorRepository.save(coordenador);
+
+        entityManager.createNativeQuery(
+                "INSERT INTO coordenadores (user_id, registro_coordenacao) VALUES (:userId, :registro)"
+        )
+        .setParameter("userId", usuario.getId())
+        .setParameter("registro", dto.getRegistroCoordenacao())
+        .executeUpdate();
+
+        return coordenadorRepository.findById(usuario.getId())
+                .orElseThrow(() -> new RuntimeException("Falha ao promover coordenador"));
 	}
 
-	
-	
+	@Transactional(readOnly = true)
 	public List<Coordenador> listarCoordenadores() {
 		return coordenadorRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Optional<Coordenador> buscarPorId(Long id) {
 		return coordenadorRepository.findById(id);
 	}
 
-
+	@Transactional
 	public void despromoverCoordenador(Long id) {
-		Coordenador coordenador = coordenadorRepository.findById(id)
+		coordenadorRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
 		Usuario usuario = usuarioRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
