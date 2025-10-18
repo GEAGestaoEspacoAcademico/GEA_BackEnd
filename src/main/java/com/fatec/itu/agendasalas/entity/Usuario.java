@@ -7,15 +7,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 
-
 @NoArgsConstructor
-@Table(name="USUARIOS")
 @Entity
+@Table(name="USUARIOS")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements Serializable{
 
     private static final long serialVersionUID = 1L;

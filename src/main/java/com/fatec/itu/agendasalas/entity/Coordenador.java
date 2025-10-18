@@ -26,4 +26,8 @@ public class Coordenador extends Usuario {
         return registroCoordenacao;
     }
 
+    public void setRegistroCoordenacao(int registroCoordenacao) {
+        this.registroCoordenacao = registroCoordenacao;
+    }
+
 }

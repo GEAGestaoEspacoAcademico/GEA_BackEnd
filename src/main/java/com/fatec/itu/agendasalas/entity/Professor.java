@@ -1,35 +1,27 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.io.Serializable;
-
-import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 @Entity
-@DiscriminatorValue("PROFESSORES")
+@Table(name = "PROFESSORES")
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Professor extends Usuario {
 
-    //@Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "registro_professor", nullable = false, unique = true)
     private Long registroProfessor;
-    private Usuario usuario;
     //private Disciplina[] Disciplinas;
 
     protected Professor() { }
 
     public Long getRegistroProfessor() {
         return registroProfessor;
-    }    
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
-
-    public Usuario getUsuario() {
-        return usuario;
+    
+    public void setRegistroProfessor(Long registroProfessor) {
+        this.registroProfessor = registroProfessor;
     }
 
     @Override
