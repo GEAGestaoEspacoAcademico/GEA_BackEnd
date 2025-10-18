@@ -1,5 +1,5 @@
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('ADMIN'), ('PROFESSOR');
+VALUES ('USER'), ('ADMIN'), ('PROFESSOR'), ('COORDENADOR');
 
 INSERT INTO USUARIOS (DTYPE, nome, login, senha, email, cargo_id)
 VALUES ('Usuario', 'Lucas', '1931', '123123', 'lucasmorais@1022.com', 1);
