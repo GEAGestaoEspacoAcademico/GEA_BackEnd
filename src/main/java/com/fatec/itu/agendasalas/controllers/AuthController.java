@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioAuthenticationResponseDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioCreationDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.services.AuthService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 

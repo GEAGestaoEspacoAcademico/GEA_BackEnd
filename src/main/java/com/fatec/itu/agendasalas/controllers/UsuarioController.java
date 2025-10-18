@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioUpdateAdminDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 @CrossOrigin

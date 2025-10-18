@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fatec.itu.agendasalas.dto.UsuarioCreationDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioResponseDTO;
-import com.fatec.itu.agendasalas.dto.UsuarioUpdateAdminDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
