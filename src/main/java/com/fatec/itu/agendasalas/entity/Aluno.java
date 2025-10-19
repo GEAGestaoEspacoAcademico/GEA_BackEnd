@@ -1,13 +1,16 @@
 package com.fatec.itu.agendasalas.entity;
 
-import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "alunos")
-@DiscriminatorValue("ALUNO")
+@Table(name = "ALUNOS")
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Aluno extends Usuario{
+    
+    @Column(name = "ra", nullable = false, unique = true)
     private int ra;
     
     public Aluno() {
@@ -23,5 +26,8 @@ public class Aluno extends Usuario{
         return ra;
     }
 
+    public void setRa(int ra) {
+        this.ra = ra;
+    }
 
 }

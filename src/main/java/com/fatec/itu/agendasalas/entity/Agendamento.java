@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +24,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "AGENDAMENTOS")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 public class Agendamento implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +36,9 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
     private Usuario usuario;
 
-    //@ManyToOne
-    //@JoinColumn(name="sala_id", referencedColumnName="id", nullable = false)
-    //private Sala sala;
+    @ManyToOne
+    @JoinColumn(name="sala_id", referencedColumnName="id", nullable = false)
+    private Sala sala;
 
     @Column(name="data_inicio", nullable = false)
     private LocalDate dataInicio;
@@ -56,7 +53,7 @@ public class Agendamento implements Serializable {
     private LocalTime horaInicio;
 
     @Column(name="hora_fim", nullable = false)
-    private LocalTime horaFim;   
+    private LocalTime horaFim;
 
     @Column(name = "tipo", insertable = false, updatable = false)
     private String tipo;
