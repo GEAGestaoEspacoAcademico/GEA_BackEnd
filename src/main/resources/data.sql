@@ -71,18 +71,18 @@ VALUES
 INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
 VALUES 
     -- Curso: ADS (curso_id = 1)
-    ('Engenharia de Software III', 3, 4, 1),
-    ('Laboratório de Banco de Dados', 2, 6, 1),
-    ('Programação Orientada à objetos', 4, 5, 1),
-    ('Segurança da Informação', 2, 7, 1),
+    ('Engenharia de Software III', '2025.2', 4, 1),
+    ('Laboratório de Banco de Dados', '2025.2', 6, 1),
+    ('Programação Orientada à objetos', '2025.1', 5, 1),
+    ('Segurança da Informação', '2025.1', 7, 1),
     
     -- Curso: GTI (curso_id = 2)
-    ('Gestão de Projetos', 3, 7, 2),
-    ('Governança de TI', 4, 6, 2),
+    ('Gestão de Projetos', '2024.2', 7, 2),
+    ('Governança de TI', '2024.2', 6, 2),
     
     -- Curso: Mecatrônica Industrial (curso_id = 3)
-    ('Eletromagnetismo', 1, 7, 3),
-    ('Cálculo', 2, 6, 3);
+    ('Eletromagnetismo', '2023.2', 7, 3),
+    ('Cálculo', '2023.2', 6, 3);
 
 
 -- -----------------------------------------------------------------------------
