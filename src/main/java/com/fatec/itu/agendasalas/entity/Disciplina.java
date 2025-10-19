@@ -19,7 +19,7 @@ public class Disciplina implements Serializable {
     public Disciplina() {
     }
 
-    public Disciplina(String nome, int semestre, Professor professor) {
+    public Disciplina(String nome, String semestre, Professor professor) {
         this.nome = nome;
         this.semestre = semestre;
         this.professor = professor;
@@ -34,7 +34,7 @@ public class Disciplina implements Serializable {
     private String nome;
 
     @Column(name = "semestre", nullable = false)
-    private int semestre;
+    private String semestre;
 
     @ManyToOne
     @JoinColumn(name = "professor_id")
@@ -60,11 +60,11 @@ public class Disciplina implements Serializable {
         this.nome = nome;
     }
 
-    public int getSemestre() {
+    public String getSemestre() {
         return semestre;
     }
 
-    public void setSemestre(int semestre) {
+    public void setSemestre(String semestre) {
         this.semestre = semestre;
     }
 
@@ -84,7 +84,7 @@ public class Disciplina implements Serializable {
         this.curso = curso;
     }
 
-    public void editarDisciplina(String novoNome, int novoSemestre, Professor novoProfessor) {
+    public void editarDisciplina(String novoNome, String novoSemestre, Professor novoProfessor) {
         this.nome = novoNome;
         this.semestre = novoSemestre;
         this.professor = novoProfessor;

@@ -52,7 +52,7 @@ public class Sala implements Serializable {
   @OneToMany(mappedBy = "sala")
   private List<RecursoSala> recursos;
 
-  @Column(name = "isLaboratorio", nullable = false)
+  @Column(name = "is_laboratorio", nullable = false)
   private boolean isLaboratorio;
 
   @Column(name = "observacoes")
