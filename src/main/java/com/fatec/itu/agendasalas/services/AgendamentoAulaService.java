@@ -135,6 +135,8 @@ public class AgendamentoAulaService {
         dto.setNomeSala(agendamento.getSala().getNome());
         dto.setDisciplinaId(agendamento.getDisciplina().getId());
         dto.setNomeDisciplina(agendamento.getDisciplina().getNome());
+        dto.setSemestre(agendamento.getDisciplina().getSemestre());
+        dto.setCurso(agendamento.getDisciplina().getCurso() != null ? agendamento.getDisciplina().getCurso().getNomeCurso() : null);
         dto.setNomeProfessor(agendamento.getDisciplina().getProfessor() != null 
                 ? agendamento.getDisciplina().getProfessor().getNome() 
                 : "Não atribuído");

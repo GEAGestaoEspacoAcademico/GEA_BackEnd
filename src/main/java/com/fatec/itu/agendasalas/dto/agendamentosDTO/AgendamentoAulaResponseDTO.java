@@ -19,6 +19,8 @@ public class AgendamentoAulaResponseDTO {
     private String nomeSala;
     private Integer disciplinaId;
     private String nomeDisciplina;
+    private String semestre;
+    private String curso;
     private String nomeProfessor;
     private LocalDate dataInicio;
     private LocalDate dataFim;
