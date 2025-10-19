@@ -10,29 +10,60 @@ VALUES ('USER'), ('ADMIN'), ('PROFESSOR'), ('COORDENADOR');
 -- Usuarios
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', 'ls123', 'lucasmorais@1022.com', 1),
-    ('Ana Costa', 'ana.costa', 'ac123', 'ana.costa@exemplo.com', 1),
-    ('Carlos Santos', 'carlos.santos', 'cs123', 'carlos.santos@exemplo.com', 1);
+    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucasmorais@1022.com', 1);
+-- senha: ls123
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Ana Costa', 'ana.costa', '$2a$10$6Zms2qpyZzQgw3LVLYZVfeTCnRWYdxqDlzDv9/8.hGNr.cdBYrfqS', 'ana.costa@exemplo.com', 1);
+-- senha: ac123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Carlos Santos', 'carlos.santos', '$2a$10$73pE/Izz/N5IBmb7Q4nItuv6XkmEMzDMQJyCD.cSU.FoXzNz2A.X6', 'carlos.santos@exemplo.com', 1);
+-- senha: cs123
 
 -- Administrador (usuários com cargo de Administrador)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Auxiliar Docente', 'auxiliar.docente', 'ad123', 'admin@fatec.sp.gov.br', 2);
+    ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
+-- senha: ad123
 
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Sergio Salgado', 'sergio.salgado', 'ss123', 'sergio.salgado@fatec.sp.gov.br', 3),
-    ('Prof. Dimas Cardoso', 'dimas.cardoso', 'dc123', 'dimas.cardoso@fatec.sp.gov.br', 3),
-    ('Prof. Fabricio Londero', 'fabricio.londero', 'fl123', 'fabricio.londero@fatec.sp.gov.br', 3),
-    ('Prof. Francisco Bianchi', 'francisco.bianchi', 'fb123', 'francisco.bianchi@fatec.sp.gov.br', 3),
-    ('Prof. Luis dos Santos', 'luis.santos', 'ls123', 'luis.santos@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
+-- senha: ss123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
+-- senha: dc123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Prof. Fabricio Londero', 'fabricio.londero', '$2a$10$OwAk2OjM1HZBNEHKfB2kAu7D4Mu43isMphmvVVoZGqXrDKkksLk0u', 'fabricio.londero@fatec.sp.gov.br', 3);
+-- senha: fl123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Prof. Francisco Bianchi', 'francisco.bianchi', '$2a$10$qmciMRg4E9JbLc6vqI30zeBLBBoK8zfTjkI8dnknJOTL9Q92QnvSq', 'francisco.bianchi@fatec.sp.gov.br', 3);
+-- senha: fb123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Prof. Luis dos Santos', 'luis.santos', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'luis.santos@fatec.sp.gov.br', 3);
+-- senha: ls123
 
 -- Coordenadores (usuários com cargo de coordenador)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Lucimar de Santi', 'lucimar.santi', 'ls123', 'lucimar.desanti@fatec.sp.gov.br', 4),
-    ('Coord. Andre Olimpio', 'andre.olimpio', 'ao123', 'andre.olimpio@fatec.sp.gov.br', 4);
+    ('Coord. Lucimar de Santi', 'lucimar.santi', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucimar.desanti@fatec.sp.gov.br', 4);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio@fatec.sp.gov.br', 4);
+-- senha: ao123
 
 
 
