@@ -20,10 +20,11 @@ public class AgendamentoAulaCreationDTO {
     private String diaDaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
+    private String tipo;
 
     public AgendamentoAulaCreationDTO(Long usuarioId, Long salaId, Integer disciplinaId, 
                                        LocalDate dataInicio, LocalDate dataFim, String diaDaSemana,
-                                       LocalTime horaInicio, LocalTime horaFim) {
+                                       LocalTime horaInicio, LocalTime horaFim, String tipo) {
         this.usuarioId = usuarioId;
         this.salaId = salaId;
         this.disciplinaId = disciplinaId;
@@ -32,5 +33,6 @@ public class AgendamentoAulaCreationDTO {
         this.diaDaSemana = diaDaSemana;
         this.horaInicio = horaInicio;
         this.horaFim = horaFim;
+        this.tipo = tipo;
     }
 }
