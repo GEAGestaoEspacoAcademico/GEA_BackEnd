@@ -31,11 +31,6 @@ public class RecursoSala implements Serializable {
   @Column(name = "id_recurso", insertable = false, updatable = false)
   private Long idRecurso;
 
-  @EqualsAndHashCode.Include
-  @Id
-  @Column(name = "id_sala", insertable = false, updatable = false)
-  private Long idSala;
-
   @ManyToOne
   @JoinColumn(name = "id_sala")
   private Sala sala;
