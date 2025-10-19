@@ -55,6 +55,7 @@ public class AgendamentoAulaService {
         agendamento.setDiaDaSemana(dto.getDiaDaSemana());
         agendamento.setHoraInicio(dto.getHoraInicio());
         agendamento.setHoraFim(dto.getHoraFim());
+        agendamento.setTipo(dto.getTipo());
 
         
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
