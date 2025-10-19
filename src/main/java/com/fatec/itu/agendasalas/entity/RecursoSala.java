@@ -20,9 +20,10 @@ import lombok.Setter;
 public class RecursoSala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public RecursoSala(Long idRecurso, Long idSala) {
-    this.idRecurso = idRecurso;
-    this.idSala = idSala;
+  public RecursoSala(Recurso recurso, Sala sala, int quantidade) {
+    this.sala = sala;
+    this.recurso = recurso;
+    this.quantidade = quantidade;
   }
 
   @EqualsAndHashCode.Include

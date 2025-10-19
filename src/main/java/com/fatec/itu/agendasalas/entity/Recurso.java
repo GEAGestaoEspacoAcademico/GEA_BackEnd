@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,9 @@ import lombok.Setter;
 public class Recurso implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Recurso(Long id, String nome, String tipo) {
-    this.id = id;
-    this.tipo = tipo;
+  public Recurso(String nome, String tipo) {
     this.nome = nome;
+    this.tipo = tipo;
   }
 
   @EqualsAndHashCode.Include
