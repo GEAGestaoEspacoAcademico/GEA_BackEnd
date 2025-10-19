@@ -1,0 +1,82 @@
+[33maeb98a7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/evento[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat(dto): faz com que a response ao login do usuário retorne também nome e id de usuário
+[33m7024573[m Merge pull request #54 from GEAGestaoEspacoAcademico/feature/springDocAPI
+[33m1b34bc3[m[33m ([m[1;31morigin/feature/springDocAPI[m[33m)[m feat(SpringDocAPI): adiciona o SpringDoc ao projeto para documentação automatizada de APIs
+[33me935cc5[m feat(resources): implementa as senhas em suas versões criptografadas para evitar problemas de login em testes
+[33m575d4bc[m Merge pull request #53 from GEAGestaoEspacoAcademico/feature/agendamento
+[33m372d926[m[33m ([m[1;31morigin/feature/agendamento[m[33m)[m Add 'tipo' column to AGENDAMENTOS and update values
+[33m4e1096a[m Update AgendamentoAulaCreationDTO.java
+[33mf1f0c54[m Add tipo field to AgendamentoAula entity
+[33md11d68a[m feat(AgendamentoAula): adiciona as informações de curso e semestre no end-point de HTTP Get de agendamentos
+[33mc34f40a[m refactor(Disciplina): altera o tipo do dado "semestre" para String para estar de acordo com o adotado pelo FrontEnd
+[33m49c7958[m feat(resources): alimenta a base de dados da aplicação
+[33m09d4b58[m refactor(Sala): altera o nome da coluna de indicação de tipo "laboratório" para conformidade com a modelagem lógica do banco de dados
+[33mcc3f09c[m feat(controllers): implementa end-points relativos à agendamento de aulas
+[33m23cc5f1[m feat(repositories): Adiciona SalaRepository para interação com Sala nos agendamentos
+[33m7128cf6[m feat(services): implementa a camada de services de AgendamentoAula
+[33m30ca1a3[m feat(repositories): adiciona AgendamentoAulaRepository
+[33m8d9a199[m feat(dto): adiciona os DTOs relativos à Agendamento; closes #10
+[33mfc5c622[m feat(entity): cria o relacionamento entre Disciplina e Agendamento através de AgendamentoAula
+[33m8321ce7[m fix(services): adiciona imports ausentes na classe CoordenadorService para corrigir erro de compilação
+[33m8690301[m Merge pull request #52 from GEAGestaoEspacoAcademico/fix/herancaHibernate
+[33m960c683[m[33m ([m[1;31morigin/fix/herancaHibernate[m[33m)[m Merge branch 'main' into fix/herancaHibernate
+[33md34c0eb[m refactor(jpa): padroniza estratégia de herança para JOINED em todas as entidades
+[33maad38d1[m Merge pull request #50 from GEAGestaoEspacoAcademico/feature/coordenador
+[33mc1120a4[m Merge pull request #49 from GEAGestaoEspacoAcademico/feature/professor
+[33mee65bae[m[33m ([m[1;31morigin/feature/professor[m[33m)[m revert(entity): Remove a classe Notificacao da branch feature/professor
+[33ma11f29a[m[33m ([m[1;31morigin/feature/coordenador[m[33m)[m feat(controller): implementa a camada de controller de Coordenador
+[33m5833063[m Merge pull request #45 from GEAGestaoEspacoAcademico/feature/disciplinaa
+[33mfbe3794[m Merge pull request #48 from GEAGestaoEspacoAcademico/feature/agendamento
+[33m4972b1a[m Merge pull request #46 from GEAGestaoEspacoAcademico/feature/curso
+[33m6c1a17b[m Merge branch 'feature/curso' of https://github.com/GEAGestaoEspacoAcademico/GEA_BackEnd
+[33m78995ac[m Merge branch 'feature/disciplinaa' of https://github.com/GEAGestaoEspacoAcademico/GEA_BackEnd
+[33me629e5a[m Merge branch 'feature/agendamento' of https://github.com/GEAGestaoEspacoAcademico/GEA_BackEnd
+[33mc32d8b5[m Merge branch 'feature/coordenador' of https://github.com/GEAGestaoEspacoAcademico/GEA_BackEnd
+[33m784d486[m fix(service): Corrige a exclusão do Professor baseado no registroProfessor
+[33m1c34008[m fix(repository): Adiciona consulta ao banco
+[33m263a483[m merge: atualiza a branch feature/coordenador com as alterações da branch feature/agendamento
+[33macd2c65[m feat(services): implementa a camada de service de Coornador
+[33m5790d43[m feat(repositories): implementa o repositório de Coordenador
+[33mb615540[m feat(dto): implementa o DTO de criação de Coordenador
+[33m110eb40[m feat(data.sql): Implementa a iniciação automática dos dados ao criar o banco em memória
+[33mfd136bb[m fix(services): Corrige a listagem dos dados de professor
+[33m6f0f91c[m fix(entity): Corrige a herança da subclasse Professor com a superclasse Usuario
+[33m37522c7[m feat(entity): adiciona a entidade Coordenador; closes #15
+[33mdbf60ba[m fix(dto): corrige as importações após alteração no diretório
+[33m801bb46[m merge: Resolve conflitos com main
+[33mfaf094a[m Atualiza a branch feature/professor com as alterações da branch main
+[33m5199332[m[33m ([m[1;31morigin/feature/evento[m[33m, [m[1;32mfeature/aluno[m[33m)[m fix(entity): importa o NoArgsConstructor nas classes que o usam
+[33m924e59a[m[33m ([m[1;31morigin/feature/disciplinaa[m[33m)[m feat(Controller): adiciona suporte a @CrossOrigin para habilitar CORS no controller de Curso
+[33m26db819[m[33m ([m[1;31morigin/feature/curso[m[33m)[m feat(controller): adiciona suporte a @CrossOrigin para habilitar CORS nos controller de Curso
+[33ma4abca0[m feat(service): adiciona a camada de serviço para Curso
+[33m7b0a189[m feat(service): adiciona a camada de serviço para Disciplina
+[33m7d5acfc[m feat(controller): Implementa a classe de interação com a regra de negócio
+[33m834fb63[m feat(service): Implementa a regra de negócio de Professor
+[33me27b60a[m feat(repository): Implementa a interface de gerenciamento de acesso ao banco de dados
+[33ma6b0b5b[m feat(entity): Implementa a classe Professor
+[33mfbc25df[m :sparkles: feat(Agendamento): Envio de entidade Agendamento, e algumas funcionalidadse de controller
+[33mb0d7f26[m Merge pull request #44 from GEAGestaoEspacoAcademico/feature/issue-17
+[33mfb8d082[m Merge pull request #43 from GEAGestaoEspacoAcademico/feature/issue-11
+[33m580a81e[m Merge pull request #41 from GEAGestaoEspacoAcademico/feature/aluno
+[33md0beeb9[m Merge branch 'main' into feature/agendamento
+[33me148380[m Merge pull request #47 from GEAGestaoEspacoAcademico/feature/usuario
+[33m4d5cac6[m :sparkles: feat(AgendamentoEntity): criando entity agendamento
+[33m0f96a13[m feat(entity): adiciona a classe Curso
+[33m130ef99[m feat(entity): adiciona a classe Disciplina, seu repository e controller
+[33m4390726[m[33m ([m[1;31morigin/feature/usuario[m[33m)[m :recycle: refactor(entities): refatorando entities com NoArgsConstructor
+[33me71a128[m :sparkles: feat (AuthController): implementado lógica de login, foi feita de maneira porca sem o token JWT, mas apenas para conseguir a entrega de segunda-feira
+[33m8660e14[m[33m ([m[1;31morigin/feature/issue-17[m[33m)[m :recycle: refactor(entity): add empty constructor to RecursoSala
+[33me2448e4[m :recycle: refactor(entity): add empty constructor to Recurso
+[33mebbede8[m :recycle: refactor(dtos): usando lombok para getter e setter
+[33m59f6d8c[m[33m ([m[1;31morigin/feature/issue-11[m[33m)[m :recycle: refactor(entity): add empty constructor to Sala
+[33me980203[m[33m ([m[1;31morigin/feature/aluno[m[33m)[m Altera metodo contrutor em Aluno
+[33m2fb5ce6[m :sparkles: feat(entity): add recurso and recursoSala entity (closes #17)
+[33m6dedddf[m :sparkles: feat(entity): add sala entity (closes #11)
+[33md3d384f[m Atualiza branch com novas alterações da main
+[33me2f2af3[m Merge pull request #42 from GEAGestaoEspacoAcademico/feature/usuario
+[33m2c20f28[m :recycle: refactor (UsuarioService): Atualizada a lógica de atualização, criando a atualização de um usuario através de um admin.
+[33me7bd3ca[m :recycle: refactor(AuthController): alterando a lógica de registro, evitando vazamento de dados
+[33m65796c1[m :recycle: refactor(UsuarioController) utilizando responseDTO nos controller, mas deixando a logica de conversao no service
+[33m557041a[m :recycle: refactor(UsuarioService): alterando métodos de listagem no controller
+[33mbe8edc6[m :recycle: refactor(UsuarioService): alterando métodos de listagem de usuarios
+[33m5c10e48[m :recycle: refactor: criar classe UsuarioResponseDTO para requisicoes GET
+[33m43f902d[m �fix: resolver problemas de construto
