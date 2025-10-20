@@ -30,7 +30,7 @@ public class UsuarioService {
         String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.getSenha());
         usuario.setSenha(senhaCriptografada);
         Cargo cargo = cargoRepository.findByNome("USER")
-            .orElseThrow(() -> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
+                .orElseThrow(() -> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 
         usuarioRepository.save(usuario);
@@ -58,14 +58,15 @@ public class UsuarioService {
 
     public UsuarioResponseDTO buscarUsuarioPorId(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         return conversaoUsuarioParaResponseDTO(usuario);
     }
 
     public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id) {
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
 
-        if (usuarioUpdateAdminDTO.getNome() != null) auxiliar.setNome(usuarioUpdateAdminDTO.getNome());
+        if (usuarioUpdateAdminDTO.getNome() != null)
+            auxiliar.setNome(usuarioUpdateAdminDTO.getNome());
         if (usuarioUpdateAdminDTO.getEmail() != null) {
             if (!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.getEmail(), id)) {
                 auxiliar.setEmail(usuarioUpdateAdminDTO.getEmail());
@@ -75,7 +76,7 @@ public class UsuarioService {
         }
         if (usuarioUpdateAdminDTO.getCargoId() != null) {
             Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.getCargoId())
-                .orElseThrow(() -> new RuntimeException("Não encontrado cargo desejado"));
+                    .orElseThrow(() -> new RuntimeException("Não encontrado cargo desejado"));
             auxiliar.setCargo(cargo);
         }
 
