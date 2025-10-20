@@ -22,7 +22,8 @@ public class AuthService {
         //autenticação bem vagabunda, mas só pra dar tempo de ter um login no sistema
         //a autenticação certa usa o JWT Token
         if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.getSenha(), user.getSenha())){
-            return new UsuarioAuthenticationResponseDTO(user.getNome());
+            String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
+            return new UsuarioAuthenticationResponseDTO(user.getNome(), user.getId(), cargoNome);
         }
         throw new RuntimeException("Erro ao validar senha");
     }
