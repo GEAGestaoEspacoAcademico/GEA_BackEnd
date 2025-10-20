@@ -20,9 +20,9 @@ import lombok.Setter;
 public class RecursoSala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public RecursoSala(Recurso recurso, Sala sala, int quantidade) {
-    this.sala = sala;
-    this.recurso = recurso;
+  public RecursoSala(Long idRecurso, Long idSala, Integer quantidade) {
+    this.idRecurso = idRecurso;
+    this.idSala = idSala;
     this.quantidade = quantidade;
   }
 
@@ -45,5 +45,5 @@ public class RecursoSala implements Serializable {
   private Recurso recurso;
 
   @Column(name = "quantidade", nullable = false)
-  private int quantidade;
+  private Integer quantidade;
 }
