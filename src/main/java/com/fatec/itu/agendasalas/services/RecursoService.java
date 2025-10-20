@@ -20,7 +20,7 @@ public class RecursoService {
   }
 
   private RecursoCompletoDTO transformarRecursoEmRecursoDTO(Recurso recurso) {
-    return new RecursoCompletoDTO(recurso.getId(),recurso.getNome(), recurso.getTipo());
+    return new RecursoCompletoDTO(recurso.getId(), recurso.getNome(), recurso.getTipo());
   }
 
   public List<RecursoCompletoDTO> listarTodosOsRecursos() {
