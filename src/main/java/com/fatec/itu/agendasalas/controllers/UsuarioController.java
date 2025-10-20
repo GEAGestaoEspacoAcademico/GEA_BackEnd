@@ -25,13 +25,13 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
         List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
         return ResponseEntity.ok(responseDTOList);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id) {
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id){
         UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
         return ResponseEntity.ok(responseDTO);
     } 
