@@ -82,5 +82,4 @@ public class UsuarioService {
 
         usuarioRepository.save(auxiliar);
     }
-
 }
