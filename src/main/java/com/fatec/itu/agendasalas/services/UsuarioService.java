@@ -20,8 +20,10 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Autowired
     private PasswordEncoder cryptPasswordEncoder;
+
     @Autowired
     private CargoRepository cargoRepository;
 
@@ -56,7 +58,7 @@ public class UsuarioService {
         return responseDTO;
     }
 
-    public UsuarioResponseDTO buscarUsuarioPorId(Long id) {
+    public UsuarioResponseDTO buscarUsuarioPorId(long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         return conversaoUsuarioParaResponseDTO(usuario);

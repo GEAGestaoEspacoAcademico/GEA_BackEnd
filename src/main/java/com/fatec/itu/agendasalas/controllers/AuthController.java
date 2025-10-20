@@ -27,21 +27,18 @@ public class AuthController {
     private AuthService authService;
     
     @PostMapping("register")
-    public ResponseEntity<UsuarioResponseDTO> register(@RequestBody UsuarioCreationDTO usuarioDTO){
-
+    public ResponseEntity<UsuarioResponseDTO> register(@RequestBody UsuarioCreationDTO usuarioDTO) {
         UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.created(null).body(responseDTO);
     }
 
     @PostMapping("login")
-    public ResponseEntity<UsuarioAuthenticationResponseDTO> login (@RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
-        
+    public ResponseEntity<UsuarioAuthenticationResponseDTO> login(@RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
         try {
             UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
             return ResponseEntity.ok(authDTO);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        
     }
 }
