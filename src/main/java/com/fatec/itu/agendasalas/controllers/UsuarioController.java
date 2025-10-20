@@ -24,9 +24,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
     
-
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
         List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
         return ResponseEntity.ok(responseDTOList);
     }
@@ -36,8 +35,6 @@ public class UsuarioController {
         UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
         return ResponseEntity.ok(responseDTO);
     } 
-
-
 
     @PatchMapping("{id}")
     public ResponseEntity<Void> atualizarUsuarioAdmin(@PathVariable Long id, @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO){
