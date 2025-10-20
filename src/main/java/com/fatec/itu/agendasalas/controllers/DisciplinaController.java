@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 @CrossOrigin
@@ -32,6 +33,11 @@ public class DisciplinaController {
     @GetMapping
     public List<Disciplina> listarDisciplinas() {
         return disciplinaService.listar();
+    }
+
+    @GetMapping("professor/{id}")
+    public List<Disciplina> listarDisciplinasPorProfessor(@PathVariable Long id, Professor professor) {
+        return disciplinaService.listarDisciplinasPorProfessor(professor);
     }
 
     @GetMapping("{id}")
