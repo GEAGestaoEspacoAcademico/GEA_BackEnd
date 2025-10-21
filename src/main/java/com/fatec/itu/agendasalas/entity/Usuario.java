@@ -1,5 +1,5 @@
 package com.fatec.itu.agendasalas.entity;
-
+//
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
