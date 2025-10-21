@@ -13,5 +13,31 @@ public class UsuarioResponseDTO {
     private String email;
     private Long cargoId;
 
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public Long getCargoId() {
+        return cargoId;
+    }
+    public void setCargoId(Long cargoId) {
+        this.cargoId = cargoId;
+    }
+
     //para consultar gets de admins, sem expor senhas e login
 }

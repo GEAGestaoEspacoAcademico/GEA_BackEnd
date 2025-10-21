@@ -57,45 +57,18 @@ public class Usuario implements Serializable{
         this.id = id;
     }
 
-    public String getSenha() {
-        return senha;
-    }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getLogin() { return login; }
+    public void setLogin(String login) { this.login = login; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
+    public Cargo getCargo() { return cargo; }
+    public void setCargo(Cargo cargo) { this.cargo = cargo; }
 
     @Override
     public int hashCode() {
@@ -114,12 +87,6 @@ public class Usuario implements Serializable{
         if (getClass() != obj.getClass())
             return false;
         Usuario other = (Usuario) obj;
-        if (id != other.id)
-            return false;
-        return true;
+        return id != null && id.equals(other.id);
     }
-
-    
-
-    
 }
