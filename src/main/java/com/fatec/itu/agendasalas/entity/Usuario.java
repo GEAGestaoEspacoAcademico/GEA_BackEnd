@@ -12,10 +12,14 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name="USUARIOS")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements Serializable{
@@ -48,27 +52,6 @@ public class Usuario implements Serializable{
     @ManyToOne
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getLogin() { return login; }
-    public void setLogin(String login) { this.login = login; }
-
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-
-    public Cargo getCargo() { return cargo; }
-    public void setCargo(Cargo cargo) { this.cargo = cargo; }
 
     @Override
     public int hashCode() {
