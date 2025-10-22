@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
-import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +20,9 @@ import lombok.Setter;
 public class Recurso implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Recurso(Long id, String nome, String tipo) {
-    this.id = id;
-    this.tipo = tipo;
+  public Recurso(String nome, String tipo) {
     this.nome = nome;
+    this.tipo = tipo;
   }
 
   @EqualsAndHashCode.Include

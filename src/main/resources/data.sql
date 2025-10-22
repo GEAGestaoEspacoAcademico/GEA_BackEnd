@@ -119,21 +119,22 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Salas
 -- -----------------------------------------------------------------------------
--- Salas normais
+-- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
 INSERT INTO SALAS (nome, capacidade, piso, disponibilidade, is_laboratorio, observacoes)
 VALUES 
-    ('Sala 101', 40, 1, 1, 0, 'Sala com projetor e ar condicionado'),
-    ('Sala 102', 40, 1, 1, 0, 'Sala com lousa digital'),
-    ('Sala 201', 50, 2, 1, 0, 'Auditório pequeno'),
-    ('Sala 202', 35, 2, 1, 0, 'Sala com projetor');
-
--- Laboratórios
-INSERT INTO SALAS (nome, capacidade, piso, disponibilidade, is_laboratorio, observacoes)
-VALUES 
-    ('Lab 301 - Informática', 30, 3, 1, 1, 'Laboratório com 30 computadores'),
-    ('Lab 302 - Informática', 25, 3, 1, 1, 'Laboratório de redes e infraestrutura'),
-    ('Lab 303 - Desenvolvimento', 30, 3, 1, 1, 'Laboratório com computadores high-end');
-
+    ('Lab 301 - Informática', 30, 3, FALSE, TRUE, 'Laboratório com 30 computadores'),
+    ('Lab 302 - Informática', 25, 3, FALSE, TRUE, 'Laboratório de redes e infraestrutura'),
+    ('Lab 303 - Desenvolvimento', 30, 3, FALSE, TRUE, 'Laboratório com computadores high-end'),
+    ('Lab 304 - Informática', 30, 3, FALSE, TRUE, 'Laboratório com 30 computadores'),
+    ('Lab 305 - Informática', 25, 3, FALSE, TRUE, 'Laboratório de redes e infraestrutura'),
+    ('Lab 306 - Desenvolvimento', 30, 3, FALSE, TRUE, 'Laboratório com computadores high-end'),
+    ('Sala 101', 40, 1, FALSE, FALSE, 'Sala com projetor e ar condicionado'),
+    ('Sala 102', 40, 1, FALSE, FALSE, 'Sala com lousa digital'),
+    ('Sala 201', 50, 2, FALSE, FALSE, 'Auditório pequeno'),
+    ('Sala 202', 35, 2, FALSE, FALSE, 'Sala com projetor'),
+    ('Sala 103', 40, 1, TRUE, FALSE, 'Sala de aula padrão com lousa branca'),
+    ('Sala 104', 35, 1, TRUE, FALSE, 'Sala de aula padrão com lousa branca'), 
+    ('Sala 203', 50, 2, TRUE, FALSE, 'Sala ampla com duas lousas');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Agendamentos
@@ -180,3 +181,24 @@ VALUES
     (12),  -- Evento coordenação - 22/11
     (13);  -- Evento admin - 10/12
 
+--------- Recursos
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Webcam Logitech C920', 'Hardware');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Monitor Dell UltraSharp 24"', 'Hardware');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Impressora Multifuncional HP', 'Hardware');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Teclado Mecânico ABNT2', 'Hardware');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Licença Microsoft Project', 'Software');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Licença Visual Studio Code', 'Software');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Cadeira de Escritório Ergonômica', 'Mobiliário');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
+
+----------RECURSOSSALAS
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (1, 1, 1); 
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (2, 2, 1); 
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (3, 3, 30);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (4, 4, 30);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (5, 5, 40);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (6, 6, 35);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (7, 7, 1);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (8, 8, 25);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (9, 1, 5);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (10, 2, 1);

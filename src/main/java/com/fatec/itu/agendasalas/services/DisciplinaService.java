@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 
 @Service
@@ -21,6 +22,11 @@ public class DisciplinaService {
     public List<Disciplina> listar() {
         return disciplinaRepository.findAll();
     }
+
+    public List<Disciplina> listarDisciplinasPorProfessor(Professor professor) {
+        return disciplinaRepository.findByProfessor(professor);
+    }
+
 
     public Disciplina buscarPorId(Integer id) {
         return disciplinaRepository.findById(id)
