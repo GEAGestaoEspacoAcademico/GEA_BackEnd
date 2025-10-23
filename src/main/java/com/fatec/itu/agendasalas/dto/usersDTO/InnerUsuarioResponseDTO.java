@@ -1,8 +1,9 @@
 package com.fatec.itu.agendasalas.dto.usersDTO;
 
-public record UsuarioResponseDTO(
+public record InnerUsuarioResponseDTO(
         Long id,
         String nome,
         String email,
         Long cargoId) {
+    // para consultar gets de admins, sem expor senhas e login
 }
