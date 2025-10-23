@@ -15,9 +15,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 
-                //.requestMatchers("/h2-console/**").permitAll() // libera o H2
-                //.requestMatchers("/usuarios/**").permitAll()//Por enquanto apenas para teste.
-                //.requestMatchers("/auth/**").permitAll() 
+                .requestMatchers("/h2-console/**").permitAll() // libera o H2
+                .requestMatchers("/usuarios/**").permitAll()//Por enquanto apenas para teste.
+                .requestMatchers("/auth/**").permitAll() 
                 .anyRequest().permitAll()
             )
             .csrf(csrf -> csrf.disable()) // desabilita CSRF para o console

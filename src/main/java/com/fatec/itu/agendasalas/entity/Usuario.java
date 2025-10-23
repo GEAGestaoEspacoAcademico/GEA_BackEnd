@@ -1,6 +1,9 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.io.Serializable;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="USUARIOS")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Usuario implements Serializable{
+public class Usuario implements UserDetails{
 
     private static final long serialVersionUID = 1L;
 
@@ -117,6 +120,22 @@ public class Usuario implements Serializable{
         if (id != other.id)
             return false;
         return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
     }
 
     
