@@ -124,8 +124,27 @@ public class Usuario implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+        if (cargo == null || cargo.getNome() == null) {
+            return java.util.Collections.emptyList();
+        }
+        String nome = cargo.getNome().trim().toUpperCase();
+        String role;
+        switch (nome) {
+            case "ADMIN":
+                role = "ROLE_ADMIN";
+                break;
+            case "PROFESSOR":
+                role = "ROLE_PROFESSOR";
+                break;
+            case "COORDENADOR":
+                role = "ROLE_COORDENADOR";
+                break;
+            case "USER":
+            default:
+                role = "ROLE_USER";
+                break;
+        }
+        return java.util.Collections.singletonList((GrantedAuthority) () -> role);
     }
 
     @Override
