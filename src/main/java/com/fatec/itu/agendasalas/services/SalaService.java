@@ -67,7 +67,7 @@ public class SalaService {
             recursoRepository.findById(recursoDTO.id()).orElseThrow(() -> new RuntimeException());
 
         RecursoSala linkNoBancoEntreSalaERecurso =
-            new RecursoSala(recursoExistente, novaSala, recursoDTO.quantidade());
+            new RecursoSala(recursoExistente.getId(), novaSala.getId(), recursoDTO.quantidade());
 
         novaSala.getRecursos().add(linkNoBancoEntreSalaERecurso);
       }
@@ -116,7 +116,7 @@ public class SalaService {
       throw new RuntimeException();
     }
 
-    RecursoSala novoLink = new RecursoSala(recursoExistente, salaExistente, dto.quantidade());
+    RecursoSala novoLink = new RecursoSala(recursoExistente.getId(), salaExistente.getId(), dto.quantidade());
 
     salaExistente.getRecursos().add(novoLink);
 
