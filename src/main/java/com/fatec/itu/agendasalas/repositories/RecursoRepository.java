@@ -6,5 +6,4 @@ import com.fatec.itu.agendasalas.entity.Recurso;
 
 @Repository
 public interface RecursoRepository extends JpaRepository<Recurso, Long> {
-
 }
