@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.NotificacaoCreationDTO;
 import com.fatec.itu.agendasalas.dto.NotificacaoResponseDTO;
 import com.fatec.itu.agendasalas.dto.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
@@ -13,8 +14,10 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.Notificacao;
 import com.fatec.itu.agendasalas.entity.Sala;
+import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.NotificacaoRepository;
+import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class NotificacaoService {
@@ -25,6 +28,9 @@ public class NotificacaoService {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
     
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
     public NotificacaoService(NotificacaoRepository notificacaoRepository) {
         this.notificacaoRepository = notificacaoRepository;
     }
@@ -33,6 +39,34 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
         return notificacaoRepository.findAll().stream()
                .map(this::converterParaResponseDTO)
                .collect(Collectors.toList());
+    }
+
+    public void enviarNotificacoes(List<NotificacaoCreationDTO> notificacoesDTO) {
+        for (NotificacaoCreationDTO dto : notificacoesDTO) {
+
+            if (dto.destinatarios() == null || dto.destinatarios().isEmpty()) {
+                throw new IllegalArgumentException("A lista de destinatários não pode ser nula ou vazia.");
+            }
+
+            Agendamento agendamento = agendamentoRepository.findById(dto.agendamento())
+                    .orElseThrow(() -> new IllegalArgumentException("Agendamento inválido ou não informado"));
+
+            Usuario remetente = usuarioRepository.findById(dto.usuarioRemetente())
+                    .orElseThrow(() -> new IllegalArgumentException("Remetente inválido"));
+
+            List<Usuario> destinatarios = usuarioRepository.findAllById(dto.destinatarios());
+
+            Notificacao notificacao = new Notificacao();
+            notificacao.setAgendamento(agendamento);
+            notificacao.setTitulo(dto.titulo());
+            notificacao.setMensagem(dto.mensagem());
+            notificacao.setDataEnvio(dto.dataEnvio());
+            notificacao.setUsuarioRemetente(remetente);
+            notificacao.setDestinatario(destinatarios);
+            notificacao.setCanalEnvio(dto.canalEnvio());
+
+            notificacaoRepository.save(notificacao);
+        }
     }
 
     private NotificacaoResponseDTO converterParaResponseDTO(Notificacao notificacao) {
