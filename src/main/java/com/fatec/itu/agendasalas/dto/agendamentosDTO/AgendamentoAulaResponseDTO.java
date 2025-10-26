@@ -13,11 +13,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AgendamentoAulaResponseDTO {
-    
+
     private Long id;
     private String nomeUsuario;
     private String nomeSala;
-    private Integer disciplinaId;
+    private Long disciplinaId;
     private String nomeDisciplina;
     private String semestre;
     private String curso;

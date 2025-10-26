@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import jakarta.persistence.*;
 
 @Table(name = "CURSOS")
@@ -28,6 +29,10 @@ public class Curso implements Serializable {
     @ManyToOne
     @JoinColumn(name = "coordenador_id")
     private Coordenador coordenador;
+
+    // @ManyToOne
+    // @JoinColumn(name = "disciplina_id")
+    // private List<Disciplina> disciplinas;
 
     public Long getId() {
         return id;

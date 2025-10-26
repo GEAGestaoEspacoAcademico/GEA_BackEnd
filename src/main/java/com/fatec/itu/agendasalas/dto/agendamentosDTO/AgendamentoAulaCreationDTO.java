@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AgendamentoAulaCreationDTO {
-    
+
     private Long usuarioId;
     private Long salaId;
-    private Integer disciplinaId;
+    private Long disciplinaId;
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private String diaDaSemana;
@@ -22,9 +22,9 @@ public class AgendamentoAulaCreationDTO {
     private LocalTime horaFim;
     private String tipo;
 
-    public AgendamentoAulaCreationDTO(Long usuarioId, Long salaId, Integer disciplinaId, 
-                                       LocalDate dataInicio, LocalDate dataFim, String diaDaSemana,
-                                       LocalTime horaInicio, LocalTime horaFim, String tipo) {
+    public AgendamentoAulaCreationDTO(Long usuarioId, Long salaId, Long disciplinaId,
+            LocalDate dataInicio, LocalDate dataFim, String diaDaSemana,
+            LocalTime horaInicio, LocalTime horaFim, String tipo) {
         this.usuarioId = usuarioId;
         this.salaId = salaId;
         this.disciplinaId = disciplinaId;

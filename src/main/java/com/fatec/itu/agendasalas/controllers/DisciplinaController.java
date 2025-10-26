@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
+import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Disciplina;
-import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 @CrossOrigin
@@ -26,32 +27,32 @@ public class DisciplinaController {
     private DisciplinaService disciplinaService;
 
     @PostMapping
-    public Disciplina criarDisciplina(@RequestBody Disciplina disciplina) {
-        return disciplinaService.criar(disciplina);
+    public DisciplinaListDTO criarDisciplina(@RequestBody DisciplinaCreateDTO novaDisciplina) {
+        return disciplinaService.criar(novaDisciplina);
     }
 
     @GetMapping
-    public List<Disciplina> listarDisciplinas() {
+    public List<DisciplinaListDTO> listarDisciplinas() {
         return disciplinaService.listar();
     }
 
-    @GetMapping("professor/{id}")
-    public List<Disciplina> listarDisciplinasPorProfessor(@PathVariable Long id, Professor professor) {
-        return disciplinaService.listarDisciplinasPorProfessor(professor);
+    @GetMapping("professor/{idProfessor}")
+    public List<DisciplinaListDTO> listarDisciplinasPorProfessor(@PathVariable Long idProfessor) {
+        return disciplinaService.listarDisciplinasPorProfessor(idProfessor);
     }
 
-    @GetMapping("{id}")
-    public Disciplina buscarPorId(@PathVariable Integer id) {
-        return disciplinaService.buscarPorId(id);
+    @GetMapping("{idDisciplina}")
+    public DisciplinaListDTO buscarPorId(@PathVariable Long idDisciplina) {
+        return disciplinaService.buscarPorId(idDisciplina);
     }
 
-    @PutMapping("{id}")
-    public Disciplina editarDisciplina(@PathVariable Integer id, @RequestBody Disciplina novaDisciplina) {
-        return disciplinaService.atualizar(id, novaDisciplina);
+    @PutMapping("{idDisciplina}")
+    public DisciplinaListDTO editarDisciplina(@PathVariable Long idDisciplina, @RequestBody DisciplinaCreateDTO novaDisciplina) {
+        return disciplinaService.atualizar(idDisciplina, novaDisciplina);
     }
 
-    @DeleteMapping("{id}")
-    public void excluirDisciplina(@PathVariable Integer id) {
-        disciplinaService.excluir(id);
+    @DeleteMapping("{idDisciplina}")
+    public void excluirDisciplina(@PathVariable Long idDisciplina) {
+        disciplinaService.excluir(idDisciplina);
     }
 }

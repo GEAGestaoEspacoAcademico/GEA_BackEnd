@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
+import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.services.CursoService;
 
@@ -25,27 +27,27 @@ public class CursoController {
     private CursoService cursoService;
 
     @PostMapping
-    public Curso criarCurso(@RequestBody Curso curso) {
+    public CursoListDTO criarCurso(@RequestBody CursoCreateDTO curso) {
         return cursoService.criar(curso);
     }
 
     @GetMapping
-    public List<Curso> listarCursos() {
+    public List<CursoListDTO> listarCursos() {
         return cursoService.listar();
     }
 
-    @GetMapping("{id}")
-    public Curso buscarPorId(@PathVariable Long id) {
-        return cursoService.buscarPorId(id);
+    @GetMapping("{idCurso}")
+    public CursoListDTO buscarPorId(@PathVariable Long idCurso) {
+        return cursoService.buscarPorId(idCurso);
     }
 
-    @PutMapping("{id}")
-    public Curso editarCurso(@PathVariable Long id, @RequestBody Curso novoCurso) {
-        return cursoService.atualizar(id, novoCurso);
+    @PutMapping("{idCurso}")
+    public CursoListDTO editarCurso(@PathVariable Long idCurso, @RequestBody CursoCreateDTO novoCurso) {
+        return cursoService.atualizar(idCurso, novoCurso);
     }
 
-    @DeleteMapping("{id}")
-    public void excluirCurso(@PathVariable Long id) {
-        cursoService.excluir(id);
+    @DeleteMapping("{idCurso}")
+    public void excluirCurso(@PathVariable Long idCurso) {
+        cursoService.excluir(idCurso);
     }
 }
