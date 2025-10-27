@@ -28,12 +28,12 @@ public class DisciplinaService {
     }
 
 
-    public Disciplina buscarPorId(Integer id) {
+    public Disciplina buscarPorId(Long id) {
         return disciplinaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
     }
 
-    public Disciplina atualizar(Integer id, Disciplina novaDisciplina) {
+    public Disciplina atualizar(Long id, Disciplina novaDisciplina) {
         Disciplina atual = buscarPorId(id);
         atual.setNome(novaDisciplina.getNome());
         atual.setSemestre(novaDisciplina.getSemestre());
@@ -42,7 +42,7 @@ public class DisciplinaService {
         return disciplinaRepository.save(atual);
     }
 
-    public void excluir(Integer id) {
+    public void excluir(Long id) {
         if (!disciplinaRepository.existsById(id)) {
             throw new RuntimeException("Disciplina não encontrada");
         }

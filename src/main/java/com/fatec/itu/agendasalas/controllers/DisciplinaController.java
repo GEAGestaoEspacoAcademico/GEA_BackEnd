@@ -41,17 +41,17 @@ public class DisciplinaController {
     }
 
     @GetMapping("{id}")
-    public Disciplina buscarPorId(@PathVariable Integer id) {
+    public Disciplina buscarPorId(@PathVariable Long id) {
         return disciplinaService.buscarPorId(id);
     }
 
     @PutMapping("{id}")
-    public Disciplina editarDisciplina(@PathVariable Integer id, @RequestBody Disciplina novaDisciplina) {
+    public Disciplina editarDisciplina(@PathVariable Long id, @RequestBody Disciplina novaDisciplina) {
         return disciplinaService.atualizar(id, novaDisciplina);
     }
 
     @DeleteMapping("{id}")
-    public void excluirDisciplina(@PathVariable Integer id) {
+    public void excluirDisciplina(@PathVariable Long id) {
         disciplinaService.excluir(id);
     }
 }

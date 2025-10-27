@@ -19,6 +19,8 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin
 @RestController
 @RequestMapping("agendamentos/aulas")
@@ -29,7 +31,7 @@ public class AgendamentoAulaController {
 
     @PostMapping
     public ResponseEntity<AgendamentoAulaResponseDTO> criarAgendamentoAula(
-            @RequestBody AgendamentoAulaCreationDTO dto) {
+            @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
         try {
             AgendamentoAulaResponseDTO response = agendamentoAulaService.criarAgendamentoAula(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
