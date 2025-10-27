@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.CoordenadorResponseDTO;
 import com.fatec.itu.agendasalas.dto.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.entity.Professor;
@@ -30,6 +31,16 @@ public class ProfessorController {
 
     /********* Lista todos os professores *********/
     @GetMapping("listar")
+    public ResponseEntity<List<Professor>> listarProfessores() {
+        List<Professor> professores = professorService.listarProfessores();
+        return ResponseEntity.ok(professores);
+    }
+
+    @GetMapping("/{idProfessor}/cursos")
+    public List<CursoListByProfessorDTO> listarPorProfessor(@PathVariable Long idProfessor) {
+        return professorService.listarCursosPorProfessor(idProfessor);
+    }
+
     public List<ProfessorResponseDTO> listar() {
         return professorService.listarProfessores().stream()
                 .map(this::toResponseDTO)
