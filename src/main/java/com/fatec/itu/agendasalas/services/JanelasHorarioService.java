@@ -36,4 +36,9 @@ public class JanelasHorarioService {
 
         return transformarEmJanelasHorarioResponseDTO(janelasHorarioSalvo);
     }
+
+    public JanelasHorarioResponseDTO filtrarJanelaHorarioPeloID(Long id) {
+        JanelasHorario janelasHorario = janelasHorarioRepository.findById(id).orElseThrow(()->new RuntimeException("Janela de Horário com esse id não foi encontrada"));
+        return transformarEmJanelasHorarioResponseDTO(janelasHorario);
+    }
 }

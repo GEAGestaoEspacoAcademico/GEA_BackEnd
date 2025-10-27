@@ -3,10 +3,12 @@ package com.fatec.itu.agendasalas.controllers;
 import java.net.URI;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +38,10 @@ public class JanelasHorarioController {
         .buildAndExpand(janelasHorarioResponseDTO.id()).toUri();
 
         return ResponseEntity.created(uri).body(janelasHorarioResponseDTO);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JanelasHorarioResponseDTO> filtrarJanelaHorarioPeloID(@PathVariable Long id){
+        return ResponseEntity.ok(janelasHorarioService.filtrarJanelaHorarioPeloID(id));
     }
 }
