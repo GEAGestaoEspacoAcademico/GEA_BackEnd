@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
-import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.services.CursoService;
 
 @CrossOrigin
@@ -39,6 +38,11 @@ public class CursoController {
     @GetMapping("{idCurso}")
     public CursoListDTO buscarPorId(@PathVariable Long idCurso) {
         return cursoService.buscarPorId(idCurso);
+    }
+
+    @GetMapping("/professor/{idProfessor}")
+    public List<CursoListDTO> listarPorProfessor(@PathVariable Long idProfessor) {
+        return cursoService.listarCursosPorProfessor(idProfessor);
     }
 
     @PutMapping("{idCurso}")

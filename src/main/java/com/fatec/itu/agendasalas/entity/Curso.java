@@ -30,9 +30,9 @@ public class Curso implements Serializable {
     @JoinColumn(name = "coordenador_id")
     private Coordenador coordenador;
 
-    // @ManyToOne
-    // @JoinColumn(name = "disciplina_id")
-    // private List<Disciplina> disciplinas;
+    @OneToMany
+    @JoinColumn(name = "disciplina_id")
+    private List<Disciplina> disciplinas;
 
     public Long getId() {
         return id;

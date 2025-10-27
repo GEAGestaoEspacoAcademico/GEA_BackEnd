@@ -26,6 +26,10 @@ public class CursoService {
                 .toList();
     }
 
+    public List<CursoListDTO> listarCursosPorProfessor(Long idProfessor) {
+        return converteCursoParaDTO(cursoRepository.findCursosByProfessorId(idProfessor));
+    }
+
     public CursoService(CursoRepository cursoRepository) {
         this.cursoRepository = cursoRepository;
     }
