@@ -29,9 +29,9 @@ public class ProfessorController {
         return ResponseEntity.ok(professores);
     }
 
-    @GetMapping("/{registroProfessor}/cursos")
-    public List<CursoListByProfessorDTO> listarPorProfessor(@PathVariable Long registroProfessor) {
-        return professorService.listarCursosPorProfessor(registroProfessor);
+    @GetMapping("/{idProfessor}/cursos")
+    public List<CursoListByProfessorDTO> listarPorProfessor(@PathVariable Long idProfessor) {
+        return professorService.listarCursosPorProfessor(idProfessor);
     }
 
     @DeleteMapping("{registroProfessor}")

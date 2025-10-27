@@ -11,6 +11,6 @@ import com.fatec.itu.agendasalas.entity.Curso;
 
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Long> {
-  @Query("SELECT c FROM Disciplina d JOIN d.curso c WHERE d.professor.registroProfessor=:registroProfessor")
-  List<Curso> findCursosByProfessorRegistro(@Param("registroProfessor") Long registroProfessor);
+  @Query("SELECT c FROM Disciplina d JOIN d.curso c WHERE d.professor.id=:idProfessor")
+  List<Curso> findCursosByProfessorRegistro(@Param("idProfessor") Long idProfessor);
 }
