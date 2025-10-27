@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fatec.itu.agendasalas.dto.JanelasHorarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.JanelasHorarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 
@@ -40,5 +41,13 @@ public class JanelasHorarioService {
     public JanelasHorarioResponseDTO filtrarJanelaHorarioPeloID(Long id) {
         JanelasHorario janelasHorario = janelasHorarioRepository.findById(id).orElseThrow(()->new RuntimeException("Janela de Horário com esse id não foi encontrada"));
         return transformarEmJanelasHorarioResponseDTO(janelasHorario);
+    }
+
+    public JanelasHorarioResponseDTO atualizarJanelasHorario(Long id, JanelasHorarioUpdateDTO janelasHorarioUpdateDTO) {
+       JanelasHorario janelasHorarioAntiga = janelasHorarioRepository.findById(id).orElseThrow(()->new RuntimeException("Janela de Horário com esse id não foi encontrada"));
+       janelasHorarioAntiga.setHoraInicio(janelasHorarioUpdateDTO.horaInicio());
+       janelasHorarioAntiga.setHoraFim(janelasHorarioUpdateDTO.horaFim());
+       JanelasHorario janelasHorarioAtualizada = janelasHorarioRepository.save(janelasHorarioAntiga);
+       return transformarEmJanelasHorarioResponseDTO(janelasHorarioAtualizada);
     }
 }

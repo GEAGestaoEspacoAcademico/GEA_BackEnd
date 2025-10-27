@@ -10,13 +10,17 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.JanelasHorarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.JanelasHorarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.services.JanelasHorarioService;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @CrossOrigin
 @RestController
@@ -32,7 +36,7 @@ public class JanelasHorarioController {
     }
 
     @PostMapping
-    public ResponseEntity<JanelasHorarioResponseDTO> criarJanelaHorario(JanelasHorarioCreationDTO janelasHorarioCreationDTO){
+    public ResponseEntity<JanelasHorarioResponseDTO> criarJanelaHorario(@RequestBody JanelasHorarioCreationDTO janelasHorarioCreationDTO){
         JanelasHorarioResponseDTO janelasHorarioResponseDTO = janelasHorarioService.criarJanelaHorario(janelasHorarioCreationDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(janelasHorarioResponseDTO.id()).toUri();
@@ -43,5 +47,10 @@ public class JanelasHorarioController {
     @GetMapping("/{id}")
     public ResponseEntity<JanelasHorarioResponseDTO> filtrarJanelaHorarioPeloID(@PathVariable Long id){
         return ResponseEntity.ok(janelasHorarioService.filtrarJanelaHorarioPeloID(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<JanelasHorarioResponseDTO> atualizarJanelasHorario(@PathVariable Long id, @RequestBody JanelasHorarioUpdateDTO janelasHorarioUpdateDTO){
+        return ResponseEntity.ok(janelasHorarioService.atualizarJanelasHorario(id, janelasHorarioUpdateDTO));
     }
 }
