@@ -31,4 +31,9 @@ public class JanelasHorario {
 
     @Column(name = "hora_fim", nullable=false)
     private LocalTime horaFim;
+
+    public JanelasHorario(LocalTime horaInicio, LocalTime horaFim) {
+        this.horaInicio = horaInicio;
+        this.horaFim = horaFim;
+    }
 }

@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+import com.fatec.itu.agendasalas.dto.JanelasHorarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
+
 
 @Service
 public class JanelasHorarioService {
@@ -25,5 +27,13 @@ public class JanelasHorarioService {
 
     private JanelasHorarioResponseDTO transformarEmJanelasHorarioResponseDTO(JanelasHorario janelaHorario){
         return new JanelasHorarioResponseDTO(janelaHorario.getId(), janelaHorario.getHoraInicio(), janelaHorario.getHoraFim());
+    }
+
+    @Transactional
+    public JanelasHorarioResponseDTO criarJanelaHorario(JanelasHorarioCreationDTO janelasHorarioCreationDTO) {
+        JanelasHorario janelasHorarioCreation = new JanelasHorario(janelasHorarioCreationDTO.horaInicio(), janelasHorarioCreationDTO.horaFim());
+        JanelasHorario janelasHorarioSalvo = janelasHorarioRepository.save(janelasHorarioCreation);
+
+        return transformarEmJanelasHorarioResponseDTO(janelasHorarioSalvo);
     }
 }
