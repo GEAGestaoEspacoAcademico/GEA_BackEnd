@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.services.ProfessorService;
 
@@ -23,9 +24,14 @@ public class ProfessorController {
     private ProfessorService professorService;
 
     @GetMapping("listar")
-    public ResponseEntity<List<Professor>> listarProfessores(){
+    public ResponseEntity<List<Professor>> listarProfessores() {
         List<Professor> professores = professorService.listarProfessores();
         return ResponseEntity.ok(professores);
+    }
+
+    @GetMapping("/{registroProfessor}/cursos")
+    public List<CursoListByProfessorDTO> listarPorProfessor(@PathVariable Long registroProfessor) {
+        return professorService.listarCursosPorProfessor(registroProfessor);
     }
 
     @DeleteMapping("{registroProfessor}")

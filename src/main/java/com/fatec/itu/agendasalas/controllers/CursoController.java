@@ -40,11 +40,6 @@ public class CursoController {
         return cursoService.buscarPorId(idCurso);
     }
 
-    @GetMapping("/professor/{idProfessor}")
-    public List<CursoListDTO> listarPorProfessor(@PathVariable Long idProfessor) {
-        return cursoService.listarCursosPorProfessor(idProfessor);
-    }
-
     @PutMapping("{idCurso}")
     public CursoListDTO editarCurso(@PathVariable Long idCurso, @RequestBody CursoCreateDTO novoCurso) {
         return cursoService.atualizar(idCurso, novoCurso);

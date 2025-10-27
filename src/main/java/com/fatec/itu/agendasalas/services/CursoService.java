@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,8 @@ public class CursoService {
     @Autowired
     private CoordenadorRepository coordenadorRepository;
 
-    private List<CursoListDTO> converteCursoParaDTO(List<Curso> cursos) {
-        return cursos.stream()
-                .map(curso -> new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome()))
-                .toList();
-    }
-
-    public List<CursoListDTO> listarCursosPorProfessor(Long idProfessor) {
-        return converteCursoParaDTO(cursoRepository.findCursosByProfessorId(idProfessor));
+    private CursoListDTO converteCursoParaDTO(Curso curso) {
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome());
     }
 
     public CursoService(CursoRepository cursoRepository) {
@@ -42,18 +37,24 @@ public class CursoService {
 
         Curso cursoSalvo = cursoRepository.save(novoCurso);
 
-        return new CursoListDTO(cursoSalvo.getId(), cursoSalvo.getNomeCurso(), cursoSalvo.getCoordenador().getNome());
+        return converteCursoParaDTO(cursoSalvo);
     }
 
     public List<CursoListDTO> listar() {
-        return converteCursoParaDTO(cursoRepository.findAll());
+        List<Curso> cursos = cursoRepository.findAll();
+        List<CursoListDTO> cursosDTO = new ArrayList<>();
+
+        for (Curso curso : cursos) {
+            cursosDTO.add(converteCursoParaDTO(curso));
+        }
+
+        return cursosDTO;
     }
 
     public CursoListDTO buscarPorId(Long id) {
         Curso cursoEncontrado = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
-        return new CursoListDTO(cursoEncontrado.getId(), cursoEncontrado.getNomeCurso(),
-                cursoEncontrado.getCoordenador().getNome());
+        return converteCursoParaDTO(cursoEncontrado);
     }
 
     public CursoListDTO atualizar(Long id, CursoCreateDTO novoCurso) {
@@ -65,8 +66,7 @@ public class CursoService {
 
         Curso cursoAtualizado = cursoRepository.save(atual);
 
-        return new CursoListDTO(cursoAtualizado.getId(), cursoAtualizado.getNomeCurso(),
-                cursoAtualizado.getCoordenador().getNome());
+        return converteCursoParaDTO(cursoAtualizado);
     }
 
     public void excluir(Long id) {
