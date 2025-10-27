@@ -3,12 +3,15 @@ package com.fatec.itu.agendasalas.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,12 +30,12 @@ import lombok.Setter;
 public class Sala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Sala(String nome, int capacidade, int piso, boolean isLaboratorio) {
+  public Sala(String nome, int capacidade, int piso, TipoSala tipoSala) {
     this.nome = nome;
     this.capacidade = capacidade;
     this.piso = piso;
-    this.isLaboratorio = isLaboratorio;
-    this.recursos = new ArrayList<>();
+    this.tipoSala = tipoSala;
+    recursos = new ArrayList<>();
   }
 
   @EqualsAndHashCode.Include
@@ -59,8 +62,9 @@ public class Sala implements Serializable {
   @OneToMany(mappedBy = "sala", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<Agendamento> agendamentos;
 
-  @Column(name = "is_laboratorio", nullable = false)
-  private boolean isLaboratorio;
+  @ManyToOne
+  @JoinColumn(name = "id_tipo_sala")
+  private TipoSala tipoSala;
 
   @Column(name = "observacoes")
   private String observacoes;
