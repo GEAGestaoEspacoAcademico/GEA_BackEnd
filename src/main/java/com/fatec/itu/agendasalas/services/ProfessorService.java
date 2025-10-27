@@ -20,9 +20,15 @@ public class ProfessorService {
         this.professorRepository = professorRepository;
     }
 
+    /********* Lista todos os professores *********/
     public List<Professor> listarProfessores(){
-        return professorRepository.findAll();
+        return professorRepository.findByCargoId(3L);
     }
+
+    /********* Lista por ID *********/
+	public Optional<Professor> buscarPorId(Long id) {
+		return professorRepository.findById(id);
+	}
 
     @Transactional
     public void excluirProfessor(Long registroProfessor) {

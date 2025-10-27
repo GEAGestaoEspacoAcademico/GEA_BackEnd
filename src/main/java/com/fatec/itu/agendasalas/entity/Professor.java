@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -12,7 +14,7 @@ public class Professor extends Usuario {
 
     @Column(name = "registro_professor", nullable = false, unique = true)
     private Long registroProfessor;
-    //private Disciplina[] Disciplinas;
+    private ArrayList<Disciplina> Disciplinas;
 
     protected Professor() { }
 
@@ -22,6 +24,10 @@ public class Professor extends Usuario {
     
     public void setRegistroProfessor(Long registroProfessor) {
         this.registroProfessor = registroProfessor;
+    }
+
+    public void addDisciplina(Disciplina disciplina) {
+        this.Disciplinas.add(disciplina);
     }
 
     @Override
