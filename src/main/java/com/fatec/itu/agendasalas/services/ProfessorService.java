@@ -26,6 +26,11 @@ public class ProfessorService {
     public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
     }
+    
+    /********* Lista por ID *********/
+	public Optional<Professor> buscarPorId(Long id) {
+		return professorRepository.findById(id);
+	}
 
     public List<Professor> listarProfessores() {
         return professorRepository.findAll();
