@@ -1,16 +1,9 @@
 package com.fatec.itu.agendasalas.dto.usersDTO;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotEmpty;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class UsuarioAuthenticationDTO {
-    
-    private String login;
-    private String senha;
+public record UsuarioAuthenticationDTO(
+    @NotEmpty(message = "Login é obrigatório") String login,
+    @NotEmpty(message = "Senha é obrigatória") String senha
 
-    
-}
+    ) {}

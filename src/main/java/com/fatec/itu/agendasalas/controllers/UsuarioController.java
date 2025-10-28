@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
@@ -26,14 +26,14 @@ public class UsuarioController {
     
 
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
-        List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
+    public ResponseEntity<List<UsuarioCreationResponseDTO>> listarUsuarios(){
+        List<UsuarioCreationResponseDTO> responseDTOList = usuarioService.listarUsuarios();
         return ResponseEntity.ok(responseDTOList);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id){
-        UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
+    public ResponseEntity<UsuarioCreationResponseDTO> buscarUsuarioPorId(@PathVariable Long id){
+        UsuarioCreationResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(id); 
         return ResponseEntity.ok(responseDTO);
     } 
 
