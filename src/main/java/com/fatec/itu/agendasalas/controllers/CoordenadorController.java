@@ -30,7 +30,7 @@ public class CoordenadorController {
     @PostMapping
     // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoordenadorResponseDTO> promover(@RequestBody @Validated CoordenadorCreationDTO dto) {
-        if (coordenadorRepository.existsByRegistroCoordenacao(dto.getRegistroCoordenacao())) {
+        if (coordenadorRepository.existsByRegistroCoordenacao(dto.registroCoordenacao())) {
             throw new RegistroCoordenacaoDuplicadoException("Registro de coordenação já existe");
         }
         Coordenador coordenador = coordenadorService.promoverParaCoordenador(dto);

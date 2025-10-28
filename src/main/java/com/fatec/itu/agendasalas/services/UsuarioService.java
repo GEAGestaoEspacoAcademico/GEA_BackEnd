@@ -30,8 +30,8 @@ public class UsuarioService {
 
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
         
-        Usuario usuario = new Usuario(usuarioDTO.getLogin(), usuarioDTO.getEmail(), usuarioDTO.getNome());
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.getSenha());
+        Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());
+        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.senha());
         usuario.setSenha(senhaCriptografada);
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
@@ -53,12 +53,12 @@ public class UsuarioService {
     }
     
     private UsuarioResponseDTO conversaoUsuarioParaResponseDTO(Usuario usuario){
-        UsuarioResponseDTO responseDTO = new UsuarioResponseDTO();
-        responseDTO.setId(usuario.getId());
-        responseDTO.setNome(usuario.getNome());
-        responseDTO.setEmail(usuario.getEmail());
-        responseDTO.setCargoId(usuario.getCargo().getId());  
-        return responseDTO;
+        return new UsuarioResponseDTO(
+            usuario.getId(),
+            usuario.getNome(),
+            usuario.getEmail(),
+            usuario.getCargo() != null ? usuario.getCargo().getId() : null
+        );
     }
 
     public UsuarioResponseDTO buscarUsuarioPorId(Long id){
@@ -70,17 +70,17 @@ public class UsuarioService {
     public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
         
-        if(usuarioUpdateAdminDTO.getNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.getNome());
-        if(usuarioUpdateAdminDTO.getEmail()!=null){
-            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.getEmail(), id)){
-                auxiliar.setEmail(usuarioUpdateAdminDTO.getEmail());
+        if(usuarioUpdateAdminDTO.nome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.nome());
+        if(usuarioUpdateAdminDTO.email()!=null){
+            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.email(), id)){
+                auxiliar.setEmail(usuarioUpdateAdminDTO.email());
             }
             else{
                 throw new RuntimeException("Tentando usar email já cadastrado");
             }
         } 
-        if(usuarioUpdateAdminDTO.getCargoId() != null){
-            Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.getCargoId())
+        if(usuarioUpdateAdminDTO.cargoId() != null){
+            Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.cargoId())
             .orElseThrow(()-> new RuntimeException("Não encontrado cargo desejado"));
             auxiliar.setCargo(cargo);
         }

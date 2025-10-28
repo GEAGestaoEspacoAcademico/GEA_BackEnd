@@ -17,13 +17,13 @@ public class AuthService {
     private PasswordEncoder cryptPasswordEncoder;
 
     public UsuarioAuthenticationResponseDTO login(UsuarioAuthenticationDTO usuarioAuthDTO){
-        Usuario user = usuarioRepository.findByLogin(usuarioAuthDTO.getLogin());
+        Usuario user = usuarioRepository.findByLogin(usuarioAuthDTO.login());
         
         //autenticação bem vagabunda, mas só pra dar tempo de ter um login no sistema
         //a autenticação certa usa o JWT Token
-        if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.getSenha(), user.getSenha())){
+        if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.senha(), user.getSenha())){
             String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
-            return new UsuarioAuthenticationResponseDTO(user.getNome(), user.getId(), cargoNome);
+            return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome);
         }
         throw new RuntimeException("Erro ao validar senha");
     }

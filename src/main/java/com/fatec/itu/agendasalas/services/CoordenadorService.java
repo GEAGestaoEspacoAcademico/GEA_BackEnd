@@ -33,7 +33,7 @@ public class CoordenadorService {
 
 	@Transactional
 	public Coordenador promoverParaCoordenador(CoordenadorCreationDTO dto) {
-		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+		Usuario usuario = usuarioRepository.findById(dto.usuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 		if (coordenadorRepository.existsById(usuario.getId())) {
 			throw new RuntimeException("Usuário já é coordenador");
@@ -46,7 +46,7 @@ public class CoordenadorService {
                 "INSERT INTO coordenadores (user_id, registro_coordenacao) VALUES (:userId, :registro)"
         )
         .setParameter("userId", usuario.getId())
-        .setParameter("registro", dto.getRegistroCoordenacao())
+        .setParameter("registro", dto.registroCoordenacao())
         .executeUpdate();
 
         return coordenadorRepository.findById(usuario.getId())
