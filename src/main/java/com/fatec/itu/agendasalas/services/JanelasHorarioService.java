@@ -1,14 +1,15 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fatec.itu.agendasalas.dto.JanelasHorarioCreationDTO;
-import com.fatec.itu.agendasalas.dto.JanelasHorarioResponseDTO;
-import com.fatec.itu.agendasalas.dto.JanelasHorarioUpdateDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 
@@ -20,10 +21,14 @@ public class JanelasHorarioService {
     private JanelasHorarioRepository janelasHorarioRepository;
 
     public List<JanelasHorarioResponseDTO> listarTodasJanelasHorario(){
-        return janelasHorarioRepository.findAll()
-        .stream()
-        .map(this::transformarEmJanelasHorarioResponseDTO)
-        .toList();
+
+        List<JanelasHorario> listaJanelasHorario = janelasHorarioRepository.findAll();
+        List<JanelasHorarioResponseDTO> listaJanelasHorarioResponseDTOs = new ArrayList<JanelasHorarioResponseDTO>();
+        for(JanelasHorario janela : listaJanelasHorario){
+            listaJanelasHorarioResponseDTOs.add(transformarEmJanelasHorarioResponseDTO(janela));
+        }
+        
+        return listaJanelasHorarioResponseDTOs;
     }
 
     private JanelasHorarioResponseDTO transformarEmJanelasHorarioResponseDTO(JanelasHorario janelaHorario){
@@ -43,6 +48,7 @@ public class JanelasHorarioService {
         return transformarEmJanelasHorarioResponseDTO(janelasHorario);
     }
 
+    @Transactional
     public JanelasHorarioResponseDTO atualizarJanelasHorario(Long id, JanelasHorarioUpdateDTO janelasHorarioUpdateDTO) {
        JanelasHorario janelasHorarioAntiga = janelasHorarioRepository.findById(id).orElseThrow(()->new RuntimeException("Janela de Horário com esse id não foi encontrada"));
        janelasHorarioAntiga.setHoraInicio(janelasHorarioUpdateDTO.horaInicio());
