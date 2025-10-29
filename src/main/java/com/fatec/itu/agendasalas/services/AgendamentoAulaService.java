@@ -138,15 +138,19 @@ public class AgendamentoAulaService {
     }
 
     private AgendamentoAulaResponseDTO converterParaResponseDTO(AgendamentoAula agendamento) {
-        AgendamentoAulaResponseDTO dto = new AgendamentoAulaResponseDTO(
-        agendamento.getId(), 
-        agendamento.getUsuario().getNome(),
-        agendamento.getSala().getNome(),
-        agendamento.getDisciplina().getId(),
-        agendamento.getDisciplina().getNome(),
-        agendamento.getDisciplina().getSemestre(),
-        agendamento.getDisciplina().getCurso().getNomeCurso(),
-        agendamento.getDisciplina().getProfessor() != null? agendamento.getDisciplina().getProfessor().getNome() : "Não Atribuido",
+    return new AgendamentoAulaResponseDTO(
+        agendamento.getId(),
+        agendamento.getUsuario() != null ? agendamento.getUsuario().getNome() : null,
+        agendamento.getSala() != null ? agendamento.getSala().getNome() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getId() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getNome() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getSemestre() : null,
+        agendamento.getDisciplina() != null && agendamento.getDisciplina().getCurso() != null
+            ? agendamento.getDisciplina().getCurso().getNomeCurso()
+            : null,
+        agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
+            ? agendamento.getDisciplina().getProfessor().getNome()
+            : "Não atribuído",
         agendamento.getDataInicio(),
         agendamento.getDataFim(),
         agendamento.getDiaDaSemana(),
