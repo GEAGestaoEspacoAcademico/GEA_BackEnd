@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fatec.itu.agendasalas.dto.RecursoCompletoDTO;
-import com.fatec.itu.agendasalas.dto.RecursoResumidoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 

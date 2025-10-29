@@ -6,7 +6,7 @@ import java.time.LocalTime;
 public record AgendamentoAulaCreationDTO(
         Long usuarioId,
         Long salaId,
-        Integer disciplinaId,
+        Long disciplinaId,
         LocalDate dataInicio,
         LocalDate dataFim,
         String diaDaSemana,

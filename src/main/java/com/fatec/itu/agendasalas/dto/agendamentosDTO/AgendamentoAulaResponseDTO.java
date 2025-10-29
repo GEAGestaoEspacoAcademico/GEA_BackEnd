@@ -7,7 +7,7 @@ public record AgendamentoAulaResponseDTO(
         Long id,
         String nomeUsuario,
         String nomeSala,
-        Integer disciplinaId,
+        Long disciplinaId,
         String nomeDisciplina,
         String semestre,
         String curso,

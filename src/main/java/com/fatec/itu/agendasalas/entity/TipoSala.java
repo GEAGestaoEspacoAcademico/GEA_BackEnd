@@ -1,33 +1,27 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
-import java.util.List;
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "RECURSOS")
+@Table(name = "TIPOSSALAS")
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Recurso implements Serializable {
+@AllArgsConstructor
+public class TipoSala implements Serializable {
   private static final long serialVersionUID = 1L;
-
-  public Recurso(String nome, String tipo) {
-    this.nome = nome;
-    this.tipo = tipo;
-  }
 
   @EqualsAndHashCode.Include
   @Id
@@ -35,12 +29,6 @@ public class Recurso implements Serializable {
   @Column(name = "id", nullable = false)
   private Long id;
 
-  @Column(name = "nome", nullable = false)
+  @Column(name = "nome", nullable = false, unique = true)
   private String nome;
-
-  @Column(name = "tipo", nullable = false)
-  private String tipo;
-
-  @OneToMany(mappedBy = "recurso", cascade = CascadeType.REMOVE, orphanRemoval = true)
-  private List<RecursoSala> salas;
 }
