@@ -1,4 +1,7 @@
 package com.fatec.itu.agendasalas.dto.recursos;
 
-public record RecursoCompletoDTO(Long id, String nome, String tipo) {
+public record RecursoCompletoDTO(
+        Long id,
+        String nome,
+        String tipo) {
 }
