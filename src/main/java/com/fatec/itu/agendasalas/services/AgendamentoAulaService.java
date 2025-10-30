@@ -158,8 +158,5 @@ public class AgendamentoAulaService {
         agendamento.getJanelasHorario().getHoraFim(),
         agendamento.getTipo()
         );
-       
-        
-        return dto;
     }
 }
