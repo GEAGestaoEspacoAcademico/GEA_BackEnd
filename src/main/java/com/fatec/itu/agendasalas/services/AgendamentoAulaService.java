@@ -124,6 +124,7 @@ public class AgendamentoAulaService {
             JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
             agendamento.setJanelasHorario(janelasHorario);
         } 
+        if(dto.tipo()!=null) agendamento.setTipo(dto.tipo());
 
         AgendamentoAula updated = agendamentoAulaRepository.save(agendamento);
         return converterParaResponseDTO(updated);
