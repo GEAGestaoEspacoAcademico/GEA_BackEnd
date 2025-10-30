@@ -11,10 +11,12 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
+import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
@@ -33,6 +35,9 @@ public class AgendamentoAulaService {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
+    @Autowired
+    private JanelasHorarioRepository janelasHorarioRepository;
+
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {
         
@@ -45,7 +50,9 @@ public class AgendamentoAulaService {
         Disciplina disciplina = disciplinaRepository.findById(dto.disciplinaId())
                 .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.disciplinaId()));
 
-        
+        JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
+
+
         AgendamentoAula agendamento = new AgendamentoAula();
         agendamento.setUsuario(usuario);
         agendamento.setSala(sala);
@@ -53,8 +60,7 @@ public class AgendamentoAulaService {
         agendamento.setDataInicio(dto.dataInicio());
         agendamento.setDataFim(dto.dataFim());
         agendamento.setDiaDaSemana(dto.diaDaSemana());
-        agendamento.setHoraInicio(dto.horaInicio());
-        agendamento.setHoraFim(dto.horaFim());
+        agendamento.setJanelasHorario(janelasHorario);
         agendamento.setTipo(dto.tipo());
 
         
@@ -114,8 +120,11 @@ public class AgendamentoAulaService {
         if (dto.dataInicio() != null) agendamento.setDataInicio(dto.dataInicio());
         if (dto.dataFim() != null) agendamento.setDataFim(dto.dataFim());
         if (dto.diaDaSemana() != null) agendamento.setDiaDaSemana(dto.diaDaSemana());
-        if (dto.horaInicio() != null) agendamento.setHoraInicio(dto.horaInicio());
-        if (dto.horaFim() != null) agendamento.setHoraFim(dto.horaFim());
+        if (dto.janelasHorarioId() != null){
+            JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
+            agendamento.setJanelasHorario(janelasHorario);
+        } 
+        if(dto.tipo()!=null) agendamento.setTipo(dto.tipo());
 
         AgendamentoAula updated = agendamentoAulaRepository.save(agendamento);
         return converterParaResponseDTO(updated);
@@ -146,8 +155,9 @@ public class AgendamentoAulaService {
         agendamento.getDataInicio(),
         agendamento.getDataFim(),
         agendamento.getDiaDaSemana(),
-        agendamento.getHoraInicio(),
-        agendamento.getHoraFim(),
-        agendamento.getTipo());
+        agendamento.getJanelasHorario().getHoraInicio(),
+        agendamento.getJanelasHorario().getHoraFim(),
+        agendamento.getTipo()
+        );
     }
 }
