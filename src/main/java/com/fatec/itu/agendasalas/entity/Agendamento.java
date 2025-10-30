@@ -52,7 +52,7 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
     private JanelasHorario janelasHorario;
 
-    @Column(name = "tipo", insertable = false, updatable = false)
+    @Column(name = "tipo")
     private String tipo;
 
 }
