@@ -143,69 +143,49 @@ VALUES
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
-<<<<<<< HEAD
-
--- -----------------------------------------------------
--- Alimenta o BD com janelas de Horário
--- --------------------------------------
-INSERT INTO JANELAS_HORARIO(hora_inicio, hora_fim) VALUES
-('07:40:00', '08:30:00'),
-('08:30:00', '09:20:00'),
-('09:30:00', '10:20:00'),
-('10:20:00', '11:10:00'),
-('11:20:00', '12:10:00'),
-('12:10:00', '13:00:00');
-=======
 -- Recursos
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Webcam Logitech C920', 'Hardware');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Monitor Dell UltraSharp 24"', 'Hardware');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Impressora Multifuncional HP', 'Hardware');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Teclado Mecânico ABNT2', 'Hardware');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Licença Microsoft Project', 'Software');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Licença Visual Studio Code', 'Software');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Cadeira de Escritório Ergonômica', 'Mobiliário');
-INSERT INTO RECURSOS (NOME, TIPO) VALUES ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
+INSERT INTO RECURSOS (NOME, TIPO) VALUES
+    ('Webcam Logitech C920', 'Hardware'),
+    ('Monitor Dell UltraSharp 24"', 'Hardware'),
+    ('Impressora Multifuncional HP', 'Hardware'),
+    ('Teclado Mecânico ABNT2', 'Hardware'),
+    ('Licença Microsoft Project', 'Software'),
+    ('Licença Visual Studio Code', 'Software'),
+    ('Cadeira de Escritório Ergonômica', 'Mobiliário'),
+    ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
 
 -- RecursosSalas
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (1, 1, 1); 
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (2, 2, 1); 
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (3, 3, 30);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (4, 4, 30);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (5, 5, 40);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (6, 6, 35);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (7, 7, 1);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (8, 8, 25);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (9, 1, 5);
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES (10, 2, 1);
+INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
+    (1, 1, 1),
+    (2, 2, 1),
+    (3, 3, 30),
+    (4, 4, 30),
+    (5, 5, 40),
+    (6, 6, 35),
+    (7, 7, 1),
+    (8, 8, 25),
+    (9, 1, 5),
+    (10, 2, 1);
 
->>>>>>> feature/agendamentoBlocosHorario
--- -----------------------------------------------------------------------------
--- Alimenta o BD com Agendamentos
--- -----------------------------------------------------------------------------
--- Agendamentos
-<<<<<<< HEAD
+-- Janelas de Horário
+INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
+    ('07:40:00', '08:30:00'),
+    ('09:10:00', '09:20:00'),
+    ('09:30:00', '10:20:00'),
+    ('10:20:00', '11:10:00'),
+    ('11:20:00', '12:10:00'),
+    ('12:10:00', '13:00:00'),
+    ('13:20:00', '14:10:00'),
+    ('14:10:00', '15:00:00'),
+    ('15:10:00', '16:00:00'),
+    ('16:00:00', '16:50:00'),
+    ('19:00:00', '19:50:00'),
+    ('19:50:00', '20:40:00'),
+    ('20:50:00', '21:40:00'),
+    ('21:40:00', '22:30:00'),
+    ('23:00:00', '23:50:00');
+
 INSERT INTO AGENDAMENTOS (user_id, sala_id, data_inicio, data_fim, dia_da_semana, janela_horario_id, tipo)
-=======
--- Inserção de dados de exemplo para a tabela JANELAS_HORARIO
-
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('07:40:00', '08:30:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('09:10:00', '09:20:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('09:30:00', '10:20:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('10:20:00', '11:10:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('11:20:00', '12:10:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('12:10:00', '13:00:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('13:20:00', '14:10:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('14:10:00', '15:00:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('15:10:00', '16:00:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('16:00:00', '16:50:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('19:00:00', '19:50:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('19:50:00', '20:40:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('20:50:00', '21:40:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('21:40:00', '22:30:00');
-INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES ('23:00:00', '23:50:00');
-
-INSERT INTO AGENDAMENTOS (user_id, sala_id, data_inicio, data_fim, dia_da_semana, hora_inicio, hora_fim, tipo)
->>>>>>> feature/agendamentoBlocosHorario
 VALUES 
     -- Agendamentos de aulas
     (1, 1, '2025-10-20', '2025-12-15', 'Segunda-feira',1, 'AULA'),
