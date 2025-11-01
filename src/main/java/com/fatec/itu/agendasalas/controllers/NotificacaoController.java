@@ -22,12 +22,12 @@ public class NotificacaoController {
     @Autowired
     private NotificacaoService notificacaoService;
 
-    @GetMapping("listar")
+    @GetMapping
     public List<NotificacaoResponseDTO> listarNotificacoes() {
         return notificacaoService.listarNotificacoesComoDTO();
     }
     
-    @PostMapping("/enviar")
+    @PostMapping
     public void enviarNotificacoes(@RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
         notificacaoService.enviarNotificacoes(notificacoesDTO);
     }
