@@ -19,16 +19,16 @@ public class Disciplina implements Serializable {
     public Disciplina() {
     }
 
-    public Disciplina(String nome, String semestre, Professor professor) {
+    public Disciplina(String nome, String semestre, Curso curso) {
         this.nome = nome;
         this.semestre = semestre;
-        this.professor = professor;
+        this.curso = curso;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -44,11 +44,11 @@ public class Disciplina implements Serializable {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

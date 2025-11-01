@@ -11,10 +11,12 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
+import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
@@ -33,29 +35,33 @@ public class AgendamentoAulaService {
     @Autowired
     private DisciplinaRepository disciplinaRepository;
 
+    @Autowired
+    private JanelasHorarioRepository janelasHorarioRepository;
+
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {
         
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + dto.getUsuarioId()));
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + dto.usuarioId()));
 
-        Sala sala = salaRepository.findById(dto.getSalaId())
-                .orElseThrow(() -> new RuntimeException("Sala não encontrada com ID: " + dto.getSalaId()));
+        Sala sala = salaRepository.findById(dto.salaId())
+                .orElseThrow(() -> new RuntimeException("Sala não encontrada com ID: " + dto.salaId()));
 
-        Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
-                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.getDisciplinaId()));
+        Disciplina disciplina = disciplinaRepository.findById(dto.disciplinaId())
+                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.disciplinaId()));
 
-        
+        JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
+
+
         AgendamentoAula agendamento = new AgendamentoAula();
         agendamento.setUsuario(usuario);
         agendamento.setSala(sala);
         agendamento.setDisciplina(disciplina);
-        agendamento.setDataInicio(dto.getDataInicio());
-        agendamento.setDataFim(dto.getDataFim());
-        agendamento.setDiaDaSemana(dto.getDiaDaSemana());
-        agendamento.setHoraInicio(dto.getHoraInicio());
-        agendamento.setHoraFim(dto.getHoraFim());
-        agendamento.setTipo(dto.getTipo());
+        agendamento.setDataInicio(dto.dataInicio());
+        agendamento.setDataFim(dto.dataFim());
+        agendamento.setDiaDaSemana(dto.diaDaSemana());
+        agendamento.setJanelasHorario(janelasHorario);
+        agendamento.setTipo(dto.tipo());
 
         
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
@@ -93,29 +99,32 @@ public class AgendamentoAulaService {
         AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento de aula não encontrado com ID: " + id));
 
-        if (dto.getUsuarioId() != null) {
-            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + dto.getUsuarioId()));
+        if (dto.usuarioId() != null) {
+            Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + dto.usuarioId()));
             agendamento.setUsuario(usuario);
         }
 
-        if (dto.getSalaId() != null) {
-            Sala sala = salaRepository.findById(dto.getSalaId())
-                    .orElseThrow(() -> new RuntimeException("Sala não encontrada com ID: " + dto.getSalaId()));
+        if (dto.salaId() != null) {
+            Sala sala = salaRepository.findById(dto.salaId())
+                    .orElseThrow(() -> new RuntimeException("Sala não encontrada com ID: " + dto.salaId()));
             agendamento.setSala(sala);
         }
 
-        if (dto.getDisciplinaId() != null) {
-            Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
-                    .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.getDisciplinaId()));
+        if (dto.disciplinaId() != null) {
+            Disciplina disciplina = disciplinaRepository.findById(dto.disciplinaId())
+                    .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.disciplinaId()));
             agendamento.setDisciplina(disciplina);
         }
 
-        if (dto.getDataInicio() != null) agendamento.setDataInicio(dto.getDataInicio());
-        if (dto.getDataFim() != null) agendamento.setDataFim(dto.getDataFim());
-        if (dto.getDiaDaSemana() != null) agendamento.setDiaDaSemana(dto.getDiaDaSemana());
-        if (dto.getHoraInicio() != null) agendamento.setHoraInicio(dto.getHoraInicio());
-        if (dto.getHoraFim() != null) agendamento.setHoraFim(dto.getHoraFim());
+        if (dto.dataInicio() != null) agendamento.setDataInicio(dto.dataInicio());
+        if (dto.dataFim() != null) agendamento.setDataFim(dto.dataFim());
+        if (dto.diaDaSemana() != null) agendamento.setDiaDaSemana(dto.diaDaSemana());
+        if (dto.janelasHorarioId() != null){
+            JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
+            agendamento.setJanelasHorario(janelasHorario);
+        } 
+        if(dto.tipo()!=null) agendamento.setTipo(dto.tipo());
 
         AgendamentoAula updated = agendamentoAulaRepository.save(agendamento);
         return converterParaResponseDTO(updated);
@@ -130,23 +139,25 @@ public class AgendamentoAulaService {
     }
 
     private AgendamentoAulaResponseDTO converterParaResponseDTO(AgendamentoAula agendamento) {
-        AgendamentoAulaResponseDTO dto = new AgendamentoAulaResponseDTO();
-        dto.setId(agendamento.getId());
-        dto.setNomeUsuario(agendamento.getUsuario().getNome());
-        dto.setNomeSala(agendamento.getSala().getNome());
-        dto.setDisciplinaId(agendamento.getDisciplina().getId());
-        dto.setNomeDisciplina(agendamento.getDisciplina().getNome());
-        dto.setSemestre(agendamento.getDisciplina().getSemestre());
-        dto.setCurso(agendamento.getDisciplina().getCurso() != null ? agendamento.getDisciplina().getCurso().getNomeCurso() : null);
-        dto.setNomeProfessor(agendamento.getDisciplina().getProfessor() != null 
-                ? agendamento.getDisciplina().getProfessor().getNome() 
-                : "Não atribuído");
-        dto.setDataInicio(agendamento.getDataInicio());
-        dto.setDataFim(agendamento.getDataFim());
-        dto.setDiaDaSemana(agendamento.getDiaDaSemana());
-        dto.setHoraInicio(agendamento.getHoraInicio());
-        dto.setHoraFim(agendamento.getHoraFim());
-        dto.setTipo(agendamento.getTipo());
-        return dto;
+    return new AgendamentoAulaResponseDTO(
+        agendamento.getId(),
+        agendamento.getUsuario() != null ? agendamento.getUsuario().getNome() : null,
+        agendamento.getSala() != null ? agendamento.getSala().getNome() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getId() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getNome() : null,
+        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getSemestre() : null,
+        agendamento.getDisciplina() != null && agendamento.getDisciplina().getCurso() != null
+            ? agendamento.getDisciplina().getCurso().getNomeCurso()
+            : null,
+        agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
+            ? agendamento.getDisciplina().getProfessor().getNome()
+            : "Não atribuído",
+        agendamento.getDataInicio(),
+        agendamento.getDataFim(),
+        agendamento.getDiaDaSemana(),
+        agendamento.getJanelasHorario().getHoraInicio(),
+        agendamento.getJanelasHorario().getHoraFim(),
+        agendamento.getTipo()
+        );
     }
 }
