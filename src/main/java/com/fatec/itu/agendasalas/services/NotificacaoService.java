@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
             notificacao.setAgendamento(agendamento);
             notificacao.setTitulo(dto.titulo());
             notificacao.setMensagem(dto.mensagem());
-            notificacao.setDataEnvio(dto.dataEnvio());
+            notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
             notificacao.setDestinatario(destinatarios);
             notificacao.setCanalEnvio(dto.canalEnvio());
@@ -122,6 +123,10 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
 
         if (notificacao.getDestinatario() == null || notificacao.getDestinatario().isEmpty()) {
             throw new IllegalArgumentException("A lista de destinatários não pode estar vazia");
+        }
+
+        if (notificacao.getDataEnvio() == null) {
+            notificacao.setDataEnvio(LocalDate.now());
         }
 
         return notificacaoRepository.save(notificacao);

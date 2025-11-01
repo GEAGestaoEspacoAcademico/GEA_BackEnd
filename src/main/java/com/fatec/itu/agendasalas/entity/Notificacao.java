@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class Notificacao implements Serializable {
     private String mensagem;
 
     @Column(name = "data_envio", nullable = false)
-    private String dataEnvio;
+    private LocalDate dataEnvio;
 
     @ManyToOne
     @JoinColumn(name = "usuario_remetente")
@@ -57,6 +58,11 @@ public class Notificacao implements Serializable {
         destinatarios = new ArrayList<Usuario>();
     }
 
+    public Notificacao(LocalDate dataEnvio) {
+        this.destinatarios = new ArrayList<Usuario>();
+        this.dataEnvio = dataEnvio == null ? LocalDate.now() : dataEnvio;
+    }
+
     public void setIdNotificacao(Long idNotificacao) {
         this.idNotificacao = idNotificacao;
     }
@@ -73,7 +79,7 @@ public class Notificacao implements Serializable {
         this.mensagem = mensagem;
     }
 
-    public void setDataEnvio(String dataEnvio) {
+    public void setDataEnvio(LocalDate dataEnvio) {
         this.dataEnvio = dataEnvio;
     }
 
@@ -105,7 +111,7 @@ public class Notificacao implements Serializable {
         return mensagem;
     }
 
-    public String getDataEnvio() {
+    public LocalDate getDataEnvio() {
         return dataEnvio;
     }
 

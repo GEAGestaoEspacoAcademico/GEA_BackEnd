@@ -6,7 +6,6 @@ public record NotificacaoCreationDTO(
     Long agendamento, 
     String titulo, 
     String mensagem, 
-    String dataEnvio, 
     Long usuarioRemetente, 
     List<Long> destinatarios, 
     String canalEnvio

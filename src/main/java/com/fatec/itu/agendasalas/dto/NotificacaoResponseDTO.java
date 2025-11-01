@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
@@ -9,7 +10,7 @@ public record NotificacaoResponseDTO(
     Long idNotificacao,
     String titulo,
     String mensagem,
-    String dataEnvio,
+    LocalDate dataEnvio,
     UsuarioResumoDTO usuarioRemetente,
     List<UsuarioResumoDTO> destinatarios,
     String canalEnvio,
