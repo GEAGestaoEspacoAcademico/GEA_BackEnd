@@ -50,9 +50,6 @@ public class Notificacao implements Serializable {
     private List<Usuario> destinatarios = new ArrayList<>();
 
 
-    @Column(name = "canal_envio", nullable = false)
-    private String canalEnvio;
-
     public Notificacao() {
 
         destinatarios = new ArrayList<Usuario>();
@@ -87,10 +84,6 @@ public class Notificacao implements Serializable {
         this.usuarioRemetente = usuarioRemetente;
     }
 
-    public void setCanalEnvio(String canalEnvio) {
-        this.canalEnvio = canalEnvio;
-    }
-
     public void setDestinatario(List<Usuario> destinatarios) {
         this.destinatarios = destinatarios;
     }
@@ -117,10 +110,6 @@ public class Notificacao implements Serializable {
 
     public Usuario getUsuarioRemetente() {
         return usuarioRemetente;
-    }
-
-    public String getCanalEnvio() {
-        return canalEnvio;
     }
 
     public List<Usuario> getDestinatario() {

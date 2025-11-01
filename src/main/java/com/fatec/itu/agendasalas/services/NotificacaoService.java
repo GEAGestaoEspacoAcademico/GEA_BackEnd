@@ -64,7 +64,6 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
             notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
             notificacao.setDestinatario(destinatarios);
-            notificacao.setCanalEnvio(dto.canalEnvio());
 
             notificacaoRepository.save(notificacao);
         }
@@ -90,7 +89,6 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
             notificacao.getDataEnvio(),
             remetenteDTO,
             destinatariosDTO,
-            notificacao.getCanalEnvio(),
             agendamentoDTO
         );
     }

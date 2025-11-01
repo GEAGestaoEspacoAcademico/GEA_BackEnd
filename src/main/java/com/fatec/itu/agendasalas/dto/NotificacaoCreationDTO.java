@@ -7,6 +7,5 @@ public record NotificacaoCreationDTO(
     String titulo, 
     String mensagem, 
     Long usuarioRemetente, 
-    List<Long> destinatarios, 
-    String canalEnvio
+    List<Long> destinatarios
 ) { }
