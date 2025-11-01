@@ -1,9 +1,7 @@
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import com.fatec.itu.agendasalas.dto.SalaResumoDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 
 public record AgendamentoNotificacaoDTO(
     Long id,

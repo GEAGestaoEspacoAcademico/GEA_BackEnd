@@ -1,4 +1,4 @@
-package com.fatec.itu.agendasalas.dto;
+package com.fatec.itu.agendasalas.dto.notificações;
 
 import java.time.LocalDate;
 import java.util.List;

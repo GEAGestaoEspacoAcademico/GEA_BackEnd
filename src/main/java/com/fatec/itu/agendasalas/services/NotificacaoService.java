@@ -8,11 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fatec.itu.agendasalas.dto.NotificacaoCreationDTO;
-import com.fatec.itu.agendasalas.dto.NotificacaoResponseDTO;
-import com.fatec.itu.agendasalas.dto.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
+import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
+import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.Notificacao;
