@@ -1,8 +1,10 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,8 @@ public class NotificacaoService {
         this.notificacaoRepository = notificacaoRepository;
     }
 
-public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
+    @Transactional(readOnly = true)
+    public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
         return notificacaoRepository.findAll().stream()
                .map(this::converterParaResponseDTO)
                .collect(Collectors.toList());
@@ -97,14 +100,20 @@ public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
 
         Sala sala = agendamento.getSala();
         SalaResumoDTO salaDTO = new SalaResumoDTO(sala.getId(), sala.getNome());
+        LocalTime horaInicio = null;
+        LocalTime horaFim = null;
+        if (agendamento.getJanelasHorario() != null) {
+            horaInicio = agendamento.getJanelasHorario().getHoraInicio();
+            horaFim = agendamento.getJanelasHorario().getHoraFim();
+        }
 
         return new AgendamentoNotificacaoDTO(
             agendamento.getId(),
             salaDTO,
             agendamento.getDataInicio(),
             agendamento.getDataFim(),
-            agendamento.getHoraInicio(),
-            agendamento.getHoraFim()
+            horaInicio,
+            horaFim
         );
     }
     
