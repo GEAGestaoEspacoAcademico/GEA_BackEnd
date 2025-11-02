@@ -19,6 +19,7 @@ public class AuthService implements UserDetailsService{
     @Autowired
     private PasswordEncoder cryptPasswordEncoder;
 
+<<<<<<< HEAD
 
     @Autowired
     UsuarioRepository repository;
@@ -39,6 +40,19 @@ public class AuthService implements UserDetailsService{
     //     }
     //     throw new RuntimeException("Erro ao validar senha");
     // }
+=======
+    public UsuarioAuthenticationResponseDTO login(UsuarioAuthenticationDTO usuarioAuthDTO){
+        Usuario user = usuarioRepository.findByLogin(usuarioAuthDTO.login());
+        
+        //autenticação bem vagabunda, mas só pra dar tempo de ter um login no sistema
+        //a autenticação certa usa o JWT Token
+        if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.senha(), user.getSenha())){
+            String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
+            return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome);
+        }
+        throw new RuntimeException("Erro ao validar senha");
+    }
+>>>>>>> origin
 
  
 }

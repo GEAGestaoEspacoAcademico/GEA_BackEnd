@@ -17,41 +17,49 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
 @RestController
 @RequestMapping("recursos")
+@Tag(name = "Recursos", description = "Operações relacionadas a recurso")
 public class RecursoController {
   @Autowired
   private RecursoService recursoService;
 
+  @Operation(summary = "Lista todos os recursos existentes")
   @GetMapping
   public ResponseEntity<List<RecursoCompletoDTO>> listarTodos() {
     return ResponseEntity.ok(recursoService.listarTodosOsRecursos());
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<RecursoCompletoDTO> buscarPorId(@PathVariable Long id) {
-    return ResponseEntity.ok(recursoService.buscarPorId(id));
+  @Operation(summary = "Apresenta um recurso existente pelo seu id")
+  @GetMapping("/{recursoId}")
+  public ResponseEntity<RecursoCompletoDTO> buscarPorId(@PathVariable Long recursoId) {
+    return ResponseEntity.ok(recursoService.buscarPorId(recursoId));
   }
 
+  @Operation(summary = "Cria um novo recurso")
   @PostMapping
-  public ResponseEntity<RecursoCompletoDTO> criar(@RequestBody RecursoResumidoDTO dto) {
-    RecursoCompletoDTO recursoCriado = recursoService.criar(dto);
+  public ResponseEntity<RecursoCompletoDTO> criar(@RequestBody RecursoResumidoDTO recurso) {
+    RecursoCompletoDTO recursoCriado = recursoService.criar(recurso);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(recursoCriado.id()).toUri();
     return ResponseEntity.created(uri).body(recursoCriado);
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<RecursoCompletoDTO> atualizar(@PathVariable Long id,
-      @RequestBody RecursoResumidoDTO dto) {
-    return ResponseEntity.ok(recursoService.atualizar(id, dto));
+  @Operation(summary = "Atualiza um recurso existente por id")
+  @PutMapping("/{recursoId}")
+  public ResponseEntity<RecursoCompletoDTO> atualizar(@PathVariable Long recursoId,
+      @RequestBody RecursoResumidoDTO recurso) {
+    return ResponseEntity.ok(recursoService.atualizar(recursoId, recurso));
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deletar(@PathVariable Long id) {
-    recursoService.deletar(id);
+  @Operation(summary = "Deleta um recurso existente por id")
+  @DeleteMapping("/{recursoId}")
+  public ResponseEntity<Void> deletar(@PathVariable Long recursoId) {
+    recursoService.deletar(recursoId);
     return ResponseEntity.noContent().build();
   }
 }

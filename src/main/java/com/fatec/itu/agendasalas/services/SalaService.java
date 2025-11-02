@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaCreateDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
@@ -20,13 +20,16 @@ import com.fatec.itu.agendasalas.repositories.SalaRepository;
 @Service
 public class SalaService {
   @Autowired
-  SalaRepository salaRepository;
+  private SalaRepository salaRepository;
 
   @Autowired
-  RecursoRepository recursoRepository;
+  private RecursoRepository recursoRepository;
 
   @Autowired
-  RecursoSalaRepository recursoSalaRepository;
+  private RecursoSalaRepository recursoSalaRepository;
+
+  @Autowired
+  private TipoSalaService tipoSalaService;
 
   public SalaDetailDTO buscarPorId(Long id) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -36,25 +39,21 @@ public class SalaService {
   private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
     return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
-        sala.isDisponibilidade(), sala.isLaboratorio(), sala.getObservacoes());
+        sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
   }
 
-  public List<SalaListDTO> listarSalasDisponiveis(boolean disponivel) {
-    return salaRepository
-        .findByDisponibilidade(disponivel).stream().map(sala -> new SalaListDTO(sala.getId(),
-            sala.getNome(), sala.getCapacidade(), sala.getPiso(), sala.isDisponibilidade()))
+
+  public List<SalaListDTO> listarTodasAsSalas() {
+    return salaRepository.findAll().stream()
+        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
+            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
         .toList();
   }
 
-  public List<SalaListDTO> listarTodasAsSalas() {
-    return salaRepository.findAll().stream().map(sala -> new SalaListDTO(sala.getId(),
-        sala.getNome(), sala.getCapacidade(), sala.getPiso(), sala.isDisponibilidade())).toList();
-  }
-
   @Transactional
-  public SalaDetailDTO criar(SalaCreateDTO salaDTO) {
-    Sala novaSala =
-        new Sala(salaDTO.nome(), salaDTO.capacidade(), salaDTO.piso(), salaDTO.isLaboratorio());
+  public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
+    Sala novaSala = new Sala(salaDTO.nome(), salaDTO.capacidade(), salaDTO.piso(),
+        tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
     novaSala.setObservacoes(salaDTO.observacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
@@ -63,14 +62,14 @@ public class SalaService {
   }
 
   @Transactional
-  public SalaDetailDTO atualizar(Long id, SalaDetailDTO salaDTO) {
+  public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
     salaExistente.setNome(salaDTO.nome());
     salaExistente.setCapacidade(salaDTO.capacidade());
     salaExistente.setPiso(salaDTO.piso());
     salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setLaboratorio(salaDTO.isLaboratorio());
+    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
     salaExistente.setObservacoes(salaDTO.observacoes());
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));

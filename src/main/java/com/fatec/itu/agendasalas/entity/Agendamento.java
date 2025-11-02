@@ -2,8 +2,7 @@ package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,13 +48,11 @@ public class Agendamento implements Serializable {
     @Column(name="dia_da_semana", nullable = false)
     private String diaDaSemana;
 
-    @Column(name="hora_inicio", nullable = false)
-    private LocalTime horaInicio;
+    @ManyToOne
+    @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
+    private JanelasHorario janelasHorario;
 
-    @Column(name="hora_fim", nullable = false)
-    private LocalTime horaFim;
-
-    @Column(name = "tipo", insertable = false, updatable = false)
+    @Column(name = "tipo")
     private String tipo;
 
 }

@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.dto.usersDTO;
 
+<<<<<<< HEAD
 import jakarta.validation.constraints.NotEmpty;
 
 
@@ -16,3 +17,12 @@ public record UsuarioCreationDTO (
     @NotEmpty(message = "Senha é obrigatória")
     String password
 ) {}
+=======
+public record UsuarioCreationDTO(
+        Long id,
+        String nome,
+        String email,
+        String login,
+        String senha) {
+}
+>>>>>>> origin
