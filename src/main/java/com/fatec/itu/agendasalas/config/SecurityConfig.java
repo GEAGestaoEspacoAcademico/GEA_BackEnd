@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,11 +22,12 @@ import com.fatec.itu.agendasalas.jwt.JWTAuthorizationFilter;
 import com.fatec.itu.agendasalas.services.UserDetailsServiceImpl;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
+   
     private final AuthenticationConfiguration authenticationConfiguration;
-
+    private final UserDetailsServiceImpl userDetailsService;
     public SecurityConfig(UserDetailsServiceImpl userDetailsService,
                           AuthenticationConfiguration authenticationConfiguration) {
         this.userDetailsService = userDetailsService;
@@ -44,6 +47,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
         JWTAuthenticationFilter authenticationFilter = new JWTAuthenticationFilter(authManager);
+        JWTAuthorizationFilter authorizationFilter = new JWTAuthorizationFilter(authManager, userDetailsService);
         authenticationFilter.setFilterProcessesUrl("/auth/login"); // endpoint de login
 
         return http
@@ -55,7 +59,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilter(authenticationFilter)
-                .addFilter(new JWTAuthorizationFilter(authManager))
+                .addFilter(authorizationFilter)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import static com.fatec.itu.agendasalas.jwt.SecurityConstants.EXPIRATION_TIME;
 import static com.fatec.itu.agendasalas.jwt.SecurityConstants.SECRET;
@@ -25,17 +26,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/agendasalas/controllers/AuthController/login");
+        setFilterProcessesUrl("/auth/login");
     }
 
     @Override
     public Authentication attemptAuthentication (HttpServletRequest req, HttpServletResponse res){
         try {
-            Usuario creds = new ObjectMapper()
-            .readValue(req.getInputStream(), Usuario.class);
+            UsuarioAuthenticationDTO creds = new ObjectMapper()
+            .readValue(req.getInputStream(), UsuarioAuthenticationDTO.class);
             
             return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(creds.getNome(), creds.getPassword(), creds.getAuthorities())
+                new UsernamePasswordAuthenticationToken(creds.login(), creds.senha())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,15 +45,26 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication  (HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException{
+        
+        Usuario usuario = (Usuario) auth.getPrincipal();
+
         String token = JWT.create()
-        .withSubject(((Usuario) auth.getPrincipal()).getNome())
-        .withClaim("cargo", ((Usuario)auth.getPrincipal()).getCargo().getNome())
+        .withSubject(usuario.getLogin())
+        .withClaim("nome", usuario.getNome())
+        .withClaim("cargo", usuario.getCargo().getNome().toUpperCase())
         .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
         .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
 
-        String body = (((Usuario)auth.getPrincipal()).getNome()) + " " + token;
-        res.getWriter().write(body);
+        
+        res.setContentType("application/json");
+        res.getWriter().write("{"
+            + "\"login\":\"" + usuario.getLogin() + "\","
+            + "\"nome\":\"" + usuario.getNome() + "\","
+            + "\"cargo\":\"" + usuario.getCargo().getNome().toUpperCase() + "\","
+            + "\"token\":\"" + token + "\""
+            + "}");
+            
         res.getWriter().flush();
     }
 
