@@ -29,14 +29,14 @@ TipoRecursoRepository tipoRecursoRepository;
   }
 
   public List<TipoRecursoListDTO> listarTodos() {
-    List<TipoRecurso> tiposSalas = tipoRecursoRepository.findAll();
-    List<TipoRecursoListDTO> tiposSalasDTO = new ArrayList<>();
+    List<TipoRecurso> tiposRecurso = tipoRecursoRepository.findAll();
+    List<TipoRecursoListDTO> tiposRecursoDTO = new ArrayList<>();
 
-    for (TipoRecurso TipoRecurso : tiposSalas) {
-      tiposSalasDTO.add(converterParaDTO(TipoRecurso));
+    for (TipoRecurso TipoRecurso : tiposRecurso) {
+      tiposRecursoDTO.add(converterParaDTO(TipoRecurso));
     }
 
-    return tiposSalasDTO;
+    return tiposRecursoDTO;
   }
 
   public TipoRecursoListDTO criar(TipoRecursoCreateAndUpdateDTO TipoRecurso) {
