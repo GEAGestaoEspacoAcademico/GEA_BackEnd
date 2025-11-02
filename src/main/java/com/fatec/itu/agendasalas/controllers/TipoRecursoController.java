@@ -20,23 +20,30 @@ import com.fatec.itu.agendasalas.dto.tipoRecurso.TipoRecursoCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.tipoRecurso.TipoRecursoListDTO;
 import com.fatec.itu.agendasalas.services.TipoRecursoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @CrossOrigin
 @RestController
-@RequestMapping("tiporecurso")
+@RequestMapping("tipo-recurso")
+@Tag(name = "Tipo de recurso", description = "Operações relacionadas a tipo de recurso")
 public class TipoRecursoController {
 @Autowired
   private TipoRecursoService tipoRecursoService;
 
+  @Operation(summary = "Lista todos os tipos de recurso existentes")
   @GetMapping
   public ResponseEntity<List<TipoRecursoListDTO>> listar() {
     return ResponseEntity.ok(tipoRecursoService.listarTodos());
   }
-
+  
+  @Operation(summary = "Lista um tipo de recurso existente por id")
   @GetMapping("{idTipoRecurso}")
   public ResponseEntity<TipoRecursoListDTO> buscarPorId(@PathVariable Long idTipoRecurso) {
     return ResponseEntity.ok(tipoRecursoService.buscarPorIdRetornarDTO(idTipoRecurso));
   }
 
+  @Operation(summary = "Cria uma novo tipo de recurso")
   @PostMapping
   public ResponseEntity<TipoRecursoListDTO> criar(
     @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
@@ -48,12 +55,14 @@ public class TipoRecursoController {
     return ResponseEntity.created(uri).body(novoTipoRecurso);
   }
 
+  @Operation(summary = "Atualiza um tipo de recurso existente")
   @PutMapping("{idTipoRecurso}")
   public ResponseEntity<TipoRecursoListDTO> atualizar(@PathVariable Long idTipoRecurso,
       @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
     return ResponseEntity.ok(tipoRecursoService.atualizar(idTipoRecurso, nomeTipoRecurso));
   }
 
+  @Operation(summary = "Deleta um tipo de recurso existente")
   @DeleteMapping("{idTipoRecurso}")
   public ResponseEntity<Void> excluir(@PathVariable Long idTipoRecurso) {
     tipoRecursoService.deletar(idTipoRecurso);
