@@ -154,6 +154,12 @@ INSERT INTO RECURSOS (NOME, TIPO) VALUES
     ('Cadeira de Escritório Ergonômica', 'Mobiliário'),
     ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
 
+-- TipoRecurso
+INSERT INTO TIPO_RECURSO (NOME)
+VALUES 
+    ('Hardware'),
+    ('Software');
+
 -- RecursosSalas
 INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (1, 1, 1),
@@ -226,8 +232,3 @@ VALUES
     (12),  -- Evento coordenação - 22/11
     (13);  -- Evento admin - 10/12
 
--- TipoRecurso
-INSERT INTO TIPO_RECURSO (NOME)
-VALUES 
-    ('Notebook'),
-    ('Projetor');
