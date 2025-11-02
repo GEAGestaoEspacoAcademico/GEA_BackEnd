@@ -17,9 +17,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.services.SalaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -174,8 +176,17 @@ public class SalaController {
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
               examples = @ExampleObject(
-                  value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
-    SalaDetailDTO salaAtualizada = salaService.atualizar(salaId, sala);
-    return ResponseEntity.ok(salaAtualizada);
+                                  value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
+      SalaDetailDTO salaAtualizada = salaService.atualizar(salaId, sala);
+      return ResponseEntity.ok(salaAtualizada);
   }
+  
+  @PostMapping("/recomendacoes")
+    public ResponseEntity<List<SalaPontuadaDTO>> recomendarSalas(
+        @RequestBody RequisicaoDeSalaDTO requisicao
+    ) {
+        List<SalaPontuadaDTO> salasRecomendadas = salaService.recomendacaoDeSala(requisicao);
+        
+        return ResponseEntity.ok(salasRecomendadas); 
+    }
 }

@@ -1,15 +1,21 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
 import com.fatec.itu.agendasalas.entity.Sala;
@@ -48,6 +54,52 @@ public class SalaService {
         .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
             sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
         .toList();
+  }
+  public List<SalaPontuadaDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+
+    List<Long> salasParaExcluir = salaRepository.findByDataEHorario(requisicao.data(),
+        requisicao.horarios().horaInicio(), requisicao.horarios().horaFim());
+
+    List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
+        .filter(sala -> !salasParaExcluir.contains(sala.id())).toList();
+
+    List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
+
+    String nomeSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
+
+    for (SalaListDTO sala : salasCandidatas) {
+      int pontuacao = 0;
+      if (sala.tipoSala().equals(nomeSala))
+        pontuacao++;
+      pontuacao += calcularPontuacaoRecurso(sala.id(), requisicao.recursos());
+      if (sala.capacidade() >= requisicao.capacidade())
+        pontuacao++;
+      rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
+    }
+
+    rankingSalas.sort(Comparator.comparing(SalaPontuadaDTO::pontuacao).reversed());
+
+    return rankingSalas.stream().limit(5).toList();
+  }
+
+
+
+  private int calcularPontuacaoRecurso(Long salaId, List<Recurso> recursosRequisitados) {
+
+    Sala salaEncontrada = salaRepository.findById(salaId).orElseThrow();
+
+    Set<Recurso> recursosExistentesNaSala = salaEncontrada.getRecursos().stream()
+        .map(recursoSala -> recursoSala.getRecurso()).collect(Collectors.toSet());
+
+    int pontuacao = 0;
+
+    for (Recurso recursoDesejado : recursosRequisitados) {
+      if (recursosExistentesNaSala.contains(recursoDesejado))
+        pontuacao++;
+    }
+
+    return pontuacao;
+
   }
 
   @Transactional
