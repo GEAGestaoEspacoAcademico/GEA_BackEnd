@@ -52,8 +52,8 @@ public class RecursoController {
   @Operation(summary = "Atualiza um recurso existente por id")
   @PutMapping("/{recursoId}")
   public ResponseEntity<RecursoCompletoDTO> atualizar(@PathVariable Long recursoId,
-      @RequestBody RecursoResumidoDTO recurso) {
-    return ResponseEntity.ok(recursoService.atualizar(recursoId, recurso));
+      @RequestBody RecursoResumidoDTO recursoDTO) {
+    return ResponseEntity.ok(recursoService.atualizar(recursoId, recursoDTO));
   }
 
   @Operation(summary = "Deleta um recurso existente por id")
