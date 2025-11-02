@@ -1,4 +1,4 @@
-package com.fatec.itu.agendasalas.dto;
+package com.fatec.itu.agendasalas.dto.coordenadores;
 
 public record CoordenadorResponseDTO(
         Long id,

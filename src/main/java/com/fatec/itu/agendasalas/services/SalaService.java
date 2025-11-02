@@ -1,11 +1,9 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
@@ -30,6 +28,7 @@ public class SalaService {
   @Autowired
   private RecursoSalaRepository recursoSalaRepository;
 
+  @Autowired
   private TipoSalaService tipoSalaService;
 
   public SalaDetailDTO buscarPorId(Long id) {
@@ -43,17 +42,11 @@ public class SalaService {
         sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
   }
 
-  public List<SalaListDTO> listarSalasDisponiveis(boolean disponivel) {
-    return salaRepository
-        .findByDisponibilidade(disponivel).stream().map(sala -> new SalaListDTO(sala.getId(),
-            sala.getNome(), sala.getCapacidade(), sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala()
-                .getNome()))
-        .toList();
-  }
 
   public List<SalaListDTO> listarTodasAsSalas() {
-    return salaRepository.findAll().stream().map(sala -> new SalaListDTO(sala.getId(),
-        sala.getNome(), sala.getCapacidade(), sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
+    return salaRepository.findAll().stream()
+        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
+            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
         .toList();
   }
 

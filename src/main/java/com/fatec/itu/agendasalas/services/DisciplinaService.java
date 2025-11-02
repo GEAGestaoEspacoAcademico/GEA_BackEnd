@@ -1,10 +1,8 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
@@ -27,13 +25,15 @@ public class DisciplinaService {
         Disciplina novaDisciplina = disciplinaRepository
                 .save(new Disciplina(disciplina.nome(), disciplina.semestre(), cursoDisciplina));
 
-        return new DisciplinaListDTO(novaDisciplina.getId(), novaDisciplina.getNome(), novaDisciplina.getSemestre(),
-                novaDisciplina.getCurso().getNomeCurso());
+        return new DisciplinaListDTO(novaDisciplina.getId(), novaDisciplina.getNome(),
+                novaDisciplina.getSemestre(), novaDisciplina.getCurso().getNomeCurso());
     }
 
     private List<DisciplinaListDTO> converterParaDTO(List<Disciplina> disciplinas) {
-        return disciplinas.stream().map(disciplina -> new DisciplinaListDTO(disciplina.getId(), disciplina.getNome(),
-                disciplina.getSemestre(), disciplina.getCurso().getNomeCurso())).toList();
+        return disciplinas.stream()
+                .map(disciplina -> new DisciplinaListDTO(disciplina.getId(), disciplina.getNome(),
+                        disciplina.getSemestre(), disciplina.getCurso().getNomeCurso()))
+                .toList();
     }
 
     public List<DisciplinaListDTO> listar() {

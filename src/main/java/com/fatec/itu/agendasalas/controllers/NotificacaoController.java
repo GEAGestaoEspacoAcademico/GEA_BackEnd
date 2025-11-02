@@ -11,23 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.services.NotificacaoService;
-import com.fatec.itu.agendasalas.dto.NotificacaoCreationDTO;
-import com.fatec.itu.agendasalas.dto.NotificacaoResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
+import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
 
 @CrossOrigin
 @RestController
 @RequestMapping("notificacoes")
+@Tag(name = "Notificação", description = "Operações relacionadas a notificação")
 public class NotificacaoController {
 
     @Autowired
     private NotificacaoService notificacaoService;
 
     @GetMapping
+    @Operation(summary = "Lista todas as notificações")
     public List<NotificacaoResponseDTO> listarNotificacoes() {
         return notificacaoService.listarNotificacoesComoDTO();
     }
     
     @PostMapping
+    @Operation(summary = "Criar uma nova notificação")
     public void enviarNotificacoes(@RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
         notificacaoService.enviarNotificacoes(notificacoesDTO);
     }
