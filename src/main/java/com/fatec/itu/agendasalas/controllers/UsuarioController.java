@@ -39,7 +39,7 @@ public class UsuarioController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @Operation(summary = "Atualizar usuário por id")
+    @Operation(summary = "Atualiza um usuário existente por id")
     @PatchMapping("{usuarioId}")
     public ResponseEntity<Void> atualizarUsuarioAdmin(@PathVariable Long usuarioId,
             @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO) {

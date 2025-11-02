@@ -32,7 +32,7 @@ public class CursoController {
         return cursoService.criar(curso);
     }
 
-    @Operation(summary = "Lista todo os cursos existentes")
+    @Operation(summary = "Lista todos os cursos existentes")
     @GetMapping
     public List<CursoListDTO> listarCursos() {
         return cursoService.listar();

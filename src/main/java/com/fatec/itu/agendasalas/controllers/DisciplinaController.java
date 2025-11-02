@@ -38,7 +38,7 @@ public class DisciplinaController {
         return disciplinaService.listar();
     }
 
-    @Operation(summary = "Lista todas as disciplinas existentes")
+    @Operation(summary = "Apresenta uma disciplina existente por id")
     @GetMapping("{disciplinaId}")
     public DisciplinaListDTO buscarPorId(@PathVariable Long disciplinaId) {
         return disciplinaService.buscarPorId(disciplinaId);
