@@ -30,7 +30,7 @@ public class ProfessorController {
     private DisciplinaService disciplinaService;
 
     @Operation(summary = "Lista todos os professores existentes")
-    @GetMapping("listar")
+    @GetMapping
     public ResponseEntity<List<ProfessorResponseDTO>> listarProfessores() {
         return ResponseEntity.ok(professorService.listarProfessores());
     }
@@ -48,7 +48,7 @@ public class ProfessorController {
     }
 
     @Operation(summary = "Lista um professor existente pelo seu id")
-    @GetMapping("listar/{professorId}")
+    @GetMapping("{professorId}")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(@PathVariable Long professorId) {
         ProfessorResponseDTO professor = professorService.buscarPorId(professorId);
         return ResponseEntity.ok(professor);
