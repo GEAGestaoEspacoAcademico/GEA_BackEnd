@@ -1,6 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
-import com.fatec.itu.agendasalas.dto.CoordenadorCreationDTO;
+import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorCreationDTO;
 import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;

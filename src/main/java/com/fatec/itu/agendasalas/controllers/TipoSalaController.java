@@ -19,25 +19,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaListDTO;
 import com.fatec.itu.agendasalas.services.TipoSalaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
 @RestController
-@RequestMapping("tipossalas")
+@RequestMapping("tipos-salas")
+@Tag(name = "Tipo de sala", description = "Operações relacionadas a tipo de sala")
 public class TipoSalaController {
 
   @Autowired
   private TipoSalaService tipoSalaService;
 
+  @Operation(summary = "Lista todos os tipos de sala existentes")
   @GetMapping
   public ResponseEntity<List<TipoSalaListDTO>> listar() {
     return ResponseEntity.ok(tipoSalaService.listarTodos());
   }
-
+  
+  @Operation(summary = "Lista um tipo sala existente por id")
   @GetMapping("{idTipoSala}")
   public ResponseEntity<TipoSalaListDTO> buscarPorId(@PathVariable Long idTipoSala) {
     return ResponseEntity.ok(tipoSalaService.buscarPorIdRetornarDTO(idTipoSala));
   }
 
+  @Operation(summary = "Cria uma novo tipo de sala")
   @PostMapping
   public ResponseEntity<TipoSalaListDTO> criar(
       @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
@@ -49,12 +55,14 @@ public class TipoSalaController {
     return ResponseEntity.created(uri).body(novoTipoSala);
   }
 
+  @Operation(summary = "Atualiza um tipo de sala existente")
   @PutMapping("{idTipoSala}")
   public ResponseEntity<TipoSalaListDTO> atualizar(@PathVariable Long idTipoSala,
       @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
     return ResponseEntity.ok(tipoSalaService.atualizar(idTipoSala, nomeTipoSala));
   }
 
+  @Operation(summary = "Deleta um tipo de sala existente")
   @DeleteMapping("{idTipoSala}")
   public ResponseEntity<Void> excluir(@PathVariable Long idTipoSala) {
     tipoSalaService.deletar(idTipoSala);
