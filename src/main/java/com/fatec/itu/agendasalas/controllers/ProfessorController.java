@@ -57,10 +57,10 @@ public class ProfessorController {
         return disciplinaService.listarDisciplinasPorProfessor(professorId);
     }
 
-    @Operation(summary = "Deleta professor pelo ID")
-    @DeleteMapping("/{professorId}")
-    public ResponseEntity<Void> delete(@PathVariable Long professorId) {
-        professorService.excluirProfessor(professorId);
+    @Operation(summary = "Deleta professor existente pelo registro do professor")
+    @DeleteMapping("{registroProfessor}")
+    public ResponseEntity<Void> delete(@PathVariable long registroProfessor) {
+        professorService.excluirProfessor(registroProfessor);
         return ResponseEntity.noContent().build();
     }
 }
