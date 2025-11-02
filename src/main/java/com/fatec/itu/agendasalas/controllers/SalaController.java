@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+
 @CrossOrigin
 @RestController
 @RequestMapping("salas")
@@ -180,13 +181,10 @@ public class SalaController {
       SalaDetailDTO salaAtualizada = salaService.atualizar(salaId, sala);
       return ResponseEntity.ok(salaAtualizada);
   }
-  
+
   @PostMapping("/recomendacoes")
-    public ResponseEntity<List<SalaPontuadaDTO>> recomendarSalas(
-        @RequestBody RequisicaoDeSalaDTO requisicao
-    ) {
-        List<SalaPontuadaDTO> salasRecomendadas = salaService.recomendacaoDeSala(requisicao);
-        
-        return ResponseEntity.ok(salasRecomendadas); 
-    }
+  public ResponseEntity<List<SalaPontuadaDTO>> recomendacoes(
+      @RequestBody RequisicaoDeSalaDTO requisicao) {
+    return ResponseEntity.ok(salaService.recomendacaoDeSala(requisicao));
+  }
 }

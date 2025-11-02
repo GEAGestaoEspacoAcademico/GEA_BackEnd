@@ -21,4 +21,11 @@ public interface SalaRepository extends JpaRepository<Sala, Long> {
       @Param("horaInicioParam") LocalTime horaInicio, @Param("horaFimParam") LocalTime horaFim);
 
   public List<Sala> findByDisponibilidade(boolean disponibilidade);
+
+  @Query(value = "SELECT SALA_ID FROM AGENDAMENTOS A "
+      + "JOIN JANELAS_HORARIO J ON A.JANELA_HORARIO_ID = J.ID "
+      + "WHERE ( :horaInicioParam < J.HORA_FIM) " + "AND ( :horaFimParam > J.HORA_INICIO) "
+      + "AND :data BETWEEN A.DATA_INICIO AND A.DATA_FIM", nativeQuery = true)
+  List<Long> findByDataEHorario(@Param("data") LocalDate data,
+      @Param("horaInicioParam") LocalTime horaInicio, @Param("horaFimParam") LocalTime horaFim);
 }
