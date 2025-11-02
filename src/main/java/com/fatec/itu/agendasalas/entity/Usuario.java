@@ -15,11 +15,16 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Entity
 @Table(name="USUARIOS")
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements UserDetails{
 
@@ -52,75 +57,8 @@ public class Usuario implements UserDetails{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-    public Long getId() {
-        return id;
-    }
+   @EqualsAndHashCode.Include
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Usuario other = (Usuario) obj;
-        if (id != other.id)
-            return false;
-        return true;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -128,22 +66,8 @@ public class Usuario implements UserDetails{
             return java.util.Collections.emptyList();
         }
         String nome = cargo.getNome().trim().toUpperCase();
-        String role;
-        switch (nome) {
-            case "ADMIN":
-                role = "ROLE_ADMIN";
-                break;
-            case "PROFESSOR":
-                role = "ROLE_PROFESSOR";
-                break;
-            case "COORDENADOR":
-                role = "ROLE_COORDENADOR";
-                break;
-            case "USER":
-            default:
-                role = "ROLE_USER";
-                break;
-        }
+        String role = "ROLE_"+ nome;
+        
         return java.util.Collections.singletonList((GrantedAuthority) () -> role);
     }
 
