@@ -225,3 +225,9 @@ VALUES
     (11),  -- Evento coordenação - 15/11
     (12),  -- Evento coordenação - 22/11
     (13);  -- Evento admin - 10/12
+
+-- TipoRecurso
+INSERT INTO TIPO_RECURSO (NOME)
+VALUES 
+    ('Notebook'),
+    ('Projetor');
