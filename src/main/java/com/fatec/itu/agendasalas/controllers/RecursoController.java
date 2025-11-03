@@ -37,7 +37,7 @@ public class RecursoController {
 
   @Operation(summary = "Apresenta um recurso existente pelo seu id")
   @GetMapping("/{recursoId}")
-  public ResponseEntity<RecursoCompletoDTO> buscarPorId(@PathVariable Long recursoId) {
+  public ResponseEntity<RecursoResponseDTO> buscarPorId(@PathVariable Long recursoId) {
     return ResponseEntity.ok(recursoService.buscarPorId(recursoId));
   }
 
