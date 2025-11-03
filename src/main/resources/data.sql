@@ -143,16 +143,23 @@ VALUES
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
+-- TipoRecurso
+INSERT INTO TIPO_RECURSO (NOME)
+VALUES 
+    ('Hardware'),
+    ('Software'),
+    ('Mobiliário');
+
 -- Recursos
-INSERT INTO RECURSOS (NOME, TIPO) VALUES
-    ('Webcam Logitech C920', 'Hardware'),
-    ('Monitor Dell UltraSharp 24"', 'Hardware'),
-    ('Impressora Multifuncional HP', 'Hardware'),
-    ('Teclado Mecânico ABNT2', 'Hardware'),
-    ('Licença Microsoft Project', 'Software'),
-    ('Licença Visual Studio Code', 'Software'),
-    ('Cadeira de Escritório Ergonômica', 'Mobiliário'),
-    ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
+INSERT INTO RECURSOS (NOME, ID_TIPO_RECURSO) VALUES
+    ('Webcam Logitech C920', 1),
+    ('Monitor Dell UltraSharp 24"', 1),
+    ('Impressora Multifuncional HP', 1),
+    ('Teclado Mecânico ABNT2', 1),
+    ('Licença Microsoft Project', 2),
+    ('Licença Visual Studio Code', 2),
+    ('Cadeira de Escritório Ergonômica', 3),
+    ('Mesa de Trabalho com Gaveteiro', 3);
 
 -- RecursosSalas
 INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
@@ -225,3 +232,4 @@ VALUES
     (11),  -- Evento coordenação - 15/11
     (12),  -- Evento coordenação - 22/11
     (13);  -- Evento admin - 10/12
+
