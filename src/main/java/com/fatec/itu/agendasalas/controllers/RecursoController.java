@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class RecursoController {
 
   @Operation(summary = "Lista todos os recursos existentes")
   @GetMapping
-  public ResponseEntity<List<RecursoCompletoDTO>> listarTodos() {
+  public ResponseEntity<List<RecursoResponseDTO>> listarTodos() {
     return ResponseEntity.ok(recursoService.listarTodosOsRecursos());
   }
 
