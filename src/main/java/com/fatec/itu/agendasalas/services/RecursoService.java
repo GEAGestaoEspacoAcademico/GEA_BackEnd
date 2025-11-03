@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.TipoRecurso;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
@@ -21,14 +20,18 @@ public class RecursoService {
   @Autowired
   TipoRecursoRepository tipoRecursoRepository;
 
-  public RecursoCompletoDTO buscarPorId(Long id) {
-    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    return transformarRecursoEmRecursoDTO(recurso);
+  private RecursoResponseDTO transformarRecursoEmRecursoResponseDTO(Recurso recurso) {
+    return new RecursoResponseDTO(recurso.getId(), recurso.getNome(), recurso.getTipoRecurso().getNome());
   }
 
   private RecursoCompletoDTO transformarRecursoEmRecursoDTO(Recurso recurso) {
     return new RecursoCompletoDTO(recurso.getId(), recurso.getNome(), recurso.getTipoRecurso().getId());
   } 
+
+  public RecursoResponseDTO buscarPorId(Long id) {
+    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    return transformarRecursoEmRecursoResponseDTO(recurso);
+  }
   
   public List<RecursoResponseDTO> listarTodosOsRecursos() {
     return recursoRepository.findAll().stream()
