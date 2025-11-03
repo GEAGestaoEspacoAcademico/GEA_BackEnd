@@ -4,5 +4,6 @@ public record UsuarioResponseDTO(
         Long id,
         String nome,
         String email,
-        Long cargoId) {
+        Long cargoId
+) {
 }
