@@ -41,7 +41,6 @@ public class SalaService {
   private RecursoSalaRepository recursoSalaRepository;
 
   @Autowired
-  @Autowired
   private TipoSalaService tipoSalaService;
 
   public SalaDetailDTO buscarPorId(Long id) {
