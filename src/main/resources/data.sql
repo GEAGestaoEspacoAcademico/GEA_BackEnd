@@ -277,6 +277,13 @@ VALUES
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
+-- TipoRecurso
+INSERT INTO TIPO_RECURSO (NOME)
+VALUES 
+    ('Hardware'),
+    ('Software'),
+    ('Mobiliário');
+
 -- Recursos
 INSERT INTO RECURSOS (NOME, TIPO) VALUES
     ('Webcam Logitech C920', 'Hardware'),
