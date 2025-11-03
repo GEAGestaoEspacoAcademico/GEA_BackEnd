@@ -29,7 +29,7 @@ public class RecursoService {
 
   @Transactional
   public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
-    Recurso novoRecurso = new Recurso(recursoDTO.nome(), recursoDTO.tipo());
+    Recurso novoRecurso = new Recurso(recursoDTO.recursoResumidoNome(), recursoDTO.recursoResumidoTipo());
 
     Recurso recursoSalvo = recursoRepository.save(novoRecurso);
 
@@ -41,8 +41,8 @@ public class RecursoService {
     Recurso recursoExistente =
         recursoRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
-    recursoExistente.setNome(recursoDTO.nome());
-    recursoExistente.setTipo(recursoDTO.tipo());
+    recursoExistente.setNome(recursoDTO.recursoResumidoNome());
+    recursoExistente.setTipo(recursoDTO.recursoResumidoTipo());
 
     Recurso recursoSalvo = recursoRepository.save(recursoExistente);
 

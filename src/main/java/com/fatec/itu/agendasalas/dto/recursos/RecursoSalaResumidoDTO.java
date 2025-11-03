@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.dto.recursos;
 
-public record RecursoSalaResumidoDTO(Long idRecurso, Integer quantidade) {
+public record RecursoSalaResumidoDTO(
+    Long recursoSalaCompletoId,
+    Integer quantidade) {
   
 }

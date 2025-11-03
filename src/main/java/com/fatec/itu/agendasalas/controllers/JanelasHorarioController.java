@@ -44,7 +44,7 @@ public class JanelasHorarioController {
         JanelasHorarioResponseDTO janelasHorarioResponseDTO =
                 janelasHorarioService.criarJanelaHorario(janelasHorarioCreationDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(janelasHorarioResponseDTO.id()).toUri();
+                .buildAndExpand(janelasHorarioResponseDTO.janelasHorarioId()).toUri();
 
         return ResponseEntity.created(uri).body(janelasHorarioResponseDTO);
     }

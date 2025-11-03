@@ -51,7 +51,7 @@ public class NotificacaoService {
                 throw new IllegalArgumentException("A lista de destinatários não pode ser nula ou vazia.");
             }
 
-            Agendamento agendamento = agendamentoRepository.findById(dto.agendamento())
+            Agendamento agendamento = agendamentoRepository.findById(dto.notificacaoAgendamento())
                     .orElseThrow(() -> new IllegalArgumentException("Agendamento inválido ou não informado"));
 
             Usuario remetente = usuarioRepository.findById(dto.usuarioRemetente())
@@ -61,8 +61,8 @@ public class NotificacaoService {
 
             Notificacao notificacao = new Notificacao();
             notificacao.setAgendamento(agendamento);
-            notificacao.setTitulo(dto.titulo());
-            notificacao.setMensagem(dto.mensagem());
+            notificacao.setTitulo(dto.notificacaoTitulo());
+            notificacao.setMensagem(dto.notificacaoMensagem());
             notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
             notificacao.setDestinatario(destinatarios);

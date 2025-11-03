@@ -15,7 +15,7 @@ public record AgendamentoAulaCreationDTO (
     @NotNull LocalDate dataFim,
     @NotBlank String diaDaSemana,
     @NotNull Long janelasHorarioId,
-    @NotBlank String tipo){}
+    @NotBlank String tipoAgendamento){}
 
 
     

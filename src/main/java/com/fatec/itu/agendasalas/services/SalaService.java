@@ -52,9 +52,9 @@ public class SalaService {
 
   @Transactional
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
-    Sala novaSala = new Sala(salaDTO.nome(), salaDTO.capacidade(), salaDTO.piso(),
-        tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
-    novaSala.setObservacoes(salaDTO.observacoes());
+    Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
+        tipoSalaService.buscarPorId(salaDTO.salaId()));
+    novaSala.setObservacoes(salaDTO.salaObservacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
 
@@ -65,12 +65,12 @@ public class SalaService {
   public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
-    salaExistente.setNome(salaDTO.nome());
-    salaExistente.setCapacidade(salaDTO.capacidade());
+    salaExistente.setNome(salaDTO.salaNome());
+    salaExistente.setCapacidade(salaDTO.salaCapacidade());
     salaExistente.setPiso(salaDTO.piso());
     salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
-    salaExistente.setObservacoes(salaDTO.observacoes());
+    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.salaId()));
+    salaExistente.setObservacoes(salaDTO.salaObservacoes());
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
   }
@@ -87,11 +87,11 @@ public class SalaService {
   public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.idRecurso())
+    Recurso recursoExistente = recursoRepository.findById(dto.recursoSalaCompletoId())
         .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
     boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.idRecurso()));
+        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoSalaCompletoId()));
 
     if (recursoJaAdicionado) {
       throw new RuntimeException();
@@ -105,7 +105,7 @@ public class SalaService {
 
     recursoSalaRepository.save(novoLink);
 
-    return new RecursoSalaCompletoDTO(dto.idRecurso(), recursoExistente.getNome(),
+    return new RecursoSalaCompletoDTO(dto.recursoSalaCompletoId(), recursoExistente.getNome(),
         recursoExistente.getTipo(), dto.quantidade());
   }
 

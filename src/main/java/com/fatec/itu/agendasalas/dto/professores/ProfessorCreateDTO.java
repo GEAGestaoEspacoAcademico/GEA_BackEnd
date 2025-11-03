@@ -1,7 +1,7 @@
 package com.fatec.itu.agendasalas.dto.professores;
 
 public record ProfessorCreateDTO(
-    Long usuarioId,
+    Long professorId,
     int registroProfessor
   ) {
 }
