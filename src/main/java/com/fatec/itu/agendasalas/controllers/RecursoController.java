@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,13 +31,13 @@ public class RecursoController {
 
   @Operation(summary = "Lista todos os recursos existentes")
   @GetMapping
-  public ResponseEntity<List<RecursoCompletoDTO>> listarTodos() {
+  public ResponseEntity<List<RecursoResponseDTO>> listarTodos() {
     return ResponseEntity.ok(recursoService.listarTodosOsRecursos());
   }
 
   @Operation(summary = "Apresenta um recurso existente pelo seu id")
   @GetMapping("/{recursoId}")
-  public ResponseEntity<RecursoCompletoDTO> buscarPorId(@PathVariable Long recursoId) {
+  public ResponseEntity<RecursoResponseDTO> buscarPorId(@PathVariable Long recursoId) {
     return ResponseEntity.ok(recursoService.buscarPorId(recursoId));
   }
 
@@ -52,8 +53,8 @@ public class RecursoController {
   @Operation(summary = "Atualiza um recurso existente por id")
   @PutMapping("/{recursoId}")
   public ResponseEntity<RecursoCompletoDTO> atualizar(@PathVariable Long recursoId,
-      @RequestBody RecursoResumidoDTO recurso) {
-    return ResponseEntity.ok(recursoService.atualizar(recursoId, recurso));
+      @RequestBody RecursoResumidoDTO recursoDTO) {
+    return ResponseEntity.ok(recursoService.atualizar(recursoId, recursoDTO));
   }
 
   @Operation(summary = "Deleta um recurso existente por id")
