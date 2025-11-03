@@ -14,21 +14,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table(name = "TIPOS_SALAS")
+@Table(name = "TIPO_RECURSO")
 @Entity
 @Getter
 @NoArgsConstructor
 @Setter
 @AllArgsConstructor
-public class TipoSala implements Serializable {
-  private static final long serialVersionUID = 1L;
+public class TipoRecurso implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-  @EqualsAndHashCode.Include
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", nullable = false)
-  private Long id;
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-  @Column(name = "nome", nullable = false, unique = true)
-  private String nome;
+    @Column(name = "nome", nullable = false, unique = true)
+    private String nome;
 }

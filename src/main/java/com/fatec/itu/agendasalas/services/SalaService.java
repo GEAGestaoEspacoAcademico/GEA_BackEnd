@@ -174,7 +174,7 @@ public class SalaService {
     recursoSalaRepository.save(novoLink);
 
     return new RecursoSalaCompletoDTO(dto.idRecurso(), recursoExistente.getNome(),
-        recursoExistente.getTipo(), dto.quantidade());
+        recursoExistente.getTipoRecurso().getId(), dto.quantidade());
   }
 
   @Transactional
@@ -206,7 +206,7 @@ public class SalaService {
     salaRepository.save(sala);
 
     return new RecursoSalaCompletoDTO(linkParaAtualizar.getRecurso().getId(),
-        linkParaAtualizar.getRecurso().getNome(), linkParaAtualizar.getRecurso().getTipo(),
+        linkParaAtualizar.getRecurso().getNome(), linkParaAtualizar.getRecurso().getTipoRecurso().getId(),
         linkParaAtualizar.getQuantidade());
   }
 
@@ -215,7 +215,7 @@ public class SalaService {
     List<RecursoSala> recursoNaSala = recursoSalaRepository.findByIdSala(salaExistente.getId());
     return recursoNaSala.stream()
         .map(recurso -> new RecursoSalaCompletoDTO(recurso.getRecurso().getId(),
-            recurso.getRecurso().getNome(), recurso.getRecurso().getTipo(),
+            recurso.getRecurso().getNome(), recurso.getRecurso().getTipoRecurso().getId(),
             recurso.getQuantidade()))
         .toList();
   }
