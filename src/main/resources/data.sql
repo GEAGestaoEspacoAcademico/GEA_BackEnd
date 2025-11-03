@@ -413,7 +413,6 @@ INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id)
 VALUES 
     (11),  -- Evento coordenação - 15/11
     (12),  -- Evento coordenação - 22/11
-    (13);  -- Evento admin - 10/12
     (13),  -- Evento admin - 10/12
     (14),  -- Evento coordenação - 27/11
     (15);  -- Evento coordenação - 01/12
