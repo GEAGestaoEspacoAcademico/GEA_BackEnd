@@ -1,12 +1,11 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,9 @@ import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
-import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
@@ -61,8 +58,12 @@ public class SalaService {
         .toList();
   }
 
-  public List<SalaListDTO> listarTodasAsSalas() {
+  public List<SalaListDTO> listarSalasDisponiveis() {
     return transformaEmSalaListDTO(salaRepository.findByDisponibilidade(true));
+  }
+
+  public List<SalaListDTO> listarTodasAsSalas() {
+    return transformaEmSalaListDTO(salaRepository.findAll());
   }
 
   private List<SalaListDTO> transformaEmSalaListDTO(List<Sala> salas) {
@@ -72,49 +73,49 @@ public class SalaService {
         .toList();
   }
 
-  public List<SalaPontuadaDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+  public List<SalaListDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
     List<Long> salasParaExcluir = salaRepository.findByDataEHorario(requisicao.data(),
         requisicao.horarios().horaInicio(), requisicao.horarios().horaFim());
 
     List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.id())).toList();
 
+    List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.id()).toList();
+
+    List<Sala> salasComSeusRecursos =
+        salaRepository.findSalasComRecursosByIds(idsDeSalasCandidatas);
+
+    Map<Long, Set<Long>> mapaDasSalasESeusRecursos = salasComSeusRecursos.stream()
+        .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
+            .map(recursoSala -> recursoSala.getRecurso().getId()).collect(Collectors.toSet())));
+
+    Set<Long> recursosRequisitados = new HashSet<>(requisicao.recursosIds());
+
     List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
 
-    String nomeSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
+    String nomeDoTipoSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
+
     for (SalaListDTO sala : salasCandidatas) {
       int pontuacao = 0;
 
-      if (sala.tipoSala().equals(nomeSala))
+      Set<Long> recursosDaSala =
+          mapaDasSalasESeusRecursos.getOrDefault(sala.id(), Collections.emptySet());
+
+      if (sala.tipoSala().equals(nomeDoTipoSala))
         pontuacao++;
 
-      pontuacao += calcularPontuacaoRecurso(sala.id(), requisicao.recursos());
+      pontuacao += recursosRequisitados.stream().filter(r -> recursosDaSala.contains(r)).count();
 
       if (sala.capacidade() >= requisicao.capacidade())
         pontuacao++;
 
-      rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
+      if (pontuacao > 0)
+        rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
     }
 
-    rankingSalas.sort(Comparator.comparing(SalaPontuadaDTO::pontuacao).reversed());
+    rankingSalas.sort(Comparator.comparing((SalaPontuadaDTO sala) -> sala.pontuacao()).reversed());
 
-    return rankingSalas.stream().limit(5).toList();
-  }
-
-  private int calcularPontuacaoRecurso(Long salaId, List<Recurso> recursos) {
-    Sala salaEncontrada = salaRepository.findById(salaId).orElseThrow();
-
-    List<RecursoSala> recursosDaSala = salaEncontrada.getRecursos();
-
-    Set<Recurso> recursosExistentesNaSala = recursosDaSala.stream()
-        .map(recursoSala -> recursoSala.getRecurso()).collect(Collectors.toSet());
-
-    int pontuacao = 0;
-    for (Recurso recursoRequisitado : recursos) {
-      if (recursosExistentesNaSala.contains(recursoRequisitado))
-        pontuacao++;
-    }
-    return pontuacao;
+    return rankingSalas.stream().limit(5).map(SalaPontuadaDTO::sala).toList();
   }
 
   @Transactional
