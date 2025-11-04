@@ -27,14 +27,17 @@ public class UsuarioService {
     @Autowired
     private CargoRepository cargoRepository;
 
-
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
+            return cadastrarUsuario(usuarioDTO, "USER");
+       }
+
+       public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO, String cargo){
         
         Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());
         String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.senha());
         usuario.setSenha(senhaCriptografada);
-        Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
-        usuario.setCargo(cargo);
+        Cargo cargoUser = cargoRepository.findByNome(cargo).orElseThrow(()-> new RuntimeException("CARGO " + cargo + "NÃO ENCONTRADO"));
+        usuario.setCargo(cargoUser);
 
         usuarioRepository.save(usuario);
         return conversaoUsuarioParaResponseDTO(usuario);
