@@ -22,8 +22,11 @@ public class AuxiliarDocente extends Usuario {
     @Column(name = "area", nullable=false)
     private String area;
 
-    public AuxiliarDocente(String area){
-        this.area = area;
+    public AuxiliarDocente(String login, String email, String nome, String area) {
+            super(login, email, nome);
+            this.area = area; 
+    
     }
+   
    
 }

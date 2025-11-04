@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteCreationDTO;
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteResponseDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.entity.AuxiliarDocente;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
 @Service
-public class AuxiliarDocenteService {
+public class AuxiliarDocenteService extends UsuarioService {
 
     @Autowired
     private AuxiliarDocenteRepository auxiliarDocenteRepository;
@@ -39,9 +38,24 @@ public class AuxiliarDocenteService {
         );
     }
 
+
     public AuxiliarDocenteResponseDTO cadastrarAuxiliarDocente(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) {
-        Cargo cargo = cargoRepository.findById(2L).orElseThrow();
-        AuxiliarDocente auxiliarDocente = new AuxiliarDocente();
+
+            AuxiliarDocente auxiliarDocente = new AuxiliarDocente(
+                auxiliarDocenteCreationDTO.login(), 
+                auxiliarDocenteCreationDTO.email(),
+                auxiliarDocenteCreationDTO.nome(),
+                auxiliarDocenteCreationDTO.area()
+            );
+
+            String senhaCriptografada = cryptPasswordEncoder.encode(auxiliarDocenteCreationDTO.senha());
+            auxiliarDocente.setSenha(senhaCriptografada);
+            Cargo cargo = cargoRepository.findByNome("AUXILIAR_DOCENTE").orElseThrow(()-> new RuntimeException("CARGO AUXILIAR DOCENTE NÃO ENCONTRADO"));
+            auxiliarDocente.setCargo(cargo);
+
+            auxiliarDocenteRepository.save(auxiliarDocente);
+            return converterParaDTO(auxiliarDocente);
+        
     }
 
 

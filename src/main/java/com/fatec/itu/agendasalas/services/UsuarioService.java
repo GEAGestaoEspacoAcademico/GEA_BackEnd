@@ -21,23 +21,21 @@ public class UsuarioService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
     @Autowired
-    private PasswordEncoder cryptPasswordEncoder;
+    protected PasswordEncoder cryptPasswordEncoder;
 
     @Autowired
     private CargoRepository cargoRepository;
 
-       public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
-            return cadastrarUsuario(usuarioDTO, "USER");
-       }
 
-       public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO, String cargo){
+       public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
         
         Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());
         String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.senha());
         usuario.setSenha(senhaCriptografada);
-        Cargo cargoUser = cargoRepository.findByNome(cargo).orElseThrow(()-> new RuntimeException("CARGO " + cargo + "NÃO ENCONTRADO"));
-        usuario.setCargo(cargoUser);
+        Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
+        usuario.setCargo(cargo);
 
         usuarioRepository.save(usuario);
         return conversaoUsuarioParaResponseDTO(usuario);

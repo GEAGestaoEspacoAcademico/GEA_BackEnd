@@ -28,6 +28,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             usuario.getCargo().getNome(); 
         }
 
+        System.out.println("Usuário autenticado: " + usuario.getUsername());
+        System.out.println("Authorities: " + usuario.getAuthorities());
+
+
         return usuario;
     }
 }

@@ -65,6 +65,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             + "\"token\":\"" + token + "\""
             + "}");
             
+
         res.getWriter().flush();
     }
 

@@ -67,9 +67,9 @@ public class Usuario implements UserDetails{
             return java.util.Collections.emptyList();
         }
         String nome = cargo.getNome().trim().toUpperCase();
-        String role = "ROLE_"+ nome;
+       
         
-        return java.util.Collections.singletonList(new SimpleGrantedAuthority(role));
+        return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
     }
 
     @Override

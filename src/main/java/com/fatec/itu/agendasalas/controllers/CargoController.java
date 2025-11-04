@@ -30,13 +30,13 @@ public class CargoController {
     private CargoService cargoService;
 
     @GetMapping("user")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<String> user(){
         return ResponseEntity.ok("oi, user");
     }
 
     @GetMapping("admin")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<String> admin(){
         return ResponseEntity.ok("oi, admin");
     }
@@ -44,8 +44,9 @@ public class CargoController {
 
     @Operation(summary = "Lista todos os cargos existentes")
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<List<Cargo>> listarTodosCargos() {
+        
         return ResponseEntity.ok(cargoService.listarTodosCargos());
     }
 
