@@ -170,10 +170,15 @@ VALUES
     (7, 1012),   -- Prof. Fabricio Londero
     (8, 1013),   -- Prof. Francisco Bianchi
     (9, 1014),   -- Prof. Luis dos Santos
-    (26, 1015),  -- Prof. Glauco Todesco
-    (27, 1016),  -- Prof. Onei Junior
-    (28, 1017),  -- Prof. Marcos Araujo
-    (29, 1018);  -- Prof. Sergio Clauss
+    (17, 1015),  -- Prof. Glauco Todesco
+    (18, 1016),  -- Prof. Onei Junior
+    (19, 1017),  -- Prof. Marcos Araujo
+    (20, 1018),  -- Prof. Sergio Clauss
+    (21, 1019),  -- Prof. Marcio Camargo
+    (22, 1020),  -- Prof. Bruno Henrique
+    (23, 1021),  -- Prof. Andre Egreggio
+    (24, 1022),  -- Prof. Ricardo Leme
+    (25, 1023);  -- Prof. Levi Munhoz
 
 
 -- Coordenadores
@@ -213,25 +218,36 @@ VALUES
     ('Programação Orientada à objetos', '2025.1', 6, 1),
     ('Segurança da Informação', '2025.1', 8, 1),
     ('Sistemas de Informação', '2024.1', 9, 1),
-    ('Algoritmos', '2024.1', 26, 1),
-    ('Programação Web', '2025.1', 26, 1),
-    ('Arq e Organização de Computadores', '2024.1', 27, 1),
-    ('Administração Geral', '2024.1', 28, 1),
-    ('Programação em Microinformática', '2024.1', 29, 1),
+    ('Algoritmos', '2024.1', 17, 1),
+    ('Programação Web', '2025.1', 17, 1),
+    ('Arq e Organização de Computadores', '2024.1', 18, 1),
+    ('Administração Geral', '2024.1', 19, 1),
+    ('Programação em Microinformática', '2024.1', 20, 1),
+    ('Comunicação e Expressão', '2024.1', 21, 1),
+    ('Matemática Discreta', '2024.1', 22, 1),
+    ('Banco de Dados', '2024.2', 24, 1),
+    ('Contabilidade', '2024.2', 23, 1),
+    ('Engenharia de Software I', '2024.2', 25, 1),
+    ('Linguagem de Programação', '2024.2', 24, 1),
 
     -- Curso: GTI (curso_id = 2)
     ('Gestão de Projetos', '2024.2', 8, 2),
     ('Governança de TI', '2024.2', 7, 2),
-    ('Gestão de Sistemas Operacionais', '2025.2', 26, 2),
-    ('Modelagem de Processos', '2024.2', 29, 2),
-    ('Gestão de Pessoas', '2024.2', 27, 2),
+    ('Processos Gerenciais', '2025.2', 25, 2),
+    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
+    ('Matemática Financeira', '2025.1', 21, 2),
+    ('Modelagem de Processos', '2024.2', 20, 2),
+    ('Gestão de Pessoas', '2024.2', 18, 2),
 
     
     -- Curso: Mecatrônica Industrial (curso_id = 3)
     ('Eletromagnetismo', '2023.2', 8, 3),
     ('Cálculo', '2023.2', 7, 3),
     ('Comunicação Acadêmica', '2024.1', 9, 3),
-    ('Estatística Descritiva', '2025.2', 5, 3);
+    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
+    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
+    ('Estatística Descritiva', '2025.2', 5, 3),
+    ('Desenho Técnico', '2025.2', 23, 3);
 
     INSERT INTO TIPOS_SALAS (nome)
     VALUES 
@@ -250,23 +266,16 @@ VALUES
     ('Lab 301', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
     ('Lab 302', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
     ('Lab 303', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Lab 304', 30, 3, TRUE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 305', 25, 3, TRUE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 306', 30, 3, TRUE, 2, 'Laboratório com computadores high-end'),
+    ('Lab 304', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
+    ('Lab 305', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
+    ('Lab 306', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
     ('Sala 101', 40, 1, FALSE, 1, 'Sala com projetor e ar condicionado'),
     ('Sala 102', 40, 1, FALSE, 1, 'Sala com lousa digital'),
     ('Sala 201', 50, 2, FALSE, 1, 'Auditório pequeno'),
     ('Sala 202', 35, 2, FALSE, 2, 'Sala com projetor'),
     ('Sala 103', 40, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'),
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
-    ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas'),
-    ('Sala 204', 40, 2, TRUE, 1, 'Sala de aula padrão no segundo piso'),
-    ('Sala 205', 50, 2, TRUE, 1, 'Sala de aula ampla com projetor'),
-    ('Lab 105', 30, 1, TRUE, 2, 'Laboratório de informática no primeiro piso'),
-    ('Lab 106', 30, 1, TRUE, 2, 'Laboratório de informática com 30 computadores'),
-    ('Sala Maker', 20, 1, TRUE, 3, 'Equipada com impressoras 3D e ferramentas'),
-    ('Lab Mecatrônica', 25, 1, TRUE, 4, 'Bancadas de eletrônica e CLPs'),
-    ('Sala 307', 35, 3, FALSE, 1, 'Sala em manutenção/indisponível');
+    ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
 -- TipoRecurso
 INSERT INTO TIPO_RECURSO (NOME)
@@ -285,58 +294,22 @@ INSERT INTO RECURSOS (NOME, id_tipo_recurso) VALUES
     ('Licença Visual Studio Code', 2),
     ('Cadeira de Escritório Ergonômica', 3),
     ('Mesa de Trabalho com Gaveteiro', 3),
-    ('Mouse USB Óptico', 1),
-    ('Computador Desktop i5 (Ensino)', 1),
-    ('Licença Pacote Adobe Creative Cloud', 2),
-    ('Kit Arduino Uno (Iniciante)', 1),
-    ('Lousa Digital Interativa (Smart Board)', 1),
-    ('Filamento PLA (Branco, 1kg)', 1),
-    ('Mesa de Reunião (6 lugares)', 3),
     ('Projetor', 1),
     ('Televisão LG 50', 1),
     ('Quadro Branco', 3);
 
 -- RecursosSalas
 INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
-    (1, 1, 30),  
-    (1, 2, 30),  
-    (2, 8, 25),  
-    (3, 5, 30),  
-    (7, 9, 1),   
-    (7, 11, 1),  
-    (8, 9, 1),   
-    (9, 7, 50),  
-    (9, 9, 1),   
-    (10, 9, 1),
-    (4, 2, 30),  
-    (4, 4, 30),  
-    (5, 8, 25),  
-    (5, 2, 25),  
-    (6, 6, 30),  
-    (6, 1, 30),  
-    (11, 10, 1), 
-    (12, 10, 1), 
-    (12, 9, 1),  
-    (13, 10, 2), 
-    (13, 11, 1),  
-    (14, 10, 1),  
-    (15, 9, 1),   
-    (15, 10, 1),  
-    (16, 2, 30), 
-    (16, 4, 30), 
-    (16, 9, 1),  
-    (17, 2, 30), 
-    (17, 1, 30), 
-    (18, 12, 2), 
-    (18, 8, 5),  
-    (19, 13, 4), 
-    (19, 2, 4),
-    (4, 14, 30),
-    (4, 15, 30),
-    (5, 14, 25),
-    (5, 15, 25),
-    (16, 14, 30),
-    (16, 15, 30);
+    (1, 1, 1),
+    (2, 2, 1),
+    (3, 3, 30),
+    (4, 4, 30),
+    (5, 5, 40),
+    (6, 6, 35),
+    (7, 7, 1),
+    (8, 8, 25),
+    (9, 1, 5),
+    (10, 2, 1);
 
 -- Janelas de Horário
 INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
