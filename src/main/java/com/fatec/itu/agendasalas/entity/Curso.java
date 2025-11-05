@@ -74,4 +74,19 @@ public class Curso implements Serializable {
     public void atribuirCoordenador(Coordenador coordenador) {
         this.coordenador = coordenador;
     }
+
+    public String getSigla() {
+        if (this.nomeCurso == null) return "";
+        String n = this.nomeCurso.toUpperCase();
+        return switch (n) {
+            case "ANÁLISE E DESENVOLVIMENTO DE SISTEMAS" -> "ADS";
+            case "GESTÃO DA TECNOLOGIA DA INFORMAÇÃO" -> "GTI";
+            case "MECATRÔNICA INDUSTRIAL" -> "MECATRÔNICA";
+            case "EVENTOS" -> "EVT";
+            case "GESTÃO EMPRESARIAL" -> "GE";
+            case "GESTÃO EMPRESARIAL EAD" -> "GE-EAD";
+            case "AMS PROCESSOS GERENCIAIS" -> "AMS-PG";
+            default -> "CURSO";
+        };
+    }
 }
