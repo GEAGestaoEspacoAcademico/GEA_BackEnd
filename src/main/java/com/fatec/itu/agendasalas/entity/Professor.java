@@ -1,8 +1,12 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -56,4 +60,25 @@ public class Professor extends Usuario {
             return false;
         return true;
     }
+
+    @ManyToMany
+    @JoinTable(
+        name = "PROFESSOR_CARGOS",
+        joinColumns = @JoinColumn(name = "professor_id"),
+        inverseJoinColumns = @JoinColumn(name = "cargo_id")
+    )
+    private List<Cargo> cargos;
+
+    public List<Cargo> getCargos() {
+        return cargos;
+    }
+
+    public void setCargos(List<Cargo> cargos) {
+        this.cargos = cargos;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
+
 }
