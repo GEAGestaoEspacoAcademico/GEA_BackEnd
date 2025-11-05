@@ -22,7 +22,7 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome());
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome(), curso.getSigla());
     }
 
     public CursoService(CursoRepository cursoRepository) {

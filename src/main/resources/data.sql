@@ -178,7 +178,7 @@ VALUES
     (31, 1020),  -- Prof. Bruno Henrique
     (32, 1021),  -- Prof. Andre Egreggio
     (33, 1022),  -- Prof. Ricardo Leme
-    (34, 1023),  -- Prof. Levi Munhoz
+    (34, 1023);  -- Prof. Levi Munhoz
 
 
 -- Coordenadores
@@ -196,16 +196,15 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Cursos
 -- -----------------------------------------------------------------------------
-INSERT INTO CURSOS (nome_curso, coordenador_id)
+INSERT INTO CURSOS (nome_curso, sigla, coordenador_id)
 VALUES 
-    ('Análise e Desenvolvimento de Sistemas', 10),
-    ('Gestão da Tecnologia da Informação', 13),
-    ('Mecatrônica Industrial', 11),
-    ('Eventos', 12),
-    ('Gestão Empresarial', 14),
-    ('Gestão Empresarial EAD', 15),
-    ('AMS Processos Gerenciais', 16);
-
+    ('Análise e Desenvolvimento de Sistemas', 'ADS', 10),
+    ('Gestão da Tecnologia da Informação', 'GTI', 13),
+    ('Mecatrônica Industrial', 'MEC', 11),
+    ('Eventos', 'EVE', 12),
+    ('Gestão Empresarial', 'GE', 14),
+    ('Gestão Empresarial EAD', 'GE-EAD', 15),
+    ('AMS Processos Gerenciais', 'AMS-PG', 16);
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
