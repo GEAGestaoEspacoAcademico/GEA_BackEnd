@@ -105,9 +105,6 @@ public class SalaService {
       pontuacao +=
           requisicao.recursosIds().stream().filter(r -> recursosDaSala.contains(r)).count();
 
-      if (sala.capacidade() >= requisicao.capacidade())
-        pontuacao++;
-
       if (pontuacao > 0)
         rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
     }
