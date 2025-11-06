@@ -3,7 +3,6 @@ package com.fatec.itu.agendasalas.services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,8 +73,9 @@ public class SalaService {
   }
 
   public List<SalaListDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
-    List<Long> salasParaExcluir = salaRepository.findByDataEHorario(requisicao.data(),
-        requisicao.horarios().horaInicio(), requisicao.horarios().horaFim());
+    List<Long> salasParaExcluir =
+        salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
+            requisicao.horarios().horaFim(), requisicao.capacidade());
 
     List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.id())).toList();
@@ -88,8 +88,6 @@ public class SalaService {
     Map<Long, Set<Long>> mapaDasSalasESeusRecursos = salasComSeusRecursos.stream()
         .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
             .map(recursoSala -> recursoSala.getRecurso().getId()).collect(Collectors.toSet())));
-
-    Set<Long> recursosRequisitados = new HashSet<>(requisicao.recursosIds());
 
     List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
 
@@ -104,10 +102,8 @@ public class SalaService {
       if (sala.tipoSala().equals(nomeDoTipoSala))
         pontuacao++;
 
-      pontuacao += recursosRequisitados.stream().filter(r -> recursosDaSala.contains(r)).count();
-
-      if (sala.capacidade() >= requisicao.capacidade())
-        pontuacao++;
+      pontuacao +=
+          requisicao.recursosIds().stream().filter(r -> recursosDaSala.contains(r)).count();
 
       if (pontuacao > 0)
         rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
@@ -206,8 +202,8 @@ public class SalaService {
     salaRepository.save(sala);
 
     return new RecursoSalaCompletoDTO(linkParaAtualizar.getRecurso().getId(),
-        linkParaAtualizar.getRecurso().getNome(), linkParaAtualizar.getRecurso().getTipoRecurso().getId(),
-        linkParaAtualizar.getQuantidade());
+        linkParaAtualizar.getRecurso().getNome(),
+        linkParaAtualizar.getRecurso().getTipoRecurso().getId(), linkParaAtualizar.getQuantidade());
   }
 
   public List<RecursoSalaCompletoDTO> listarRecursosPorSala(Long id) {

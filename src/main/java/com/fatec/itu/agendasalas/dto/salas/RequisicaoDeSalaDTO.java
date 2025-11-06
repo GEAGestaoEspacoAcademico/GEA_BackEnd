@@ -1,12 +1,13 @@
 package com.fatec.itu.agendasalas.dto.salas;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
 import jakarta.validation.constraints.NotNull;
 
 public record RequisicaoDeSalaDTO(JanelasHorarioCreationDTO horarios, LocalDate data,
-                Long tipoSalaId,
-                @NotNull(message = "O campo 'recursoIds' é obrigatório mas pode ser uma lista vazia.") List<Long> recursosIds,
-                int capacidade) {
+    Long tipoSalaId,
+    @NotNull(
+        message = "O campo 'recursoIds' é obrigatório mas pode ser uma lista vazia.") Set<Long> recursosIds,
+    @NotNull(message = "O campo 'capacidade' é obrigatório.") Integer capacidade) {
 }
