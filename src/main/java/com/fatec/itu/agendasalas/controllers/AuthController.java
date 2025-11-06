@@ -31,18 +31,4 @@ public class AuthController {
         UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.ok(responseDTO);
     }
-
-    // @Operation(summary = "Valida um usuário")
-    // @PostMapping("login")
-    // public ResponseEntity<UsuarioAuthenticationResponseDTO> login(
-    //         @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
-
-    //     try {
-    //         UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
-    //         return ResponseEntity.ok(authDTO);
-    //     } catch (Exception e) {
-    //         throw new RuntimeException(e.getMessage());
-    //     }
-
-    // }
 }
