@@ -12,11 +12,12 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, UsuarioResponseDTO> {
 
     
     @Autowired
@@ -28,7 +29,7 @@ public class UsuarioService {
     @Autowired
     private CargoRepository cargoRepository;
 
-
+       @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
         
         Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());

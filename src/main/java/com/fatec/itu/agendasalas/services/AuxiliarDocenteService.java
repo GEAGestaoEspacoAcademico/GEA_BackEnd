@@ -10,11 +10,13 @@ import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteCreationD
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteResponseDTO;
 import com.fatec.itu.agendasalas.entity.AuxiliarDocente;
 import com.fatec.itu.agendasalas.entity.Cargo;
+import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
 @Service
-public class AuxiliarDocenteService extends UsuarioService {
+public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocenteCreationDTO, AuxiliarDocenteResponseDTO> {
 
     @Autowired
     private AuxiliarDocenteRepository auxiliarDocenteRepository;
@@ -39,9 +41,9 @@ public class AuxiliarDocenteService extends UsuarioService {
     }
 
 
-    public AuxiliarDocenteResponseDTO cadastrarAuxiliarDocente(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) {
-
-            AuxiliarDocente auxiliarDocente = new AuxiliarDocente(
+    @Override
+    public AuxiliarDocenteResponseDTO cadastrarUsuario(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) {
+        AuxiliarDocente auxiliarDocente = new AuxiliarDocente(
                 auxiliarDocenteCreationDTO.login(), 
                 auxiliarDocenteCreationDTO.email(),
                 auxiliarDocenteCreationDTO.nome(),
@@ -55,7 +57,6 @@ public class AuxiliarDocenteService extends UsuarioService {
 
             auxiliarDocenteRepository.save(auxiliarDocente);
             return converterParaDTO(auxiliarDocente);
-        
     }
 
 
