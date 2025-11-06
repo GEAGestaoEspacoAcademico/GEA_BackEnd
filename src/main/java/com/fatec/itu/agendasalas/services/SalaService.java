@@ -87,11 +87,11 @@ public class SalaService {
   public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.recursoSalaCompletoId())
+    Recurso recursoExistente = recursoRepository.findById(dto.recursoSalaId())
         .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
     boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoSalaCompletoId()));
+        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoSalaId()));
 
     if (recursoJaAdicionado) {
       throw new RuntimeException();
@@ -101,12 +101,12 @@ public class SalaService {
 
     novoLink.setIdRecurso(recursoExistente.getId());
     novoLink.setIdSala(salaId);
-    novoLink.setQuantidade(dto.quantidade());
+    novoLink.setQuantidade(dto.quantidadeRecurso());
 
     recursoSalaRepository.save(novoLink);
 
-    return new RecursoSalaCompletoDTO(dto.recursoSalaCompletoId(), recursoExistente.getNome(),
-        recursoExistente.getTipo(), dto.quantidade());
+    return new RecursoSalaCompletoDTO(dto.recursoSalaId(), recursoExistente.getNome(),
+        recursoExistente.getTipo(), dto.quantidadeRecurso());
   }
 
   @Transactional

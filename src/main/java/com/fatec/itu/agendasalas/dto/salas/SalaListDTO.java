@@ -6,5 +6,5 @@ public record SalaListDTO(
     int capacidade, 
     int piso, 
     boolean disponibilidade, 
-    String tipoSala) {
-}
+    String tipoSala
+){}

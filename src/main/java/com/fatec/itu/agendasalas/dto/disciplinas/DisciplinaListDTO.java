@@ -4,6 +4,5 @@ public record DisciplinaListDTO(
     Long disciplinaId, 
     String disciplinaNome, 
     String disciplinaSemestre, 
-    String cursoNome) {
-
-}
+    String cursoNome
+){}

@@ -5,5 +5,5 @@ public record UsuarioCreationDTO(
         String usuarioNome,
         String usuarioEmail,
         String usuarioLogin,
-        String usuarioSenha) {
-}
+        String usuarioSenha
+){}

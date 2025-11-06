@@ -10,4 +10,4 @@ public record AgendamentoNotificacaoDTO(
     LocalDate dataFim,
     LocalTime horaInicio,
     LocalTime horaFim
-) { }
+){}

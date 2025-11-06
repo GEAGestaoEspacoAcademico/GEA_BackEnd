@@ -8,4 +8,4 @@ public record NotificacaoCreationDTO(
     String notificacaoMensagem, 
     Long usuarioRemetente, 
     List<Long> destinatarios
-) { }
+){}

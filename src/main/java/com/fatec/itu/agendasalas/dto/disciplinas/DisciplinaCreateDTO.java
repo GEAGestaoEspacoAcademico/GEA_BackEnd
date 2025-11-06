@@ -4,6 +4,4 @@ public record DisciplinaCreateDTO(
     Long cursoId,    
     String disciplinaNome, 
     String disciplinaSemestre
-    ) {
-
-    }
+){}

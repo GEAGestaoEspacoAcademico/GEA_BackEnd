@@ -14,4 +14,4 @@ public record NotificacaoResponseDTO(
     UsuarioResumoDTO usuarioRemetente,
     List<UsuarioResumoDTO> destinatarios,
     AgendamentoNotificacaoDTO notificacaoAgendamento
-) { }
+){}

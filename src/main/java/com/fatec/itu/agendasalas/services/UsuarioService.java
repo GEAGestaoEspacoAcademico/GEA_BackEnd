@@ -70,10 +70,10 @@ public class UsuarioService {
     public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
         
-        if(usuarioUpdateAdminDTO.usuarioAdminNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.usuarioAdminNome());
-        if(usuarioUpdateAdminDTO.usuarioAdminEmail()!=null){
-            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.usuarioAdminEmail(), id)){
-                auxiliar.setEmail(usuarioUpdateAdminDTO.usuarioAdminEmail());
+        if(usuarioUpdateAdminDTO.usuarioNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.usuarioNome());
+        if(usuarioUpdateAdminDTO.usuarioEmail()!=null){
+            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.usuarioEmail(), id)){
+                auxiliar.setEmail(usuarioUpdateAdminDTO.usuarioEmail());
             }
             else{
                 throw new RuntimeException("Tentando usar email já cadastrado");

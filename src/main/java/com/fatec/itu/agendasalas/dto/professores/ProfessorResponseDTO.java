@@ -6,4 +6,4 @@ public record ProfessorResponseDTO(
     String professorEmail,
     Long registroProfessor,
     Long cargoId
-  ) { }
+){}

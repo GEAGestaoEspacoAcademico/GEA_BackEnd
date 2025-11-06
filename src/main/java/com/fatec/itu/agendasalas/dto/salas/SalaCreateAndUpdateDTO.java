@@ -6,5 +6,5 @@ public record SalaCreateAndUpdateDTO(
         int salaCapacidade, 
         int piso, 
         boolean disponibilidade,
-        String salaObservacoes) {
-}
+        String salaObservacoes
+){}

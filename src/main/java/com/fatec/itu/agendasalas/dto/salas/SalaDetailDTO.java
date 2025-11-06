@@ -7,5 +7,5 @@ public record SalaDetailDTO(
     int piso, 
     boolean disponibilidade,
     String tipoSala, 
-    String salaObservacoes) {
-}
+    String salaObservacoes
+){}

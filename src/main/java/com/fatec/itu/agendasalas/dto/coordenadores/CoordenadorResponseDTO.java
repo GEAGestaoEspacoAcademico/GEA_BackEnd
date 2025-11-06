@@ -5,5 +5,5 @@ public record CoordenadorResponseDTO(
         String coordenadorNome,
         String coordenadorEmail,
         int registroCoordenacao,
-        Long cargoId) {
-}
+        Long cargoId
+){}

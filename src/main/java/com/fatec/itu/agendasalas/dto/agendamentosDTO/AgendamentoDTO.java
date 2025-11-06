@@ -11,5 +11,5 @@ public record AgendamentoDTO(
         String diaDaSemana,
         LocalTime horaInicio,
         LocalTime horaFim,
-        String tipo) {
-}
+        String tipo
+){}

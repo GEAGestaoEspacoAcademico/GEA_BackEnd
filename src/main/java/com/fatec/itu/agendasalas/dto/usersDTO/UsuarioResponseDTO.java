@@ -5,5 +5,4 @@ public record UsuarioResponseDTO(
         String usuarioNome,
         String usuarioEmail,
         Long cargoId
-) {
-}
+){}
