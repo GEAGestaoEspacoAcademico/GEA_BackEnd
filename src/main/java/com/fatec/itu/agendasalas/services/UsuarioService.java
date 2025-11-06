@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
@@ -24,17 +23,15 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     private UsuarioRepository usuarioRepository;
     
     @Autowired
-    protected PasswordEncoder cryptPasswordEncoder;
+    private PasswordEncryptService passwordEncryptService;
 
     @Autowired
     private CargoRepository cargoRepository;
 
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
-        
         Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.senha());
-        usuario.setSenha(senhaCriptografada);
+        usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.senha()));
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 

@@ -10,7 +10,6 @@ import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteCreationD
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteResponseDTO;
 import com.fatec.itu.agendasalas.entity.AuxiliarDocente;
 import com.fatec.itu.agendasalas.entity.Cargo;
-import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
@@ -20,6 +19,9 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
 
     @Autowired
     private AuxiliarDocenteRepository auxiliarDocenteRepository;
+
+    @Autowired
+    private PasswordEncryptService passwordEncryptService;
 
     @Autowired
     private CargoRepository cargoRepository;
@@ -50,8 +52,8 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
                 auxiliarDocenteCreationDTO.area()
             );
 
-            String senhaCriptografada = cryptPasswordEncoder.encode(auxiliarDocenteCreationDTO.senha());
-            auxiliarDocente.setSenha(senhaCriptografada);
+          
+            auxiliarDocente.setSenha(passwordEncryptService.criptografarSenha(auxiliarDocenteCreationDTO.senha()));
             Cargo cargo = cargoRepository.findByNome("AUXILIAR_DOCENTE").orElseThrow(()-> new RuntimeException("CARGO AUXILIAR DOCENTE NÃO ENCONTRADO"));
             auxiliarDocente.setCargo(cargo);
 
