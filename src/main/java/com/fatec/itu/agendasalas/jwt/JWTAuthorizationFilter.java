@@ -1,25 +1,18 @@
 package com.fatec.itu.agendasalas.jwt;
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fatec.itu.agendasalas.entity.Cargo;
-import com.fatec.itu.agendasalas.entity.Usuario;
-import com.fatec.itu.agendasalas.services.UserDetailsServiceImpl;
-
 import static com.fatec.itu.agendasalas.jwt.SecurityConstants.HEADER_STRING;
 import static com.fatec.itu.agendasalas.jwt.SecurityConstants.SECRET;
 import static com.fatec.itu.agendasalas.jwt.SecurityConstants.TOKEN_PREFIX;
+import com.fatec.itu.agendasalas.services.UserDetailsServiceImpl;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -64,7 +57,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
             if (login != null) {
                UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-                System.out.println("Authorities do usuário: " + userDetails.getAuthorities());
                 return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             }
         } catch (Exception e) {

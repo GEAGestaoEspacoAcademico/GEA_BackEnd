@@ -2,8 +2,10 @@ package com.fatec.itu.agendasalas.controllers;
 
 import java.net.URI;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
@@ -22,6 +25,7 @@ import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.services.SalaService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -69,6 +73,7 @@ public class SalaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     @Operation(summary = "Cria uma nova sala")
     @ApiResponses(value = {@ApiResponse(responseCode = "201",
             description = "Sala criada com sucesso",
@@ -93,6 +98,7 @@ public class SalaController {
     @ApiResponses(value = {@ApiResponse(responseCode = "204",
             description = "Sala deletada com sucesso", content = @Content)})
     @DeleteMapping("/{salaId}")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<Void> deletar(
             @Parameter(description = "ID da sala a ser deletada") @PathVariable Long salaId) {
         salaService.deletar(salaId);
@@ -107,6 +113,7 @@ public class SalaController {
                     examples = @ExampleObject(
                             value = "  { \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 10 }"))})})
     @PostMapping("/{salaId}/recursos")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<RecursoSalaCompletoDTO> adicionarRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -138,6 +145,7 @@ public class SalaController {
     @ApiResponses(value = {@ApiResponse(responseCode = "204",
             description = "Recurso removido da sala com sucesso", content = @Content)})
     @DeleteMapping("/{salaId}/recursos/{recursoId}")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<Void> removerRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @Parameter(description = "ID do recurso a ser removido") @PathVariable Long recursoId) {
@@ -153,6 +161,7 @@ public class SalaController {
                     examples = @ExampleObject(
                             value = "{ \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 5 }"))})})
     @PutMapping("/{salaId}/recursos/{recursoId}")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<RecursoSalaCompletoDTO> atualizarQuantidadeRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @Parameter(description = "ID do recurso a ser atualizado") @PathVariable Long recursoId,
@@ -173,6 +182,7 @@ public class SalaController {
                     examples = @ExampleObject(
                             value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))})})
     @PutMapping("/{salaId}")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<SalaDetailDTO> atualizarSala(
             @Parameter(description = "ID da sala a ser atualizada") @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
