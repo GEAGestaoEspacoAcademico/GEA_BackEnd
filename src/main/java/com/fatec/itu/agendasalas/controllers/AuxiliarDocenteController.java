@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteCreationDTO;
 import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteResponseDTO;
 import com.fatec.itu.agendasalas.dto.paginacaoDTO.PageableResponseDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.services.AuxiliarDocenteService;
 
 
@@ -40,8 +39,7 @@ public class AuxiliarDocenteController {
     @PostMapping
     @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<AuxiliarDocenteResponseDTO> cadastrarAuxiliarDocente(@RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaa!#11323131");
-        return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarAuxiliarDocente(auxiliarDocenteCreationDTO));
+        return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarUsuario(auxiliarDocenteCreationDTO));
 
     } 
 

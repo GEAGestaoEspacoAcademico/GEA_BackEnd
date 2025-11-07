@@ -14,6 +14,8 @@ import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocenteCreationDTO, AuxiliarDocenteResponseDTO> {
 
@@ -44,6 +46,7 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
 
 
     @Override
+    @Transactional
     public AuxiliarDocenteResponseDTO cadastrarUsuario(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) {
         AuxiliarDocente auxiliarDocente = new AuxiliarDocente(
                 auxiliarDocenteCreationDTO.login(), 
