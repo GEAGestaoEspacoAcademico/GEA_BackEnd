@@ -1,15 +1,23 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
+import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
 import com.fatec.itu.agendasalas.entity.Sala;
@@ -42,12 +50,68 @@ public class SalaService {
         sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
   }
 
-
-  public List<SalaListDTO> listarTodasAsSalas() {
-    return salaRepository.findAll().stream()
+  public List<SalaListDTO> listarSalasDisponiveis(boolean disponivel) {
+    return salaRepository.findByDisponibilidade(disponivel).stream()
         .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
             sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
         .toList();
+  }
+
+  public List<SalaListDTO> listarSalasDisponiveis() {
+    return transformaEmSalaListDTO(salaRepository.findByDisponibilidade(true));
+  }
+
+  public List<SalaListDTO> listarTodasAsSalas() {
+    return transformaEmSalaListDTO(salaRepository.findAll());
+  }
+
+  private List<SalaListDTO> transformaEmSalaListDTO(List<Sala> salas) {
+    return salas.stream()
+        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
+            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
+        .toList();
+  }
+
+  public List<SalaListDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+    List<Long> salasParaExcluir =
+        salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
+            requisicao.horarios().horaFim(), requisicao.capacidade());
+
+    List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
+        .filter(sala -> !salasParaExcluir.contains(sala.id())).toList();
+
+    List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.id()).toList();
+
+    List<Sala> salasComSeusRecursos =
+        salaRepository.findSalasComRecursosByIds(idsDeSalasCandidatas);
+
+    Map<Long, Set<Long>> mapaDasSalasESeusRecursos = salasComSeusRecursos.stream()
+        .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
+            .map(recursoSala -> recursoSala.getRecurso().getId()).collect(Collectors.toSet())));
+
+    List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
+
+    String nomeDoTipoSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
+
+    for (SalaListDTO sala : salasCandidatas) {
+      int pontuacao = 0;
+
+      Set<Long> recursosDaSala =
+          mapaDasSalasESeusRecursos.getOrDefault(sala.id(), Collections.emptySet());
+
+      if (sala.tipoSala().equals(nomeDoTipoSala))
+        pontuacao++;
+
+      pontuacao +=
+          requisicao.recursosIds().stream().filter(r -> recursosDaSala.contains(r)).count();
+
+      if (pontuacao > 0)
+        rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
+    }
+
+    rankingSalas.sort(Comparator.comparing((SalaPontuadaDTO sala) -> sala.pontuacao()).reversed());
+
+    return rankingSalas.stream().limit(5).map(SalaPontuadaDTO::sala).toList();
   }
 
   @Transactional
@@ -138,8 +202,8 @@ public class SalaService {
     salaRepository.save(sala);
 
     return new RecursoSalaCompletoDTO(linkParaAtualizar.getRecurso().getId(),
-        linkParaAtualizar.getRecurso().getNome(), linkParaAtualizar.getRecurso().getTipoRecurso().getId(),
-        linkParaAtualizar.getQuantidade());
+        linkParaAtualizar.getRecurso().getNome(),
+        linkParaAtualizar.getRecurso().getTipoRecurso().getId(), linkParaAtualizar.getQuantidade());
   }
 
   public List<RecursoSalaCompletoDTO> listarRecursosPorSala(Long id) {
