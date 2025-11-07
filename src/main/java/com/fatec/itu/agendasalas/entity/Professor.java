@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ public class Professor extends Usuario {
     private Long registroProfessor;
 
     @OneToMany(mappedBy = "professor")
-    private List<Disciplina> disciplinas;
+    private List<Disciplina> disciplinas = new ArrayList<>();
 
     protected Professor() {}
 
@@ -34,6 +35,10 @@ public class Professor extends Usuario {
 
     public void addDisciplina(Disciplina disciplina) {
         this.disciplinas.add(disciplina);
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class Professor extends Usuario {
         joinColumns = @JoinColumn(name = "professor_id"),
         inverseJoinColumns = @JoinColumn(name = "cargo_id")
     )
-    private List<Cargo> cargos;
+    private List<Cargo> cargos = new ArrayList<>();
 
     public List<Cargo> getCargos() {
         return cargos;

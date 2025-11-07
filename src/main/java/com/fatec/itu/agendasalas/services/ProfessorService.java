@@ -2,6 +2,7 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,7 +86,7 @@ public class ProfessorService {
             var cargos = dto.cargosIds()
                 .stream()
                 .map(cargoService::findById)
-                .toList();
+                .collect(Collectors.toList());
 
         professor.setCargos(cargos);
     }
@@ -94,10 +95,23 @@ public class ProfessorService {
             var disciplinas = dto.disciplinasIds()
                 .stream()
                 .map(disciplinaService::findById)
-                .toList();
+                .collect(Collectors.toList());
 
-        professor.setDisciplinas(disciplinas);
-    }
+            var novasIds = disciplinas.stream()
+                .map(d -> d.getId())
+                .collect(Collectors.toSet());
+
+            var disciplinasAtuais = professor.getDisciplinas();
+            if (disciplinasAtuais != null) {
+                disciplinasAtuais.stream()
+                    .filter(d -> d.getId() != null && !novasIds.contains(d.getId()))
+                    .forEach(d -> d.setProfessor(null));
+            }
+
+            disciplinas.forEach(d -> d.setProfessor(professor));
+
+            professor.setDisciplinas(disciplinas);
+        }
 
     return toResponseDTO(professorRepository.save(professor));
 }
