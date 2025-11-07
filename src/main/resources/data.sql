@@ -250,6 +250,7 @@ VALUES
    -- ('Desenho Técnico', '2025.2', 32, 3);
 
     INSERT INTO TIPOS_SALAS (nome)
+    INSERT INTO TIPOS_SALAS (nome)
     VALUES 
     ('Sala de Aula'),               
     ('Laboratório de Informática'), 
@@ -299,6 +300,7 @@ INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
     ('Quadro Branco', 3);
 
 -- RecursosSalas
+INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
 INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (1, 1, 1),
     (2, 2, 1),
