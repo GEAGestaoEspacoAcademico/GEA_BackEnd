@@ -13,5 +13,5 @@ public record NotificacaoResponseDTO(
     LocalDate dataEnvio,
     UsuarioResumoDTO usuarioRemetente,
     List<UsuarioResumoDTO> destinatarios,
-    AgendamentoNotificacaoDTO notificacaoAgendamento
+    AgendamentoNotificacaoDTO agendamento
 ){}

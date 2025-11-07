@@ -1,7 +1,7 @@
 package com.fatec.itu.agendasalas.dto.professores;
 
 public record ProfessorResponseDTO(
-    Long professorId,
+    Long usuarioId,
     String professorNome,
     String professorEmail,
     Long registroProfessor,

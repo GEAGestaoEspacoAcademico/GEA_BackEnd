@@ -1,8 +1,8 @@
 package com.fatec.itu.agendasalas.dto.recursos;
 
 public record RecursoSalaCompletoDTO(
-    Long recursoSalaId, 
-    String recursoSalaNome, 
-    String recursoSalaTipo, 
+    Long recursoId, 
+    String recursoNome, 
+    Long recursoTipoId, 
     Integer quantidadeRecurso
 ){}

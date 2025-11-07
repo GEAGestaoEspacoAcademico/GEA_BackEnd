@@ -53,7 +53,7 @@ public class SalaService {
   @Transactional
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
     Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
-        tipoSalaService.buscarPorId(salaDTO.salaId()));
+        tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
     novaSala.setObservacoes(salaDTO.salaObservacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
@@ -69,7 +69,7 @@ public class SalaService {
     salaExistente.setCapacidade(salaDTO.salaCapacidade());
     salaExistente.setPiso(salaDTO.piso());
     salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.salaId()));
+    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
     salaExistente.setObservacoes(salaDTO.salaObservacoes());
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
@@ -87,11 +87,11 @@ public class SalaService {
   public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.recursoSalaId())
+    Recurso recursoExistente = recursoRepository.findById(dto.recursoId())
         .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
     boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoSalaId()));
+        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoId()));
 
     if (recursoJaAdicionado) {
       throw new RuntimeException();
@@ -105,8 +105,8 @@ public class SalaService {
 
     recursoSalaRepository.save(novoLink);
 
-    return new RecursoSalaCompletoDTO(dto.idRecurso(), recursoExistente.getNome(),
-        recursoExistente.getTipoRecurso().getId(), dto.quantidade());
+    return new RecursoSalaCompletoDTO(dto.recursoId(), recursoExistente.getNome(),
+        recursoExistente.getTipoRecurso().getId(), dto.quantidadeRecurso());
   }
 
   @Transactional
