@@ -34,6 +34,7 @@ public class CursoService {
 
         novoCurso.setNomeCurso(curso.nome());
         novoCurso.setCoordenador(coordenadorRepository.findById(curso.idCoordenador()).orElseThrow());
+        novoCurso.setSigla(curso.sigla());
 
         Curso cursoSalvo = cursoRepository.save(novoCurso);
 
@@ -63,6 +64,7 @@ public class CursoService {
         atual.setNomeCurso(novoCurso.nome());
         Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.idCoordenador()).orElseThrow();
         atual.setCoordenador(coordenadorEncontrado);
+        atual.setSigla(novoCurso.sigla());
 
         Curso cursoAtualizado = cursoRepository.save(atual);
 
