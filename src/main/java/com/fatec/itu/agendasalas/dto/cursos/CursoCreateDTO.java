@@ -1,4 +1,6 @@
 package com.fatec.itu.agendasalas.dto.cursos;
 
-public record CursoCreateDTO(String nome, Long idCoordenador) {
-}
+public record CursoCreateDTO(
+    Long coordenadorId,
+    String cursoNome
+){}
