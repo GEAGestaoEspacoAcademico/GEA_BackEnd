@@ -1,13 +1,12 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -19,6 +18,10 @@ public class Professor extends Usuario {
 
     @Column(name = "registro_professor", nullable = false, unique = true)
     private Long registroProfessor;
+
+    @ManyToOne
+    @JoinColumn(name = "cargo_id")   
+    private Cargo cargo;
 
     @OneToMany(mappedBy = "professor")
     private List<Disciplina> disciplinas = new ArrayList<>();
@@ -33,12 +36,24 @@ public class Professor extends Usuario {
         this.registroProfessor = registroProfessor;
     }
 
-    public void addDisciplina(Disciplina disciplina) {
-        this.disciplinas.add(disciplina);
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
     }
 
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
+
+    public void addDisciplina(Disciplina disciplina) {
+        this.disciplinas.add(disciplina);
     }
 
     @Override
@@ -64,26 +79,6 @@ public class Professor extends Usuario {
         } else if (!registroProfessor.equals(other.registroProfessor))
             return false;
         return true;
-    }
-
-    @ManyToMany
-    @JoinTable(
-        name = "PROFESSOR_CARGOS",
-        joinColumns = @JoinColumn(name = "professor_id"),
-        inverseJoinColumns = @JoinColumn(name = "cargo_id")
-    )
-    private List<Cargo> cargos = new ArrayList<>();
-
-    public List<Cargo> getCargos() {
-        return cargos;
-    }
-
-    public void setCargos(List<Cargo> cargos) {
-        this.cargos = cargos;
-    }
-
-    public void setDisciplinas(List<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
     }
 
 }

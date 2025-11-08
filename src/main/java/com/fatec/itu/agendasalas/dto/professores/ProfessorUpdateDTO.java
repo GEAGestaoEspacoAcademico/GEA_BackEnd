@@ -3,9 +3,10 @@ package com.fatec.itu.agendasalas.dto.professores;
 import java.util.List;
 
 public record ProfessorUpdateDTO(
-        Long registroProfessor,
+        Long usuarioId,
         String nome,
         String email,
-        List<Long> cargosIds,
+        Long cargoId,
         List<Long> disciplinasIds
 ) {}
+

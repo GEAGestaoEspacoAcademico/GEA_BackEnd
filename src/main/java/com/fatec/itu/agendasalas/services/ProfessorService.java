@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
+import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Curso;
+import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
@@ -72,40 +74,38 @@ public class ProfessorService {
     }
 
     @Transactional
-    public ProfessorResponseDTO atualizarProfessor(ProfessorUpdateDTO dto,
-                                              DisciplinaService disciplinaService,
-                                              CargoService cargoService) {
+    public ProfessorResponseDTO atualizarProfessor(
+        ProfessorUpdateDTO dto,
+        DisciplinaService disciplinaService,
+        CargoService cargoService) {
 
-    Professor professor = professorRepository.findByRegistroProfessor(dto.registroProfessor())
-            .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
+        Professor professor = professorRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
 
-        if(dto.nome() != null) professor.setNome(dto.nome());
-        if(dto.email() != null) professor.setEmail(dto.email());
+        if (dto.nome() != null) professor.setNome(dto.nome());
+        if (dto.email() != null) professor.setEmail(dto.email());
 
-        if(dto.cargosIds() != null) {
-            var cargos = dto.cargosIds()
-                .stream()
-                .map(cargoService::findById)
-                .collect(Collectors.toList());
+        if (dto.cargoId() != null) {
+            Cargo cargo = cargoService.findById(dto.cargoId());
+            professor.setCargo(cargo);
+        }
 
-        professor.setCargos(cargos);
-    }
+        if (dto.disciplinasIds() != null) {
 
-        if(dto.disciplinasIds() != null) {
             var disciplinas = dto.disciplinasIds()
-                .stream()
-                .map(disciplinaService::findById)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(disciplinaService::findById)
+                    .toList();
 
             var novasIds = disciplinas.stream()
-                .map(d -> d.getId())
-                .collect(Collectors.toSet());
+                    .map(Disciplina::getId)
+                    .collect(Collectors.toSet());
 
             var disciplinasAtuais = professor.getDisciplinas();
             if (disciplinasAtuais != null) {
                 disciplinasAtuais.stream()
-                    .filter(d -> d.getId() != null && !novasIds.contains(d.getId()))
-                    .forEach(d -> d.setProfessor(null));
+                        .filter(d -> d.getId() != null && !novasIds.contains(d.getId()))
+                        .forEach(d -> d.setProfessor(null));
             }
 
             disciplinas.forEach(d -> d.setProfessor(professor));
@@ -115,5 +115,7 @@ public class ProfessorService {
 
     return toResponseDTO(professorRepository.save(professor));
 }
+
+
 
 }
