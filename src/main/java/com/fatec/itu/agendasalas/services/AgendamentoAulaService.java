@@ -59,7 +59,6 @@ public class AgendamentoAulaService {
         agendamento.setDisciplina(disciplina);
         agendamento.setDataInicio(dto.dataInicio());
         agendamento.setDataFim(dto.dataFim());
-        agendamento.setDiaDaSemana(dto.diaDaSemana());
         agendamento.setJanelasHorario(janelasHorario);
         agendamento.setTipo(dto.tipoAgendamento());
 
@@ -119,7 +118,6 @@ public class AgendamentoAulaService {
 
         if (dto.dataInicio() != null) agendamento.setDataInicio(dto.dataInicio());
         if (dto.dataFim() != null) agendamento.setDataFim(dto.dataFim());
-        if (dto.diaDaSemana() != null) agendamento.setDiaDaSemana(dto.diaDaSemana());
         if (dto.janelasHorarioId() != null){
             JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
             agendamento.setJanelasHorario(janelasHorario);
