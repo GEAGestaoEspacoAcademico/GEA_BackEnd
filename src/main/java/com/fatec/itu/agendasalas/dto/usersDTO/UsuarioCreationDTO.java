@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 public record UsuarioCreationDTO (
     @NotEmpty(message = "Login é obrigatório")
-    String login,
+    String usuarioLogin,
 
     @NotEmpty(message = "Nome é obrigatório")
     String usuarioNome,

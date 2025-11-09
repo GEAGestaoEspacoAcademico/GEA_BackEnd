@@ -36,7 +36,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .readValue(req.getInputStream(), UsuarioAuthenticationDTO.class);
             
             return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(creds.login(), creds.senha())
+                new UsernamePasswordAuthenticationToken(creds.usuarioLogin(), creds.usuarioSenha())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -30,7 +30,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
-        Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
+        Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
         usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.usuarioSenha()));
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
