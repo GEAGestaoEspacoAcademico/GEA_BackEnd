@@ -20,10 +20,10 @@ public class DisciplinaService {
     private CursoRepository cursoRepository;
 
     public DisciplinaListDTO criar(DisciplinaCreateDTO disciplina) {
-        Curso cursoDisciplina = cursoRepository.findById(disciplina.idCurso()).orElseThrow();
+        Curso cursoDisciplina = cursoRepository.findById(disciplina.cursoId()).orElseThrow();
 
         Disciplina novaDisciplina = disciplinaRepository
-                .save(new Disciplina(disciplina.nome(), disciplina.semestre(), cursoDisciplina));
+                .save(new Disciplina(disciplina.disciplinaNome(), disciplina.disciplinaSemestre(), cursoDisciplina));
 
         return new DisciplinaListDTO(novaDisciplina.getId(), novaDisciplina.getNome(),
                 novaDisciplina.getSemestre(), novaDisciplina.getCurso().getNomeCurso());
@@ -54,9 +54,9 @@ public class DisciplinaService {
     public DisciplinaListDTO atualizar(Long id, DisciplinaCreateDTO novaDisciplina) {
         Disciplina atual = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
-        atual.setNome(novaDisciplina.nome());
-        atual.setSemestre(novaDisciplina.semestre());
-        atual.setCurso(cursoRepository.findById(novaDisciplina.idCurso()).orElseThrow());
+        atual.setNome(novaDisciplina.disciplinaNome());
+        atual.setSemestre(novaDisciplina.disciplinaSemestre());
+        atual.setCurso(cursoRepository.findById(novaDisciplina.cursoId()).orElseThrow());
 
         Disciplina disciplinaAtualizada = disciplinaRepository.save(atual);
 

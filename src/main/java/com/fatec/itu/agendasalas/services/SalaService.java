@@ -78,9 +78,9 @@ public class SalaService {
             requisicao.horarios().horaFim(), requisicao.capacidade());
 
     List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
-        .filter(sala -> !salasParaExcluir.contains(sala.id())).toList();
+        .filter(sala -> !salasParaExcluir.contains(sala.salaId())).toList();
 
-    List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.id()).toList();
+    List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.salaId()).toList();
 
     List<Sala> salasComSeusRecursos =
         salaRepository.findSalasComRecursosByIds(idsDeSalasCandidatas);
@@ -97,7 +97,7 @@ public class SalaService {
       int pontuacao = 0;
 
       Set<Long> recursosDaSala =
-          mapaDasSalasESeusRecursos.getOrDefault(sala.id(), Collections.emptySet());
+          mapaDasSalasESeusRecursos.getOrDefault(sala.salaId(), Collections.emptySet());
 
       if (sala.tipoSala().equals(nomeDoTipoSala))
         pontuacao++;
@@ -109,16 +109,16 @@ public class SalaService {
         rankingSalas.add(new SalaPontuadaDTO(sala, pontuacao));
     }
 
-    rankingSalas.sort(Comparator.comparing((SalaPontuadaDTO sala) -> sala.pontuacao()).reversed());
+    rankingSalas.sort(Comparator.comparing((SalaPontuadaDTO sala) -> sala.salaPontuacao()).reversed());
 
     return rankingSalas.stream().limit(5).map(SalaPontuadaDTO::sala).toList();
   }
 
   @Transactional
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
-    Sala novaSala = new Sala(salaDTO.nome(), salaDTO.capacidade(), salaDTO.piso(),
-        tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
-    novaSala.setObservacoes(salaDTO.observacoes());
+    Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
+        tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    novaSala.setObservacoes(salaDTO.salaObservacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
 
@@ -129,12 +129,12 @@ public class SalaService {
   public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
-    salaExistente.setNome(salaDTO.nome());
-    salaExistente.setCapacidade(salaDTO.capacidade());
+    salaExistente.setNome(salaDTO.salaNome());
+    salaExistente.setCapacidade(salaDTO.salaCapacidade());
     salaExistente.setPiso(salaDTO.piso());
     salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.idTipoSala()));
-    salaExistente.setObservacoes(salaDTO.observacoes());
+    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    salaExistente.setObservacoes(salaDTO.salaObservacoes());
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
   }
@@ -151,11 +151,11 @@ public class SalaService {
   public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.idRecurso())
+    Recurso recursoExistente = recursoRepository.findById(dto.recursoId())
         .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
     boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.idRecurso()));
+        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoId()));
 
     if (recursoJaAdicionado) {
       throw new RuntimeException();
@@ -165,12 +165,12 @@ public class SalaService {
 
     novoLink.setIdRecurso(recursoExistente.getId());
     novoLink.setIdSala(salaId);
-    novoLink.setQuantidade(dto.quantidade());
+    novoLink.setQuantidade(dto.quantidadeRecurso());
 
     recursoSalaRepository.save(novoLink);
 
-    return new RecursoSalaCompletoDTO(dto.idRecurso(), recursoExistente.getNome(),
-        recursoExistente.getTipoRecurso().getId(), dto.quantidade());
+    return new RecursoSalaCompletoDTO(dto.recursoId(), recursoExistente.getNome(),
+        recursoExistente.getTipoRecurso().getId(), dto.quantidadeRecurso());
   }
 
   @Transactional
