@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +56,9 @@ public class JanelasHorarioService {
        janelasHorarioAntiga.setHoraFim(janelasHorarioUpdateDTO.horaFim());
        JanelasHorario janelasHorarioAtualizada = janelasHorarioRepository.save(janelasHorarioAntiga);
        return transformarEmJanelasHorarioResponseDTO(janelasHorarioAtualizada);
+    }
+
+    public List<JanelasHorario> buscarDisponiveisPorData(LocalDate data) {
+        return janelasHorarioRepository.findDisponiveisPorData(data);
     }
 }
