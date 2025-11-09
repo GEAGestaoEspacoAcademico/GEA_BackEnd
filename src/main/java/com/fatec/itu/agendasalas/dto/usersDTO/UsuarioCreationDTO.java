@@ -8,11 +8,11 @@ public record UsuarioCreationDTO (
     String login,
 
     @NotEmpty(message = "Nome é obrigatório")
-    String nome,
+    String usuarioNome,
 
     @NotEmpty(message = "E-mail é obrigatório")
-    String email,
+    String usuarioEmail,
 
     @NotEmpty(message = "Senha é obrigatória")
-    String senha
+    String usuarioSenha
 ) {}

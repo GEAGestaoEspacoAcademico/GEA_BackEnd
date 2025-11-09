@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 
 
-public record AgendamentoAulaCreationDTO (
+public record AgendamentoAulaCreationDTO(
     @NotNull Long usuarioId,
     @NotNull Long salaId,
     @NotNull Long disciplinaId,
@@ -15,7 +15,8 @@ public record AgendamentoAulaCreationDTO (
     @NotNull LocalDate dataFim,
     @NotBlank String diaDaSemana,
     @NotNull Long janelasHorarioId,
-    @NotBlank String tipo){}
+    @NotBlank String tipoAgendamento
+){}
 
 
     

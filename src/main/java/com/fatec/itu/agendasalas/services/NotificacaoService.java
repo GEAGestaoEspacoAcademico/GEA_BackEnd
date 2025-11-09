@@ -61,8 +61,8 @@ public class NotificacaoService {
 
             Notificacao notificacao = new Notificacao();
             notificacao.setAgendamento(agendamento);
-            notificacao.setTitulo(dto.titulo());
-            notificacao.setMensagem(dto.mensagem());
+            notificacao.setTitulo(dto.notificacaoTitulo());
+            notificacao.setMensagem(dto.notificacaoMensagem());
             notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
             notificacao.setDestinatario(destinatarios);

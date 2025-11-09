@@ -90,7 +90,7 @@ public class SalaController {
                                     value = "{ \"nome\": \"Nova sala\", \"capacidade\": 10, \"piso\": 1, \"disponibilidade\": true, \"idTipoSala\": 1, \"observacoes\": \"Sala em perfeito estado\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
         SalaDetailDTO salaCriada = salaService.criar(sala);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(salaCriada.id()).toUri();
+                .buildAndExpand(salaCriada.salaId()).toUri();
         return ResponseEntity.created(uri).body(salaCriada);
     }
 

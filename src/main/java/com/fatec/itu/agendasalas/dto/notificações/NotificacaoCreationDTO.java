@@ -4,8 +4,8 @@ import java.util.List;
 
 public record NotificacaoCreationDTO(
     Long agendamento, 
-    String titulo, 
-    String mensagem, 
+    String notificacaoTitulo, 
+    String notificacaoMensagem, 
     Long usuarioRemetente, 
     List<Long> destinatarios
-) { }
+){}

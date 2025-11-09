@@ -4,21 +4,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record AgendamentoAulaResponseDTO(
-    Long id,
-    String nomeUsuario,
-    String nomeSala,
+    Long agendamentoAulaId,
+    String usuarioNome,
+    String salaNome,
     Long disciplinaId,
-    String nomeDisciplina,
+    String disciplinaNome,
     String semestre,
-    String curso,
-    String nomeProfessor,
+    String cursoNome,
+    String professorNome,
     LocalDate dataInicio,
     LocalDate dataFim,
     String diaDaSemana,
     LocalTime horaInicio,
     LocalTime horaFim,
-    String tipo) {
-
-    
-   
-}
+    String tipoAgendamento
+){}

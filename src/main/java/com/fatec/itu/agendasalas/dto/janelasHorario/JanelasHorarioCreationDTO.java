@@ -6,6 +6,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record JanelasHorarioCreationDTO(
     @NotNull LocalTime horaInicio, 
-    @NotNull LocalTime horaFim){
-    
-}
+    @NotNull LocalTime horaFim
+){}

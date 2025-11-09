@@ -46,7 +46,7 @@ public class RecursoController {
   public ResponseEntity<RecursoCompletoDTO> criar(@RequestBody RecursoResumidoDTO recurso) {
     RecursoCompletoDTO recursoCriado = recursoService.criar(recurso);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-        .buildAndExpand(recursoCriado.id()).toUri();
+        .buildAndExpand(recursoCriado.recursoId()).toUri();
     return ResponseEntity.created(uri).body(recursoCriado);
   }
 
