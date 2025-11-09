@@ -42,6 +42,9 @@ public class Curso implements Serializable {
     @OneToMany(mappedBy = "curso")
     private List<Disciplina> disciplinas;
 
+    @Column(name = "sigla", length = 10, nullable = false)
+    private String sigla;
+
     public Long getId() {
         return id;
     }
@@ -64,6 +67,14 @@ public class Curso implements Serializable {
 
     public void setCoordenador(Coordenador coordenador) {
         this.coordenador = coordenador;
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
     public void editarCurso(String novoNomeCurso, Coordenador novoCoordenador) {

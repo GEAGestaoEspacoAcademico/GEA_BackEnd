@@ -22,7 +22,7 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome());
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome(), curso.getSigla());
     }
 
     public CursoService(CursoRepository cursoRepository) {
@@ -34,6 +34,7 @@ public class CursoService {
 
         novoCurso.setNomeCurso(curso.cursoNome());
         novoCurso.setCoordenador(coordenadorRepository.findById(curso.coordenadorId()).orElseThrow());
+        novoCurso.setSigla(curso.cursoSigla());
 
         Curso cursoSalvo = cursoRepository.save(novoCurso);
 
@@ -63,6 +64,7 @@ public class CursoService {
         atual.setNomeCurso(novoCurso.cursoNome());
         Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow();
         atual.setCoordenador(coordenadorEncontrado);
+        atual.setSigla(novoCurso.cursoSigla());
 
         Curso cursoAtualizado = cursoRepository.save(atual);
 

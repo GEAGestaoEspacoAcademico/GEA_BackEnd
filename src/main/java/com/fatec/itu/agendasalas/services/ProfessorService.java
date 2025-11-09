@@ -64,7 +64,7 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
     public List<CursoListByProfessorDTO> listarCursosPorProfessor(Long idProfessor) {
         List<Curso> cursosEncontrados = cursoRepository.findCursosByProfessorRegistro(idProfessor);
         return cursosEncontrados.stream()
-                .map(curso -> new CursoListByProfessorDTO(curso.getId(), curso.getNomeCurso()))
+                .map(curso -> new CursoListByProfessorDTO(curso.getId(), curso.getNomeCurso(), curso.getSigla()))
                 .toList();
     }
 
