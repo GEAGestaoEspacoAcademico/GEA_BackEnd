@@ -72,7 +72,7 @@ public class JanelasHorarioController {
     }
 
     @Operation(summary = "Lista os horários disponíveis pela data")
-    @GetMapping("/janelas-horario/disponiveis/{data}")
+    @GetMapping("/disponiveis/{data}")
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveis(
         @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
             List<JanelasHorario> lista = janelasHorarioService.buscarDisponiveisPorData(data);
