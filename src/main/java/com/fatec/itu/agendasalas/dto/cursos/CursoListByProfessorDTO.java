@@ -1,6 +1,5 @@
 package com.fatec.itu.agendasalas.dto.cursos;
 
-public record CursoListByProfessorDTO(
-    Long cursoId,
-    String cursoNome
-){}
+public record CursoListByProfessorDTO(Long cursoId, String cursoNome, String cursoSigla) {
+
+}
