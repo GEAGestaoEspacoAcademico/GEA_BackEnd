@@ -56,4 +56,9 @@ public class JanelasHorarioService {
        JanelasHorario janelasHorarioAtualizada = janelasHorarioRepository.save(janelasHorarioAntiga);
        return transformarEmJanelasHorarioResponseDTO(janelasHorarioAtualizada);
     }
+
+    public Long buscaJanelaHorarioPelosHorariosInicioeFim(LocalTime horaInicio, LocalTime horaFim){
+        return janelasHorarioRepository.findIdByHoraInicioAndHoraFim(horaInicio, horaFim);
+
+    }
 }

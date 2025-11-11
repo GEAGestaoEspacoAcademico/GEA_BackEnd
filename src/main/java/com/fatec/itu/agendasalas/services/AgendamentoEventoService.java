@@ -13,10 +13,12 @@ public class AgendamentoEventoService {
     @Autowired
     private AgendamentoEventoRepository agendamentoEventoRepository;
 
+    private jane
     @Transactional
     public AgendamentoEventoResponseDTO criarAgendamentoEvento(AgendamentoEventoCreationDTO agendamentoEventoCreationDTO){
 
-        
+        LocalDate 
+
 
     }
 }
