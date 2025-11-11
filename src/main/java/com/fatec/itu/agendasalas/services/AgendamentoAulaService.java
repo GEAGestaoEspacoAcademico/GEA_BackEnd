@@ -160,4 +160,9 @@ public class AgendamentoAulaService {
         agendamento.getTipo()
         );
     }
+
+    
+    private boolean verificarConflitoComEvento(){
+        
+    }
 }

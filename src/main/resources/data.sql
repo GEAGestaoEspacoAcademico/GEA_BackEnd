@@ -33,7 +33,7 @@ INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
 -- senha: ss123
-
+    
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
