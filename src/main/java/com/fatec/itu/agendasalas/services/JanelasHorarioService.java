@@ -59,12 +59,17 @@ public class JanelasHorarioService {
     }
 
     public List<JanelasHorario> buscaJanelaHorarioPelosHorariosInicioeFim(LocalTime horaInicio, LocalTime horaFim, boolean todosHorarios){
-        List<JanelasHorario> listaJanelas = new ArrayList<JanelasHorario>();
+        List<JanelasHorario> listaJanelas = new ArrayList<>();
         if(!todosHorarios){
             listaJanelas = janelasHorarioRepository.findAll();
         }
         else{
-            listaJanelas.add(janelasHorarioRepository.findByHoraInicioAndHoraFim(horaInicio, horaFim));
+            while(horaInicio!=horaFim){
+                JanelasHorario provisoria = janelasHorarioRepository.findByHoraInicio(horaInicio);
+                listaJanelas.add(provisoria);
+                horaInicio = provisoria.getHoraFim();
+            }
+            
         }
 
         return listaJanelas;

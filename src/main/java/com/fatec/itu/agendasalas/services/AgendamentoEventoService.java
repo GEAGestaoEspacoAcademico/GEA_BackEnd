@@ -2,6 +2,7 @@ package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,10 @@ public class AgendamentoEventoService {
    
     @Transactional
     public AgendamentoEventoResponseDTO criarAgendamentoEvento(AgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
-        Set<JanelasHorario> janelasHorario = new HashSet<JanelasHorario>();
-        if(!agendamentoEventoCreationDTO.todosHorarios())
-            JanelasHorario janelaHorarioAgendamento = janelasHorarioService.buscaJanelaHorarioPelosHorariosInicioeFim(agendamentoEventoCreationDTO.horaInicio(), agendamentoEventoCreationDTO.horafim());
-        else{
-            janelasHorario = janelasHorarioService.listarTodasJanelasHorario();
-        }
+        List<JanelasHorario> janelasHorario;
+        
+        janelasHorario = janelasHorarioService.buscaJanelaHorarioPelosHorariosInicioeFim(agendamentoEventoCreationDTO.horaInicio(), agendamentoEventoCreationDTO.horafim(), agendamentoEventoCreationDTO.todosHorarios());
+        
         
         LocalDate dataInicial = agendamentoEventoCreationDTO.diaInicio(); 
         LocalDate dataFinal = agendamentoEventoCreationDTO.diaFim();

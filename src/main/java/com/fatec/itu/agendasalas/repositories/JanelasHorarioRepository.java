@@ -11,5 +11,5 @@ import com.fatec.itu.agendasalas.entity.JanelasHorario;
 public interface JanelasHorarioRepository extends JpaRepository<JanelasHorario, Long> {
 
     
-    JanelasHorario findByHoraInicioAndHoraFim(LocalTime horaInicio, LocalTime horaFim);
+    JanelasHorario findByHoraInicio(LocalTime horaInicio);
 }
