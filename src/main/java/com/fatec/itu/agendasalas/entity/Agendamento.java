@@ -13,6 +13,9 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import java.time.DayOfWeek;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -54,5 +57,37 @@ public class Agendamento implements Serializable {
 
     @Column(name = "tipo")
     private String tipo;
+
+    @PrePersist
+    @PreUpdate
+    private void preencherDiaDaSemana() {
+        if (this.dataInicio != null) {
+            this.diaDaSemana = traduzirDiaDaSemana(this.dataInicio.getDayOfWeek());
+        } else {
+            this.diaDaSemana = null;
+        }
+    }
+
+    private String traduzirDiaDaSemana(DayOfWeek day) {
+        if (day == null) return null;
+        switch (day) {
+            case MONDAY:
+                return "Segunda-feira";
+            case TUESDAY:
+                return "Terça-feira";
+            case WEDNESDAY:
+                return "Quarta-feira";
+            case THURSDAY:
+                return "Quinta-feira";
+            case FRIDAY:
+                return "Sexta-feira";
+            case SATURDAY:
+                return "Sábado";
+            case SUNDAY:
+                return "Domingo";
+            default:
+                return day.toString();
+        }
+    }
 
 }
