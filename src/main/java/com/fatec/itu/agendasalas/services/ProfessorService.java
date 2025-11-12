@@ -115,7 +115,4 @@ public class ProfessorService {
 
     return toResponseDTO(professorRepository.save(professor));
 }
-
-
-
 }

@@ -5,8 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -19,10 +17,6 @@ public class Professor extends Usuario {
     @Column(name = "registro_professor", nullable = false, unique = true)
     private Long registroProfessor;
 
-    @ManyToOne
-    @JoinColumn(name = "cargo_id")   
-    private Cargo cargo;
-
     @OneToMany(mappedBy = "professor")
     private List<Disciplina> disciplinas = new ArrayList<>();
 
@@ -34,14 +28,6 @@ public class Professor extends Usuario {
 
     public void setRegistroProfessor(Long registroProfessor) {
         this.registroProfessor = registroProfessor;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
     }
 
     public List<Disciplina> getDisciplinas() {
