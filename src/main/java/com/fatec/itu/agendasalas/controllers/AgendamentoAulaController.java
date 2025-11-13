@@ -31,11 +31,11 @@ public class AgendamentoAulaController {
 
     @Operation(summary = "Cria um novo agendamento de aula")
     @PostMapping
-    public ResponseEntity<AgendamentoAulaResponseDTO> criarAgendamentoAula(
+    public ResponseEntity<Void> criarAgendamentoAula(
             @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
         try {
-            AgendamentoAulaResponseDTO response = agendamentoAulaService.criarAgendamentoAula(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            agendamentoAulaService.criar(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

@@ -16,6 +16,6 @@ public record AgendamentoAulaResponseDTO(
     LocalDate dataFim,
     String diaDaSemana,
     LocalTime horaInicio,
-    LocalTime horaFim,
-    String tipoAgendamento
+    LocalTime horaFim
+    // boolean isEvento
 ){}
