@@ -2,10 +2,8 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
@@ -17,10 +15,10 @@ public class AgendamentoService {
     private AgendamentoRepository agendamentoRepository;
 
     public List<AgendamentoDTO> listarAgendamentos() {
-        
+
         List<Agendamento> listaAgendamentos = agendamentoRepository.findAll();
         List<AgendamentoDTO> listaAgendamentoDTOS = new ArrayList<>();
-        for(Agendamento agendamento : listaAgendamentos){
+        for (Agendamento agendamento : listaAgendamentos) {
             AgendamentoDTO agendamentoDTO = conversaoAgendamentoParaDTO(agendamento);
             listaAgendamentoDTOS.add(agendamentoDTO);
         }
@@ -34,13 +32,13 @@ public class AgendamentoService {
         agendamento.getDataFim(), 
         agendamento.getDiaDaSemana(), 
         agendamento.getJanelasHorario().getHoraInicio(), 
-        agendamento.getJanelasHorario().getHoraFim(), 
-        agendamento.getTipo()
+        agendamento.getJanelasHorario().getHoraFim()
+        // agendamento.isEvento()
         );
         
         return agendamentoDTO;
 
     }
-    
+
 
 }

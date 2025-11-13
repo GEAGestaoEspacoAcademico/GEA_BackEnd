@@ -328,26 +328,26 @@ INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
     ('21:40:00', '22:30:00'),
     ('23:00:00', '23:50:00');
 
-INSERT INTO AGENDAMENTOS (user_id, sala_id, data_inicio, data_fim, dia_da_semana, janela_horario_id, tipo)
+INSERT INTO AGENDAMENTOS (user_id, sala_id, data_inicio, data_fim, dia_da_semana, janela_horario_id)
 VALUES 
     -- Agendamentos de aulas
-    (1, 1, '2025-10-20', '2025-12-15', 'Segunda-feira', 1, 'AULA'),
-    (1, 1, '2025-10-20', '2025-12-15', 'Quarta-feira', 5, 'AULA'),
-    (1, 5, '2025-10-20', '2025-12-15', 'Terça-feira', 6, 'AULA'),
-    (2, 2, '2025-10-20', '2025-12-15', 'Segunda-feira', 2,'AULA'),
-    (2, 2, '2025-10-20', '2025-12-15', 'Quinta-feira', 3,'AULA'),
-    (1, 5, '2025-10-20', '2025-12-15', 'Sexta-feira', 1, 'AULA'),
-    (3, 3, '2025-10-20', '2025-12-15', 'Quarta-feira', 4,'AULA'),
-    (3, 6, '2025-10-20', '2025-12-15', 'Terça-feira', 6, 'AULA'),
-    (1, 7, '2025-10-20', '2025-12-15', 'Quinta-feira', 5, 'AULA'),
-    (2, 4, '2025-10-20', '2025-12-15', 'Segunda-feira', 3, 'AULA'),
+    (1, 1, '2025-10-20', '2025-12-15', 'Segunda-feira', 1),
+    (1, 1, '2025-10-20', '2025-12-15', 'Quarta-feira', 5),
+    (1, 5, '2025-10-20', '2025-12-15', 'Terça-feira', 6),
+    (2, 2, '2025-10-20', '2025-12-15', 'Segunda-feira', 2),
+    (2, 2, '2025-10-20', '2025-12-15', 'Quinta-feira', 3),
+    (1, 5, '2025-10-20', '2025-12-15', 'Sexta-feira', 1),
+    (3, 3, '2025-10-20', '2025-12-15', 'Quarta-feira', 4),
+    (3, 6, '2025-10-20', '2025-12-15', 'Terça-feira', 6),
+    (1, 7, '2025-10-20', '2025-12-15', 'Quinta-feira', 5),
+    (2, 4, '2025-10-20', '2025-12-15', 'Segunda-feira', 3),
     
     -- Agendamentos de eventos
-    (8, 3, '2025-11-15', '2025-11-15', 'Sexta-feira', 2, 'EVENTO'),
-    (9, 3, '2025-11-22', '2025-11-22', 'Sexta-feira', 3,'EVENTO'),
-    (10, 2, '2025-12-10', '2025-12-10', 'Terça-feira', 4,'EVENTO'),
-    (8, 3, '2025-11-27', '2025-11-27', 'Quinta-feira', 1, 'EVENTO'),
-    (8, 3, '2025-12-01', '2025-12-01', 'Segunda-feira', 6, 'EVENTO');
+    (8, 3, '2025-11-15', '2025-11-15', 'Sexta-feira', 2),
+    (9, 3, '2025-11-22', '2025-11-22', 'Sexta-feira', 3),
+    (10, 2, '2025-12-10', '2025-12-10', 'Terça-feira', 4),
+    (8, 3, '2025-11-27', '2025-11-27', 'Quinta-feira', 1),
+    (8, 3, '2025-12-01', '2025-12-01', 'Segunda-feira', 6);
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)

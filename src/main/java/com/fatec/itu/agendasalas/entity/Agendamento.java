@@ -48,15 +48,15 @@ public class Agendamento implements Serializable {
     @Column(name="data_fim", nullable = false)
     private LocalDate dataFim;
 
-    @Column(name="dia_da_semana", nullable = false)
+    @Column(name="dia_da_semana")
     private String diaDaSemana;
 
     @ManyToOne
     @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
     private JanelasHorario janelasHorario;
 
-    @Column(name = "tipo")
-    private String tipo;
+    // @Column(name = "is_evento")
+    // private boolean isEvento;
 
     @PrePersist
     @PreUpdate
