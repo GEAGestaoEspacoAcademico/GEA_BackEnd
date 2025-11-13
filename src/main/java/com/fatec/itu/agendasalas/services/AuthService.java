@@ -21,7 +21,7 @@ public class AuthService {
         
         //autenticação bem vagabunda, mas só pra dar tempo de ter um login no sistema
         //a autenticação certa usa o JWT Token
-        if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.usuarioLogin(), user.getSenha())){
+        if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.usuarioSenha(), user.getSenha())){
             String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
             return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome);
         }

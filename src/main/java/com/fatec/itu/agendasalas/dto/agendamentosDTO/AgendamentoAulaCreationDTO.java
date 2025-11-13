@@ -13,12 +13,6 @@ public record AgendamentoAulaCreationDTO(
     @NotNull Long disciplinaId,
     @NotNull LocalDate dataInicio,
     @NotNull LocalDate dataFim,
-    @NotBlank String diaDaSemana,
     @NotNull Long janelasHorarioId,
     @NotBlank String tipoAgendamento
 ){}
-
-
-    
-
-

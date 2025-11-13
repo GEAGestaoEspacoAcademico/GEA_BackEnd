@@ -36,11 +36,13 @@ public class AgendamentoEventoService {
         AgendamentoEventoRepository agendamentoEventoRepository, 
         JanelasHorarioService janelasHorarioService, 
         UsuarioRepository usuarioRepository,
-        SalaRepository salaRepository){
+        SalaRepository salaRepository,
+        EventoRepository eventoRepository){
             this.agendamentoEventoRepository = agendamentoEventoRepository;
             this.janelasHorarioService = janelasHorarioService;
             this.usuarioRepository = usuarioRepository;
             this.salaRepository = salaRepository;
+            this.eventoRepository = eventoRepository;
         }
 
     @Transactional
@@ -52,7 +54,7 @@ public class AgendamentoEventoService {
         LocalDate dataInicial = agendamentoEventoCreationDTO.diaInicio(); 
         LocalDate dataFinal = agendamentoEventoCreationDTO.diaFim();
         Usuario usuario = usuarioRepository.getReferenceById(agendamentoEventoCreationDTO.usuario());
-        
+        Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento());
         Sala sala = salaRepository.findByNome(agendamentoEventoCreationDTO.local()).orElseThrow(()-> new RuntimeException("SALA NAO ENCONTRADA"));
 
         while(!dataInicial.isAfter(dataFinal)){
@@ -61,14 +63,13 @@ public class AgendamentoEventoService {
                 AgendamentoEvento agendamentoEvento = new AgendamentoEvento();
                 agendamentoEvento.setUsuario(usuario);
                 agendamentoEvento.setSala(sala);
-                agendamentoEvento.setDisciplina(disciplina);
-                agendamentoEvento.setDataInicio(dto.dataInicio());
-                agendamentoEvento.setDataFim(dto.dataFim());
-                agendamentoEvento.setDiaDaSemana(dto.diaDaSemana());
-                agendamentoEvento.setJanelasHorario(janelasHorario);
+                agendamentoEvento.setEventoId(evento);
+                agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setTipo(dto.tipoAgendamento());
 
-                };
+            }
+            dataInicial = dataFinal.plusDays(1);
+            
             }
     }
 

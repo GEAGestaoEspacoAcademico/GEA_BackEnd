@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -12,6 +13,8 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,13 +58,36 @@ public class Agendamento implements Serializable {
     @Column(name = "tipo")
     private String tipo;
 
-    /* 
-    public Agendamento(Usuario usuario, Sala sala, LocalDate data, JanelasHorario janelasHorario, String tipo){
-        this.usuario = usuario;
-        this.sala = sala;
-        this.data = data;
-        this.janelasHorario = janelasHorario;
-        this.diaDaSemana = diaDaSemana;
+    @PrePersist
+    @PreUpdate
+    private void preencherDiaDaSemana() {
+        if (this.dataInicio != null) {
+            this.diaDaSemana = traduzirDiaDaSemana(this.dataInicio.getDayOfWeek());
+        } else {
+            this.diaDaSemana = null;
+        }
     }
-    */
+
+    private String traduzirDiaDaSemana(DayOfWeek day) {
+        if (day == null) return null;
+        switch (day) {
+            case MONDAY:
+                return "Segunda-feira";
+            case TUESDAY:
+                return "Terça-feira";
+            case WEDNESDAY:
+                return "Quarta-feira";
+            case THURSDAY:
+                return "Quinta-feira";
+            case FRIDAY:
+                return "Sexta-feira";
+            case SATURDAY:
+                return "Sábado";
+            case SUNDAY:
+                return "Domingo";
+            default:
+                return day.toString();
+        }
+    }
+
 }
