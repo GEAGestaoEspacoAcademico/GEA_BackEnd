@@ -8,7 +8,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="RECORRENCIA")
 public class Recorrencia {
@@ -25,8 +31,9 @@ public class Recorrencia {
     @Column(name="data_fim", nullable=false)
     private LocalDate dataFim;
 
-    @Column(name="tipo", nullable=false)
-    private String tipo;
-
+    public Recorrencia(LocalDate dataInicio, LocalDate dataFim){
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+    }
     
 }

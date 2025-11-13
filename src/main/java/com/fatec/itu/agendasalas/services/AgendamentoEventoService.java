@@ -16,10 +16,14 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDT
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.AgendamentoEvento;
+import com.fatec.itu.agendasalas.entity.Evento;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
+import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
+import com.fatec.itu.agendasalas.repositories.EventoRepository;
+import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
@@ -31,18 +35,22 @@ public class AgendamentoEventoService {
     private JanelasHorarioService janelasHorarioService;
     private UsuarioRepository usuarioRepository;
     private SalaRepository salaRepository;
+    private EventoRepository eventoRepository;
+    private RecorrenciaRepository recorrenciaRepository
 
     public AgendamentoEventoService(
         AgendamentoEventoRepository agendamentoEventoRepository, 
         JanelasHorarioService janelasHorarioService, 
         UsuarioRepository usuarioRepository,
         SalaRepository salaRepository,
-        EventoRepository eventoRepository){
+        EventoRepository eventoRepository,
+        RecorrenciaRepository recorrenciaRepository){
             this.agendamentoEventoRepository = agendamentoEventoRepository;
             this.janelasHorarioService = janelasHorarioService;
             this.usuarioRepository = usuarioRepository;
             this.salaRepository = salaRepository;
             this.eventoRepository = eventoRepository;
+            this.recorrenciaRepository = recorrenciaRepository;
         }
 
     @Transactional
@@ -53,10 +61,15 @@ public class AgendamentoEventoService {
         
         LocalDate dataInicial = agendamentoEventoCreationDTO.diaInicio(); 
         LocalDate dataFinal = agendamentoEventoCreationDTO.diaFim();
-        
+        Recorrencia recorrencia = new Recorrencia();
+        recorrencia.setDataInicio(dataInicial);
+        recorrencia.setDataFinal(dataFinal);
+
+
         Usuario usuario = usuarioRepository.getReferenceById(agendamentoEventoCreationDTO.usuario());
-        Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento());
+        Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento()).orElseThrow(()-> new RuntimeException("EVENTO NAO ENCONTRADA"));;
         Sala sala = salaRepository.findByNome(agendamentoEventoCreationDTO.local()).orElseThrow(()-> new RuntimeException("SALA NAO ENCONTRADA"));
+
 
         while(!dataInicial.isAfter(dataFinal)){
 
