@@ -55,4 +55,13 @@ public class Agendamento implements Serializable {
     @Column(name = "tipo")
     private String tipo;
 
+    /* 
+    public Agendamento(Usuario usuario, Sala sala, LocalDate data, JanelasHorario janelasHorario, String tipo){
+        this.usuario = usuario;
+        this.sala = sala;
+        this.data = data;
+        this.janelasHorario = janelasHorario;
+        this.diaDaSemana = diaDaSemana;
+    }
+    */
 }

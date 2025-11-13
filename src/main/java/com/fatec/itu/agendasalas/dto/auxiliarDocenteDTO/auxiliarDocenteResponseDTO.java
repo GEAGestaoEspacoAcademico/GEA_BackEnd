@@ -1,6 +1,6 @@
 package com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO;
 
-public record AuxiliarDocenteResponseDTO(
+public record auxiliarDocenteResponseDTO(
         Long id,
         String nome,
         String email,

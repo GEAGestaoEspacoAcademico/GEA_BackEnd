@@ -25,10 +25,10 @@ LocalTime horaInicio,
 @NotNull(message = "O horario de fim de agendamento de um evento não pode ser nulo")
 LocalTime horafim,
 
-boolean todosHorarios
+boolean todosHorarios,
 
-
-
+@NotNull(message = "O usuario nao pode ser nulo")
+Long usuario
 
 ) {
 
