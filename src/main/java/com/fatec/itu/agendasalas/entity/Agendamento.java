@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -12,10 +13,9 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import java.time.DayOfWeek;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,11 +42,8 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="sala_id", referencedColumnName="id", nullable = false)
     private Sala sala;
 
-    @Column(name="data_inicio", nullable = false)
-    private LocalDate dataInicio;
-
-    @Column(name="data_fim", nullable = false)
-    private LocalDate dataFim;
+    @Column(name="data", nullable = false)
+    private LocalDate data;
 
     @Column(name="dia_da_semana", nullable = false)
     private String diaDaSemana;
@@ -61,8 +58,8 @@ public class Agendamento implements Serializable {
     @PrePersist
     @PreUpdate
     private void preencherDiaDaSemana() {
-        if (this.dataInicio != null) {
-            this.diaDaSemana = traduzirDiaDaSemana(this.dataInicio.getDayOfWeek());
+        if (this.data != null) {
+            this.diaDaSemana = traduzirDiaDaSemana(this.data.getDayOfWeek());
         } else {
             this.diaDaSemana = null;
         }

@@ -6,8 +6,7 @@ import java.time.LocalTime;
 public record AgendamentoDTO(
         String nomeUsuario,
         // String nomeSala,
-        LocalDate dataInicio,
-        LocalDate dataFim,
+        LocalDate data,
         String diaDaSemana,
         LocalTime horaInicio,
         LocalTime horaFim,
