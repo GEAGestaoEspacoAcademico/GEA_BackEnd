@@ -57,7 +57,7 @@ public class AgendamentoAulaService {
         agendamento.setUsuario(usuario);
         agendamento.setSala(sala);
         agendamento.setDisciplina(disciplina);
-        agendamento.setDataInicio(dto.dataInicio());
+        agendamento.setData(data);
         agendamento.setDataFim(dto.dataFim());
         agendamento.setJanelasHorario(janelasHorario);
         agendamento.setTipo(dto.tipoAgendamento());

@@ -30,8 +30,7 @@ public class AgendamentoService {
     private AgendamentoDTO conversaoAgendamentoParaDTO(Agendamento agendamento){
         AgendamentoDTO agendamentoDTO = new AgendamentoDTO(
         agendamento.getUsuario().getNome(), 
-        agendamento.getDataInicio(), 
-        agendamento.getDataFim(), 
+        agendamento.getData(),
         agendamento.getDiaDaSemana(), 
         agendamento.getJanelasHorario().getHoraInicio(), 
         agendamento.getJanelasHorario().getHoraFim(), 
