@@ -53,6 +53,7 @@ public class AgendamentoEventoService {
         
         LocalDate dataInicial = agendamentoEventoCreationDTO.diaInicio(); 
         LocalDate dataFinal = agendamentoEventoCreationDTO.diaFim();
+        
         Usuario usuario = usuarioRepository.getReferenceById(agendamentoEventoCreationDTO.usuario());
         Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento());
         Sala sala = salaRepository.findByNome(agendamentoEventoCreationDTO.local()).orElseThrow(()-> new RuntimeException("SALA NAO ENCONTRADA"));
@@ -65,10 +66,10 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setSala(sala);
                 agendamentoEvento.setEventoId(evento);
                 agendamentoEvento.setJanelasHorario(janela);
-                agendamentoEvento.setTipo(dto.tipoAgendamento());
+                agendamentoEvento.setData(dataInicial);
 
             }
-            dataInicial = dataFinal.plusDays(1);
+            dataInicial = dataInicial.plusDays(1);
             
             }
     }
