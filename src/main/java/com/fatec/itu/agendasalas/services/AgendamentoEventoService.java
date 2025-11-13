@@ -17,57 +17,54 @@ import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class AgendamentoEventoService {
-  @Autowired
-  private UsuarioRepository usuarioRepository;
+        @Autowired
+        private UsuarioRepository usuarioRepository;
 
-  @Autowired
-  private AgendamentoEventoRepository agendamentoEventoRepository;
+        @Autowired
+        private AgendamentoEventoRepository agendamentoEventoRepository;
 
-  @Autowired
-  private AgendamentoRepository agendamentoRepository;
+        @Autowired
+        private AgendamentoRepository agendamentoRepository;
 
-  @Autowired
-  private SalaRepository salaRepository;
+        @Autowired
+        private SalaRepository salaRepository;
 
-  @Autowired
-  private JanelasHorarioRepository janelasHorarioRepository;
+        @Autowired
+        private JanelasHorarioRepository janelasHorarioRepository;
 
-  @Transactional
-  public void criar(AgendamentoEventoCreationDTO dto) {
-    Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
-        () -> new RuntimeException("Usuário não encontrado com ID: " + dto.usuarioId()));
+        @Transactional
+        public void criar(AgendamentoEventoCreationDTO dto) {
+                Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
+                                () -> new RuntimeException("Usuário não encontrado com ID: "
+                                                + dto.usuarioId()));
 
-    Sala sala = salaRepository.findById(dto.salaId())
-        .orElseThrow(() -> new RuntimeException("Sala não encontrada com ID: " + dto.salaId()));
+                Sala sala = salaRepository.findById(dto.salaId())
+                                .orElseThrow(() -> new RuntimeException(
+                                                "Sala não encontrada com ID: " + dto.salaId()));
 
-    JanelasHorario janelaHorario = janelasHorarioRepository.findById(dto.janelasHorarioId())
-        .orElseThrow(() -> new RuntimeException("Janela de horários inválida"));
+                List<JanelasHorario> horariosEncontrados = janelasHorarioRepository
+                                .findByIntervaloIdHorarios(dto.horarioInicio(), dto.horarioFim());
 
-    List<JanelasHorario> horariosDisponiveis = janelasHorarioRepository.findAll().stream()
-        .filter(j -> !j.getHoraInicio().isBefore(janelaHorario.getHoraFim())
-            || j.getId().equals(janelaHorario.getId()))
-        .limit(dto.quantidade()).toList();
+                List<Long> idsDeHorariosParaExcluirAgendamento =
+                                horariosEncontrados.stream().map(h -> h.getId()).toList();
 
-    List<Long> idsDeHorariosParaExcluirAgendamento =
-        horariosDisponiveis.stream().map(h -> h.getId()).toList();
+                List<Long> idsDeAgendamentoParaExcluir =
+                                agendamentoRepository.findByDataAndJanelaHorario(dto.dataInicio(),
+                                                idsDeHorariosParaExcluirAgendamento, dto.salaId());
 
-    List<Long> idsDeAgendamentoParaExcluir =
-        agendamentoRepository.findByDataAndJanelaHorario(dto.dataInicio(),
-            idsDeHorariosParaExcluirAgendamento, dto.salaId()).stream().toList();
+                agendamentoRepository.deleteAllById(idsDeAgendamentoParaExcluir);
 
-    agendamentoRepository.deleteAllById(idsDeAgendamentoParaExcluir);
+                for (int i = 0; i < horariosEncontrados.size(); i++) {
+                        AgendamentoEvento proximoAgendamento = new AgendamentoEvento();
 
-    for (int i = 0; i < dto.quantidade(); i++) {
-      AgendamentoEvento proximoAgendamento = new AgendamentoEvento();
+                        proximoAgendamento.setUsuario(usuario);
+                        proximoAgendamento.setSala(sala);
+                        proximoAgendamento.setDataInicio(dto.dataInicio());
+                        proximoAgendamento.setDataFim(dto.dataFim());
+                        // proximoAgendamento.setEvento((dto.isEvento()));
+                        proximoAgendamento.setJanelasHorario(horariosEncontrados.get(i));
 
-      proximoAgendamento.setUsuario(usuario);
-      proximoAgendamento.setSala(sala);
-      proximoAgendamento.setDataInicio(dto.dataInicio());
-      proximoAgendamento.setDataFim(dto.dataFim());
-      // proximoAgendamento.setEvento((dto.isEvento()));
-      proximoAgendamento.setJanelasHorario(horariosDisponiveis.get(i));
-
-      agendamentoEventoRepository.save(proximoAgendamento);
-    }
-  }
+                        agendamentoEventoRepository.save(proximoAgendamento);
+                }
+        }
 }

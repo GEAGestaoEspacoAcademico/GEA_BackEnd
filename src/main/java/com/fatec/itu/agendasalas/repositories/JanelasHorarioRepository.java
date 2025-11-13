@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.repositories;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface JanelasHorarioRepository extends JpaRepository<JanelasHorario, 
     """)
     List<JanelasHorario> findDisponiveisPorData(@Param("data") LocalDate data);
 
+    @Query("SELECT j from JanelasHorario j where j.horaInicio >= :horaInicio and j.horaFim <= :horaFim")
+    List<JanelasHorario> findByIntervaloIdHorarios(@Param("horaInicio") LocalTime horaInicio, @Param("horaFim") LocalTime horaFim);
 }

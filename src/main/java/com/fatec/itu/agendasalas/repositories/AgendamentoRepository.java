@@ -10,9 +10,9 @@ import com.fatec.itu.agendasalas.entity.Agendamento;
 
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
-  @Query("SELECT a.id FROM Agendamento a "
-      + "WHERE a.dataInicio = :data AND a.janelasHorario.id IN (:janelas)" +
-      " AND a.sala.id = :sala_id")
-  List<Long> findByDataAndJanelaHorario(@Param("data") LocalDate data,
-      @Param("janelas") List<Long> janelas, @Param("sala_id") Long salaId);
+    @Query("SELECT a.id FROM Agendamento a "
+            + "WHERE a.dataInicio = :data AND a.janelasHorario.id IN (:janelas)"
+            + " AND a.sala.id = :sala_id")
+    List<Long> findByDataAndJanelaHorario(@Param("data") LocalDate data,
+            @Param("janelas") List<Long> janelas, @Param("sala_id") Long salaId);
 }
