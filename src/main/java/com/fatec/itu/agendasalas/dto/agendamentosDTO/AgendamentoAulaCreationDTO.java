@@ -14,5 +14,5 @@ public record AgendamentoAulaCreationDTO(
     @NotNull LocalDate dataInicio,
     @NotNull LocalDate dataFim,
     @NotNull Long janelasHorarioId,
-    @NotBlank String tipoAgendamento
+    @NotBlank boolean isEvento
 ){}

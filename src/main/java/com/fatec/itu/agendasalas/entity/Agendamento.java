@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -12,10 +13,10 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import java.time.DayOfWeek;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -55,8 +56,11 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
     private JanelasHorario janelasHorario;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name="tipo")
+    private String tipo; 
+
+    @Transient
+    private boolean isEvento; 
 
     @PrePersist
     @PreUpdate
@@ -90,4 +94,7 @@ public class Agendamento implements Serializable {
         }
     }
 
+    public boolean isEvento() {
+        return "EVENTO".equalsIgnoreCase(this.tipo);
+    }
 }
