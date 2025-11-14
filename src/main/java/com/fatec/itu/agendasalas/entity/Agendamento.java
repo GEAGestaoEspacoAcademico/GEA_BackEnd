@@ -53,18 +53,18 @@ public class Agendamento implements Serializable {
     private JanelasHorario janelasHorario;
 
     @Column(name = "tipo")
-    private String tipo;
+    private boolean tipo;
 
     @ManyToOne
     @JoinColumn(name="recorrencia_id", referencedColumnName="id", nullable=false)
     private Recorrencia recorrencia;
 
     @Column(name = "status")
-    private boolean status;
+    private String status;
 
     @PrePersist
     @PreUpdate
-    private void preencherDiaDaSemana() {
+    public void preencherDiaDaSemana() {
         if (this.data != null) {
             this.diaDaSemana = traduzirDiaDaSemana(this.data.getDayOfWeek());
         } else {

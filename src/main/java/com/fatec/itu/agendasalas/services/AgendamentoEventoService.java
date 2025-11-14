@@ -95,8 +95,8 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setData(dataInicial);
                 agendamentoEvento.setRecorrencia(recorrenciaSalva);
-                agendamentoEvento.setTipo("EVENTO");
-                agendamentoEvento.setStatus(true);
+                agendamentoEvento.setTipo(true);
+                agendamentoEvento.setStatus("ATIVO");
                 agendamentoEventoRepository.save(agendamentoEvento);
 
             }
@@ -115,9 +115,9 @@ public class AgendamentoEventoService {
             agendamentoEvento.getDiaDaSemana(),
             agendamentoEvento.getJanelasHorario().getHoraInicio(),
             agendamentoEvento.getJanelasHorario().getHoraFim(),
-            agendamentoEvento.getTipo(),
+            agendamentoEvento.isTipo(),
             agendamentoEvento.getRecorrencia().getId(),
-            agendamentoEvento.isStatus()
+            agendamentoEvento.getStatus()
         );
     }
 

@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,9 @@ public class AgendamentoService {
         return agendamentoDTO;
 
     }
+   
     
+    
+
 
 }
