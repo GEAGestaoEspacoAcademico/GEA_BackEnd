@@ -29,16 +29,16 @@ public class AgendamentoConflitoService {
         this.agendamentoAulaRepository = agendamentoAulaRepository;
     }
 
+    
     public boolean existeEventoNoHorario(Sala sala, LocalDate data, JanelasHorario janela){
         return agendamentoEventoRepository.existsBySalaIdAndDataAndJanelasHorarioId(sala.getId(), data, janela.getId());
     }
 
     public boolean existeAgendamentoNoHorario(Sala sala, LocalDate data, JanelasHorario janela){
         return agendamentoRepository.existsBySalaIdAndDataAndJanelasHorarioId(sala.getId(), data, janela.getId());
-    
     }
 
-    public List<AgendamentoAula> filtrarAulasConflitantes(Sala sala, LocalDate data, JanelasHorario janela){
+    public AgendamentoAula filtrarAulasConflitantes(Sala sala, LocalDate data, JanelasHorario janela){
         return agendamentoAulaRepository.findBySalaIdAndDataAndJanelasHorarioId(sala.getId(), data, janela.getId());
     }
 

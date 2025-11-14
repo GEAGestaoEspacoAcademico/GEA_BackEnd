@@ -1,16 +1,13 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.HashSet;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
@@ -20,6 +17,7 @@ import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
@@ -37,10 +35,12 @@ public class AgendamentoEventoService {
     private SalaRepository salaRepository;
     private EventoRepository eventoRepository;
     private RecorrenciaRepository recorrenciaRepository;
+    private AgendamentoAulaService agendamentoAulaService;
 
     public AgendamentoEventoService(
         AgendamentoEventoRepository agendamentoEventoRepository, 
-        JanelasHorarioService janelasHorarioService, 
+        JanelasHorarioService janelasHorarioService,
+        AgendamentoAulaService agendamentoAulaService, 
         UsuarioRepository usuarioRepository,
         SalaRepository salaRepository,
         EventoRepository eventoRepository,
@@ -53,12 +53,12 @@ public class AgendamentoEventoService {
             this.eventoRepository = eventoRepository;
             this.recorrenciaRepository = recorrenciaRepository;
             this.agendamentoConflitoService = agendamentoConflitoService;
+            this.agendamentoAulaService = agendamentoAulaService;
         }
 
     @Transactional
-    public void criarAgendamentoEvento(AgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
-      
-        
+    public void criarAgendamentoEvento(AgendamentoEventoCreationDTO agendamentoEventoCreationDTO) throws ConflitoAoAgendarException{ 
+    
         List<JanelasHorario> janelasHorario = janelasHorarioService.buscaJanelaHorarioPelosHorariosInicioeFim(agendamentoEventoCreationDTO.horaInicio(), agendamentoEventoCreationDTO.horafim(), agendamentoEventoCreationDTO.todosHorarios());
         
         LocalDate dataInicial = agendamentoEventoCreationDTO.diaInicio(); 
@@ -76,8 +76,17 @@ public class AgendamentoEventoService {
 
             for(JanelasHorario janela : janelasHorario){
                 AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala, dataInicial, janela);
+                if(agendamentoAulaConflitante!=null){
+                    //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
+                    //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
+                    agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
+                    //e enviar uma notificao pro professor da aula
+                }
                 if(agendamentoConflitoService.existeEventoNoHorario(sala, dataInicial, janela)){
-                    throw new ConflitoAoAgendarException();
+                    throw new ConflitoAoAgendarException(
+                        "Falha ao agendar um evento, pois já existe um evento na sala " + sala.getNome() + 
+                        " no dia "  +  dataInicial.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + 
+                        " na janela de horarios de: " + janela.getHoraInicio().toString() + "-"+janela.getHoraFim().toString());
                 }
                 AgendamentoEvento agendamentoEvento = new AgendamentoEvento();
                 agendamentoEvento.setUsuario(usuario);
@@ -87,6 +96,7 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setData(dataInicial);
                 agendamentoEvento.setRecorrencia(recorrenciaSalva);
                 agendamentoEvento.setTipo("EVENTO");
+                agendamentoEvento.setStatus(true);
                 agendamentoEventoRepository.save(agendamentoEvento);
 
             }
@@ -106,7 +116,8 @@ public class AgendamentoEventoService {
             agendamentoEvento.getJanelasHorario().getHoraInicio(),
             agendamentoEvento.getJanelasHorario().getHoraFim(),
             agendamentoEvento.getTipo(),
-            agendamentoEvento.getRecorrencia().getId()
+            agendamentoEvento.getRecorrencia().getId(),
+            agendamentoEvento.isStatus()
         );
     }
 
@@ -115,6 +126,15 @@ public class AgendamentoEventoService {
                 .map(this::converterParaResponseDTO)
                 .collect(Collectors.toList());
     }
+
+    public void deletarAgendamentoEventoEspecifico(Long agendamentoEventoId){
+        agendamentoEventoRepository.deleteById(agendamentoEventoId);
+    }
+
+    public void deletarAgendamentoEventoPelaRecorrencia(Long recorrenciaId)
+    {
+        
+    }  
 
     }
 

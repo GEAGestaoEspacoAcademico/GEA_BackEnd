@@ -13,7 +13,8 @@ public record AgendamentoEventoResponseDTO(
     LocalTime horaInicio,
     LocalTime horaFim,
     String tipoAgendamento,
-    Long recorrenciaId
+    Long recorrenciaId,
+    boolean status
 
 ) {
     

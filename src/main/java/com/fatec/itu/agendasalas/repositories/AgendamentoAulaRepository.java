@@ -21,5 +21,5 @@ public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula
     @Query("SELECT a FROM AgendamentoAula a WHERE a.disciplina.professor.id = :professorId")
     List<AgendamentoAula> findByProfessorId(@Param("professorId") Integer professorId);
 
-    List<AgendamentoAula> findBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
+    AgendamentoAula findBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
 }

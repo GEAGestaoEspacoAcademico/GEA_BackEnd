@@ -59,6 +59,9 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="recorrencia_id", referencedColumnName="id", nullable=false)
     private Recorrencia recorrencia;
 
+    @Column(name = "status")
+    private boolean status;
+
     @PrePersist
     @PreUpdate
     private void preencherDiaDaSemana() {
