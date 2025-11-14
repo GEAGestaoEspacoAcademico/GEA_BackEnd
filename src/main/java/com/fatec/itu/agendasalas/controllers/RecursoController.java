@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,5 +63,12 @@ public class RecursoController {
   public ResponseEntity<Void> deletar(@PathVariable Long recursoId) {
     recursoService.deletar(recursoId);
     return ResponseEntity.noContent().build();
+  }
+
+  @Operation(summary = "Apresenta os recursos existentes de um determinado tipo")
+  @GetMapping("/tipo/{tipoId}")
+  public ResponseEntity<List<RecursoSalaCompletoDTO>> buscarPorTipo(@PathVariable Long tipoId){
+    List <RecursoSalaCompletoDTO> recursos = recursoService.listarPorTipo(tipoId);
+    return ResponseEntity.ok(recursos);
   }
 }
