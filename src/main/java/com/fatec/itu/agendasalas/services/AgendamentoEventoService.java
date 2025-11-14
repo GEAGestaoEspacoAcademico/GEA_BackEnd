@@ -75,14 +75,14 @@ public class AgendamentoEventoService {
         while(!dataInicial.isAfter(dataFinal)){
 
             for(JanelasHorario janela : janelasHorario){
-                AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala, dataInicial, janela);
+                AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), dataInicial, janela.getId());
                 if(agendamentoAulaConflitante!=null){
                     //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
                     //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
                     agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
                     //e enviar uma notificao pro professor da aula
                 }
-                if(agendamentoConflitoService.existeEventoNoHorario(sala, dataInicial, janela)){
+                if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), dataInicial, janela.getId())){
                     throw new ConflitoAoAgendarException(
                         "Falha ao agendar um evento, pois já existe um evento na sala " + sala.getNome() + 
                         " no dia "  +  dataInicial.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + 
@@ -95,7 +95,7 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setData(dataInicial);
                 agendamentoEvento.setRecorrencia(recorrenciaSalva);
-                agendamentoEvento.setTipo(true);
+                agendamentoEvento.setTipoEvento(true);
                 agendamentoEvento.setStatus("ATIVO");
                 agendamentoEventoRepository.save(agendamentoEvento);
 
@@ -115,7 +115,7 @@ public class AgendamentoEventoService {
             agendamentoEvento.getDiaDaSemana(),
             agendamentoEvento.getJanelasHorario().getHoraInicio(),
             agendamentoEvento.getJanelasHorario().getHoraFim(),
-            agendamentoEvento.isTipo(),
+            agendamentoEvento.isTipoEvento(),
             agendamentoEvento.getRecorrencia().getId(),
             agendamentoEvento.getStatus()
         );

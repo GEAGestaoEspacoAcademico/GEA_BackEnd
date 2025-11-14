@@ -52,8 +52,8 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
     private JanelasHorario janelasHorario;
 
-    @Column(name = "tipo")
-    private boolean tipo;
+    @Column(name = "is_evento")
+    private boolean tipoEvento; //se true = evento, false = aula
 
     @ManyToOne
     @JoinColumn(name="recorrencia_id", referencedColumnName="id", nullable=false)
