@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula
     // Buscar agendamentos de aula por professor (através da disciplina)
     @Query("SELECT a FROM AgendamentoAula a WHERE a.disciplina.professor.id = :professorId")
     List<AgendamentoAula> findByProfessorId(@Param("professorId") Integer professorId);
+
+    List<AgendamentoAula> findBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
 }

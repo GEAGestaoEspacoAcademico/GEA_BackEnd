@@ -3,20 +3,18 @@ package com.fatec.itu.agendasalas.dto.agendamentosDTO;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record AgendamentoAulaResponseDTO(
-    Long agendamentoAulaId,
+public record AgendamentoEventoResponseDTO(
+    Long agendamentoEventoId,
     String usuarioNome,
     String salaNome,
-    Long disciplinaId,
-    String disciplinaNome,
-    String semestre,
-    String cursoNome,
-    String professorNome,
-    LocalDate dataInicio,
-    LocalDate dataFim,
+    String eventoNome,
+    LocalDate data,
     String diaDaSemana,
     LocalTime horaInicio,
     LocalTime horaFim,
     String tipoAgendamento,
     Long recorrenciaId
-){}
+
+) {
+    
+}
