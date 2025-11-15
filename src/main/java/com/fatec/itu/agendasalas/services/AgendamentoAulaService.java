@@ -154,4 +154,9 @@ public class AgendamentoAulaService {
             agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraFim() : null,
             agendamento.isEvento());
     }
+
+    
+    private boolean verificarConflitoComEvento(){
+        
+    }
 }
