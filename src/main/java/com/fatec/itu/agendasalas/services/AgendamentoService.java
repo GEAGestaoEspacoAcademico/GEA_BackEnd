@@ -35,7 +35,7 @@ public class AgendamentoService {
         agendamento.getDiaDaSemana(), 
         agendamento.getJanelasHorario().getHoraInicio(), 
         agendamento.getJanelasHorario().getHoraFim(), 
-        agendamento.getTipo()
+        agendamento.isTipoEvento()
         );
         
         return agendamentoDTO;
