@@ -61,7 +61,7 @@ public class AgendamentoAulaService {
         agendamento.setDataFim(dto.dataFim());
         agendamento.setJanelasHorario(janelasHorario);
         
-        agendamento.setEvento(dto.isEvento()); 
+        agendamento.setIsEvento(dto.isEvento()); 
 
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
 
@@ -123,7 +123,7 @@ public class AgendamentoAulaService {
         } 
         
         
-        if(dto.isEvento()) agendamento.setEvento(dto.isEvento());
+        if(dto.isEvento()) agendamento.setIsEvento(dto.isEvento());
 
         AgendamentoAula updated = agendamentoAulaRepository.save(agendamento);
         return converterParaResponseDTO(updated);
