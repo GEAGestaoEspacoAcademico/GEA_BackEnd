@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -18,7 +19,10 @@ public class Professor extends Usuario {
     @OneToMany(mappedBy = "professor")
     private List<Disciplina> disciplinas;
 
-    protected Professor() {}
+    public Professor(String login, String email, String nome, Long registroProfessor) {
+        super(login, email, nome);
+        this.registroProfessor=registroProfessor;
+    }
 
     public Long getRegistroProfessor() {
         return registroProfessor;

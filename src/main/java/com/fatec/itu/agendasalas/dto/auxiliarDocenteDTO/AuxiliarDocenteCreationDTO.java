@@ -1,18 +1,20 @@
-package com.fatec.itu.agendasalas.dto.usersDTO;
+package com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO;
 
 import jakarta.validation.constraints.NotEmpty;
 
-
-public record UsuarioCreationDTO (
+public record AuxiliarDocenteCreationDTO(
     @NotEmpty(message = "Login é obrigatório")
-    String usuarioLogin,
+    String login,
 
     @NotEmpty(message = "Nome é obrigatório")
-    String usuarioNome,
+    String nome,
 
     @NotEmpty(message = "E-mail é obrigatório")
-    String usuarioEmail,
+    String email,
 
     @NotEmpty(message = "Senha é obrigatória")
-    String usuarioSenha
+    String senha,
+    
+    @NotEmpty(message= "Area é obrigatória")
+    String area
 ) {}

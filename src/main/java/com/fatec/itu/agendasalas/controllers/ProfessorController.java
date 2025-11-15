@@ -4,15 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 import com.fatec.itu.agendasalas.services.ProfessorService;
@@ -33,9 +37,17 @@ public class ProfessorController {
     private DisciplinaService disciplinaService;
 
     @Operation(summary = "Lista todos os professores")
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     @GetMapping
     public ResponseEntity<List<ProfessorResponseDTO>> listarProfessores() {
         return ResponseEntity.ok(professorService.listarProfessores());
+    }
+
+    @PostMapping
+    /*Se não me engano é função da secretaria, mas isso é o de menos é só adicionar aqui */
+    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    public ResponseEntity<ProfessorResponseDTO> cadastrarProfessor(@RequestBody ProfessorCreateDTO professorCreateDTO){
+        return ResponseEntity.created(null).body(professorService.cadastrarUsuario(professorCreateDTO));
     }
 
     @Operation(summary = "Busca professor pelo ID")
