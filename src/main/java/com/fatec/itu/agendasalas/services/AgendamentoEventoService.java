@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,7 +108,7 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setData(agendamentoDia.dia());
                 agendamentoEvento.preencherDiaDaSemana();
                 agendamentoEvento.setRecorrencia(recorrenciaSalva);
-                agendamentoEvento.isEvento();
+                agendamentoEvento.setIsEvento(true);
                 agendamentoEvento.setStatus("ATIVO");
                 agendamentoEvento.setSolicitante(usuario.getNome()); 
                 //estou considerando que a propria pessoa que agendou é a solicitante, pois na tela não tem nada disso.

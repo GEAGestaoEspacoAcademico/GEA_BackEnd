@@ -53,7 +53,7 @@ public class Agendamento implements Serializable {
     private JanelasHorario janelasHorario;
 
     @Column(name = "is_evento")
-    private boolean isEvento; //se true = evento, false = aula
+    private Boolean isEvento; //se true = evento, false = aula
 
     @ManyToOne
     @JoinColumn(name="recorrencia_id", referencedColumnName="id", nullable=false)
@@ -97,11 +97,4 @@ public class Agendamento implements Serializable {
         }
     }
 
-    public boolean isEvento() {
-        return Boolean.TRUE.equals(this.isEvento);
-    }
-
-    public void setIsEvento(Boolean isEvento) {
-        this.isEvento = isEvento;
-    }
 }
