@@ -7,8 +7,7 @@ import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 public record AgendamentoNotificacaoDTO(
     Long agendamentoId,
     SalaResumoDTO sala, // <-- Usando o novo DTO de resumo da sala
-    LocalDate dataInicio,
-    LocalDate dataFim,
+    LocalDate data,
     LocalTime horaInicio,
     LocalTime horaFim
 ){}

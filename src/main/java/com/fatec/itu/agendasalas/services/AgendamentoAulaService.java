@@ -57,10 +57,8 @@ public class AgendamentoAulaService {
         agendamento.setUsuario(usuario);
         agendamento.setSala(sala);
         agendamento.setDisciplina(disciplina);
-        agendamento.setData(data);
-        agendamento.setDataFim(dto.dataFim());
+        agendamento.setData(dto.data());
         agendamento.setJanelasHorario(janelasHorario);
-        
         agendamento.setIsEvento(dto.isEvento()); 
 
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
@@ -115,8 +113,7 @@ public class AgendamentoAulaService {
             agendamento.setDisciplina(disciplina);
         }
 
-        if (dto.dataInicio() != null) agendamento.setDataInicio(dto.dataInicio());
-        if (dto.dataFim() != null) agendamento.setDataFim(dto.dataFim());
+        if (dto.data() != null) agendamento.setData(dto.data());
         if (dto.janelasHorarioId() != null){
             JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
             agendamento.setJanelasHorario(janelasHorario);
@@ -151,8 +148,7 @@ public class AgendamentoAulaService {
             agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
                 ? agendamento.getDisciplina().getProfessor().getNome()
                 : "Não atribuído",
-            agendamento.getDataInicio(),
-            agendamento.getDataFim(),
+            agendamento.getData(),
             agendamento.getDiaDaSemana(),
             agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraInicio() : null,
             agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraFim() : null,

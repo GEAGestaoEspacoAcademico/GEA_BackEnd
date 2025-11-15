@@ -10,5 +10,5 @@ import com.fatec.itu.agendasalas.entity.Agendamento;
 
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
-    List<Agendamento> findAllByDataInicio(LocalDate data);
+    List<Agendamento> findAllByData(LocalDate data);
 }

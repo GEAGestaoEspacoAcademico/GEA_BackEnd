@@ -31,7 +31,7 @@ public class AgendamentoService {
     @Transactional(readOnly = true)
     public List<AgendamentoNotificacaoDisciplinaDTO> buscarAgendamentosPorData(LocalDate data) {
         
-        List<Agendamento> agendamentos = agendamentoRepository.findAllByDataInicio(data); 
+        List<Agendamento> agendamentos = agendamentoRepository.findAllByData(data);
 
         return agendamentos.stream()
                 .map(this::conversaoAgendamentoParaNotificacaoDisciplinaDTO)
@@ -61,8 +61,7 @@ public class AgendamentoService {
         return new AgendamentoNotificacaoDisciplinaDTO(
             agendamento.getId(),
             salaResumo,
-            agendamento.getDataInicio(),
-            agendamento.getDataFim(),
+            agendamento.getData(),
             agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraInicio() : null,
             agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraFim() : null,
             disciplinaId,
