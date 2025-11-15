@@ -2,27 +2,49 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ProfessorService {
+public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, ProfessorResponseDTO> {
 
     private ProfessorRepository professorRepository;
 
     @Autowired
     private CursoRepository cursoRepository;
 
+    @Autowired
+    private PasswordEncryptService passwordEncryptService;
+
     public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
+    }
+
+    @Override
+    @Transactional
+    public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) {
+       Professor novoProfessor = new Professor(
+            professorCreateDTO.login(), 
+            professorCreateDTO.email(), 
+            professorCreateDTO.nome(),
+            professorCreateDTO.registroProfessor());
+
+        novoProfessor.setSenha(passwordEncryptService.criptografarSenha(professorCreateDTO.senha()));
+        professorRepository.save(novoProfessor);
+        return toResponseDTO(novoProfessor);
     }
 
     /********* Lista por ID *********/
@@ -65,4 +87,6 @@ public class ProfessorService {
         return new ProfessorResponseDTO(p.getId(), p.getNome(), p.getEmail(),
                 p.getRegistroProfessor(), p.getCargo() != null ? p.getCargo().getId() : null);
     }
+
+
 }

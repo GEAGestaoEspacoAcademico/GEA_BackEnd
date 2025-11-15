@@ -3,10 +3,13 @@ package com.fatec.itu.agendasalas.repositories;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import com.fatec.itu.agendasalas.entity.Sala;
 
 @Repository
@@ -29,4 +32,6 @@ public interface SalaRepository extends JpaRepository<Sala, Long> {
         @Query("SELECT DISTINCT s FROM Sala s LEFT JOIN FETCH s.recursos rs "
                         + "LEFT JOIN FETCH rs.recurso r WHERE s.id IN :ids")
         List<Sala> findSalasComRecursosByIds(@Param("ids") List<Long> ids);
+
+        public Optional<Sala> findByNome(String nome);
 }

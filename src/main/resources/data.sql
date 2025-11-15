@@ -28,12 +28,16 @@ VALUES
     ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
 -- senha: ad123
 
+INSERT INTO AUXILIAR_DOCENTES (area, user_id)
+VALUES
+('MECATRONICA', 4);
+
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
 -- senha: ss123
-
+    
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
@@ -169,16 +173,16 @@ VALUES
     (6, 1011),   -- Prof. Dimas Cardoso
     (7, 1012),   -- Prof. Fabricio Londero
     (8, 1013),   -- Prof. Francisco Bianchi
-    (9, 1014),   -- Prof. Luis dos Santos
-    (17, 1015),  -- Prof. Glauco Todesco
-    (18, 1016),  -- Prof. Onei Junior
-    (19, 1017),  -- Prof. Marcos Araujo
-    (20, 1018),  -- Prof. Sergio Clauss
-    (21, 1019),  -- Prof. Marcio Camargo
-    (22, 1020),  -- Prof. Bruno Henrique
-    (23, 1021),  -- Prof. Andre Egreggio
-    (24, 1022),  -- Prof. Ricardo Leme
-    (25, 1023);  -- Prof. Levi Munhoz
+    (9, 1014);   -- Prof. Luis dos Santos
+    --(26, 1015),  -- Prof. Glauco Todesco
+    --(27, 1016),  -- Prof. Onei Junior
+    --(28, 1017),  -- Prof. Marcos Araujo
+    --(29, 1018),  -- Prof. Sergio Clauss
+    --(30, 1019),  -- Prof. Marcio Camargo
+    --(31, 1020),  -- Prof. Bruno Henrique
+    --(32, 1021),  -- Prof. Andre Egreggio
+    --(33, 1022),  -- Prof. Ricardo Leme
+    --(34, 1023);  -- Prof. Levi Munhoz
 
 
 -- Coordenadores
@@ -217,36 +221,36 @@ VALUES
     ('Programação Orientada à objetos', '2025.1', 6, 1),
     ('Segurança da Informação', '2025.1', 8, 1),
     ('Sistemas de Informação', '2024.1', 9, 1),
-    ('Algoritmos', '2024.1', 17, 1),
-    ('Programação Web', '2025.1', 17, 1),
-    ('Arq e Organização de Computadores', '2024.1', 18, 1),
-    ('Administração Geral', '2024.1', 19, 1),
-    ('Programação em Microinformática', '2024.1', 20, 1),
-    ('Comunicação e Expressão', '2024.1', 21, 1),
-    ('Matemática Discreta', '2024.1', 22, 1),
-    ('Banco de Dados', '2024.2', 24, 1),
-    ('Contabilidade', '2024.2', 23, 1),
-    ('Engenharia de Software I', '2024.2', 25, 1),
-    ('Linguagem de Programação', '2024.2', 24, 1),
+    --('Algoritmos', '2024.1', 26, 1),
+    --('Programação Web', '2025.1', 26, 1),
+    --('Arq e Organização de Computadores', '2024.1', 27, 1),
+    --('Administração Geral', '2024.1', 28, 1),
+    --('Programação em Microinformática', '2024.1', 29, 1),
+    --('Comunicação e Expressão', '2024.1', 30, 1),
+    --('Matemática Discreta', '2024.1', 31, 1),
+    --('Banco de Dados', '2024.2', 33, 1),
+    --('Contabilidade', '2024.2', 32, 1),
+    --('Engenharia de Software I', '2024.2', 34, 1),
+    --('Linguagem de Programação', '2024.2', 33, 1),
 
     -- Curso: GTI (curso_id = 2)
     ('Gestão de Projetos', '2024.2', 8, 2),
     ('Governança de TI', '2024.2', 7, 2),
-    ('Processos Gerenciais', '2025.2', 25, 2),
-    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
-    ('Matemática Financeira', '2025.1', 21, 2),
-    ('Modelagem de Processos', '2024.2', 20, 2),
-    ('Gestão de Pessoas', '2024.2', 18, 2),
+    --('Processos Gerenciais', '2025.2', 34, 2),
+    --('Gestão de Sistemas Operacionais', '2025.2', 26, 2),
+    --('Matemática Financeira', '2025.1', 30, 2),
+   -- ('Modelagem de Processos', '2024.2', 29, 2),
+   -- ('Gestão de Pessoas', '2024.2', 27, 2),
 
     
     -- Curso: Mecatrônica Industrial (curso_id = 3)
     ('Eletromagnetismo', '2023.2', 8, 3),
     ('Cálculo', '2023.2', 7, 3),
-    ('Comunicação Acadêmica', '2024.1', 9, 3),
-    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
-    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
-    ('Estatística Descritiva', '2025.2', 5, 3),
-    ('Desenho Técnico', '2025.2', 23, 3);
+    ('Comunicação Acadêmica', '2024.1', 9, 3);
+   -- ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 30, 3),
+   -- ('Int. Sistemas Dimensionais', '2025.1', 34, 3),
+   -- ('Estatística Descritiva', '2025.2', 5, 3),
+   -- ('Desenho Técnico', '2025.2', 32, 3);
 
     INSERT INTO TIPOS_SALAS (nome)
     VALUES 
@@ -284,7 +288,7 @@ VALUES
     ('Mobiliário');
 
 -- Recursos
-INSERT INTO RECURSOS (NOME, id_tipo_recurso) VALUES
+INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
     ('Webcam Logitech C920', 1),
     ('Monitor Dell UltraSharp 24"', 1),
     ('Impressora Multifuncional HP', 1),
@@ -327,26 +331,33 @@ INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
     ('20:50:00', '21:40:00'),
     ('21:40:00', '22:30:00'),
     ('23:00:00', '23:50:00');
-    INSERT INTO AGENDAMENTOS (user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento)
-    VALUES 
-        -- Agendamentos de aulas
-        (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE),
-        (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE),
-        (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE),
-        (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE),
-        (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE),
-        (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE),
-        (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE),
-        (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE),
-        
-        -- Agendamentos de eventos
-        (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE),
-        (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE),
-        (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE),
-        (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE),
-        (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE);
+
+    INSERT INTO RECORRENCIA (data_inicio, data_fim)
+    VALUES
+    ('2025-12-15', '2025-12-15'),
+    ('2025-12-15', '2025-12-15');
+
+    INSERT INTO AGENDAMENTOS 
+(user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
+VALUES 
+    -- Agendamentos de aulas
+    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'APROVADO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'APROVADO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
+    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'APROVADO', 'Sistema'),
+    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'APROVADO', 'Sistema'),
+    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'APROVADO', 'Sistema'),
+    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'APROVADO', 'Sistema'),
+
+    -- Agendamentos de eventos
+    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'EVENTO', 'Sistema'),
+    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'EVENTO', 'Sistema'),
+    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'EVENTO', 'Sistema'),
+    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'EVENTO', 'Sistema'),
+    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'EVENTO', 'Sistema');
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
@@ -363,11 +374,16 @@ VALUES
     (10, 6);  -- Gestão de Projetos - Segunda 14:00
 
 
+INSERT INTO EVENTOS(nome, descricao)
+VALUES
+('AAA', 'aa'),
+('evento2', 'evento2 da silva');
+
 -- AgendamentoEventos
-INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id)
+INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id, evento_id)
 VALUES 
-    (11),  -- Evento coordenação - 15/11
-    (12),  -- Evento coordenação - 22/11
-    (13),  -- Evento admin - 10/12
-    (14),  -- Evento coordenação - 27/11
-    (15);  -- Evento coordenação - 01/12
+    (11, 1),  -- Evento coordenação - 15/11
+    (12, 1),  -- Evento coordenação - 22/11
+    (13, 2),  -- Evento admin - 10/12
+    (14, 2),  -- Evento coordenação - 27/11
+    (15, 1);  -- Evento coordenação - 01/12
