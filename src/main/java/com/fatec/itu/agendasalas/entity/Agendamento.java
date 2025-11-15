@@ -52,8 +52,8 @@ public class Agendamento implements Serializable {
     @JoinColumn(name="janela_horario_id", referencedColumnName="id", nullable=false)
     private JanelasHorario janelasHorario;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Column(name = "is_evento")
+    private Boolean isEvento;
 
     @PrePersist
     @PreUpdate
@@ -87,4 +87,11 @@ public class Agendamento implements Serializable {
         }
     }
 
+    public boolean isEvento() {
+        return Boolean.TRUE.equals(this.isEvento);
+    }
+
+    public void setIsEvento(Boolean isEvento) {
+        this.isEvento = isEvento;
+    }
 }

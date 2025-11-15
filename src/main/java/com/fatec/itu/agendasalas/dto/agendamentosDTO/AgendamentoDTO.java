@@ -5,10 +5,10 @@ import java.time.LocalTime;
 
 public record AgendamentoDTO(
         String nomeUsuario,
-        // String nomeSala,
+        String nomeSala,
         LocalDate data,
         String diaDaSemana,
         LocalTime horaInicio,
         LocalTime horaFim,
-        String agendamentoTipo
+        boolean isEvento
 ){}

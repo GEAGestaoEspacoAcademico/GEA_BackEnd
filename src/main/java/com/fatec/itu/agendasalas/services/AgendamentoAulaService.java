@@ -57,15 +57,12 @@ public class AgendamentoAulaService {
         agendamento.setUsuario(usuario);
         agendamento.setSala(sala);
         agendamento.setDisciplina(disciplina);
-        agendamento.setData(data);
-        agendamento.setDataFim(dto.dataFim());
+        agendamento.setData(dto.data());
         agendamento.setJanelasHorario(janelasHorario);
-        agendamento.setTipo(dto.tipoAgendamento());
+        agendamento.setIsEvento(dto.isEvento()); 
 
-        
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
 
-        
         return converterParaResponseDTO(saved);
     }
 
@@ -116,13 +113,14 @@ public class AgendamentoAulaService {
             agendamento.setDisciplina(disciplina);
         }
 
-        if (dto.dataInicio() != null) agendamento.setDataInicio(dto.dataInicio());
-        if (dto.dataFim() != null) agendamento.setDataFim(dto.dataFim());
+        if (dto.data() != null) agendamento.setData(dto.data());
         if (dto.janelasHorarioId() != null){
             JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
             agendamento.setJanelasHorario(janelasHorario);
         } 
-        if(dto.tipoAgendamento()!=null) agendamento.setTipo(dto.tipoAgendamento());
+        
+        
+        if(dto.isEvento()) agendamento.setIsEvento(dto.isEvento());
 
         AgendamentoAula updated = agendamentoAulaRepository.save(agendamento);
         return converterParaResponseDTO(updated);
@@ -137,25 +135,23 @@ public class AgendamentoAulaService {
     }
 
     private AgendamentoAulaResponseDTO converterParaResponseDTO(AgendamentoAula agendamento) {
-    return new AgendamentoAulaResponseDTO(
-        agendamento.getId(),
-        agendamento.getUsuario() != null ? agendamento.getUsuario().getNome() : null,
-        agendamento.getSala() != null ? agendamento.getSala().getNome() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getId() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getNome() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getSemestre() : null,
-        agendamento.getDisciplina() != null && agendamento.getDisciplina().getCurso() != null
-            ? agendamento.getDisciplina().getCurso().getNomeCurso()
-            : null,
-        agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
-            ? agendamento.getDisciplina().getProfessor().getNome()
-            : "Não atribuído",
-        agendamento.getDataInicio(),
-        agendamento.getDataFim(),
-        agendamento.getDiaDaSemana(),
-        agendamento.getJanelasHorario().getHoraInicio(),
-        agendamento.getJanelasHorario().getHoraFim(),
-        agendamento.getTipo()
-        );
+        return new AgendamentoAulaResponseDTO(
+            agendamento.getId(),
+            agendamento.getUsuario() != null ? agendamento.getUsuario().getNome() : null,
+            agendamento.getSala() != null ? agendamento.getSala().getNome() : null,
+            agendamento.getDisciplina() != null ? agendamento.getDisciplina().getId() : null,
+            agendamento.getDisciplina() != null ? agendamento.getDisciplina().getNome() : null,
+            agendamento.getDisciplina() != null ? agendamento.getDisciplina().getSemestre() : null,
+            agendamento.getDisciplina() != null && agendamento.getDisciplina().getCurso() != null
+                ? agendamento.getDisciplina().getCurso().getNomeCurso()
+                : null,
+            agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
+                ? agendamento.getDisciplina().getProfessor().getNome()
+                : "Não atribuído",
+            agendamento.getData(),
+            agendamento.getDiaDaSemana(),
+            agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraInicio() : null,
+            agendamento.getJanelasHorario() != null ? agendamento.getJanelasHorario().getHoraFim() : null,
+            agendamento.isEvento());
     }
 }
