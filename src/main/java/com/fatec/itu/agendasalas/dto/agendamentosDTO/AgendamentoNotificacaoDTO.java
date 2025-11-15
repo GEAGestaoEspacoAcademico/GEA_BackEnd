@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 
 public record AgendamentoNotificacaoDTO(
-    Long agendamentoNotificacaoId,
+    Long agendamentoId,
     SalaResumoDTO sala, // <-- Usando o novo DTO de resumo da sala
     LocalDate dataInicio,
     LocalDate dataFim,

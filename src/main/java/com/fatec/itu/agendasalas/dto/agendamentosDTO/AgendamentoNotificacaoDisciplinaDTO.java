@@ -8,7 +8,7 @@ import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AgendamentoNotificacaoDisciplinaDTO(
-    Long agendamentoNotificacaoId,
+    Long agendamentoId,
     SalaResumoDTO sala, 
     LocalDate dataInicio,
     LocalDate dataFim,
