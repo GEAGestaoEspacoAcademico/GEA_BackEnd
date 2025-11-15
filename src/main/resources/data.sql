@@ -28,6 +28,10 @@ VALUES
     ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
 -- senha: ad123
 
+INSERT INTO AUXILIAR_DOCENTES (area, user_id)
+VALUES
+('MECATRONICA', 4);
+
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
@@ -249,7 +253,6 @@ VALUES
    -- ('Desenho Técnico', '2025.2', 32, 3);
 
     INSERT INTO TIPOS_SALAS (nome)
-    INSERT INTO TIPOS_SALAS (nome)
     VALUES 
     ('Sala de Aula'),               
     ('Laboratório de Informática'), 
@@ -300,7 +303,6 @@ INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
 
 -- RecursosSalas
 INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
-INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (1, 1, 1),
     (2, 2, 1),
     (3, 3, 30),
@@ -329,26 +331,33 @@ INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
     ('20:50:00', '21:40:00'),
     ('21:40:00', '22:30:00'),
     ('23:00:00', '23:50:00');
-    INSERT INTO AGENDAMENTOS (user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento)
-    VALUES 
-        -- Agendamentos de aulas
-        (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE),
-        (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE),
-        (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE),
-        (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE),
-        (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE),
-        (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE),
-        (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE),
-        (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE),
-        
-        -- Agendamentos de eventos
-        (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE),
-        (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE),
-        (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE),
-        (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE),
-        (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE);
+
+    INSERT INTO RECORRENCIA (data_inicio, data_fim)
+    VALUES
+    ('2025-12-15', '2025-12-15'),
+    ('2025-12-15', '2025-12-15');
+
+    INSERT INTO AGENDAMENTOS 
+(user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
+VALUES 
+    -- Agendamentos de aulas
+    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'APROVADO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'APROVADO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'APROVADO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
+    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'APROVADO', 'Sistema'),
+    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'APROVADO', 'Sistema'),
+    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'APROVADO', 'Sistema'),
+    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'APROVADO', 'Sistema'),
+
+    -- Agendamentos de eventos
+    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'EVENTO', 'Sistema'),
+    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'EVENTO', 'Sistema'),
+    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'EVENTO', 'Sistema'),
+    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'EVENTO', 'Sistema'),
+    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'EVENTO', 'Sistema');
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
@@ -365,11 +374,16 @@ VALUES
     (10, 6);  -- Gestão de Projetos - Segunda 14:00
 
 
+INSERT INTO EVENTOS(nome, descricao)
+VALUES
+('AAA', 'aa'),
+('evento2', 'evento2 da silva');
+
 -- AgendamentoEventos
-INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id)
+INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id, evento_id)
 VALUES 
-    (11),  -- Evento coordenação - 15/11
-    (12),  -- Evento coordenação - 22/11
-    (13),  -- Evento admin - 10/12
-    (14),  -- Evento coordenação - 27/11
-    (15);  -- Evento coordenação - 01/12
+    (11, 1),  -- Evento coordenação - 15/11
+    (12, 1),  -- Evento coordenação - 22/11
+    (13, 2),  -- Evento admin - 10/12
+    (14, 2),  -- Evento coordenação - 27/11
+    (15, 1);  -- Evento coordenação - 01/12

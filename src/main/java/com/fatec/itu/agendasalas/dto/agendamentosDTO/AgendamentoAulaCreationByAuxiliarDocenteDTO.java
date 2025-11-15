@@ -12,7 +12,6 @@ public record AgendamentoAulaCreationByAuxiliarDocenteDTO(
     @NotNull Long disciplinaId,
     @NotNull LocalDate data,
     @NotNull List<Long> janelasHorarioId, 
-  
     @NotNull String solicitante
     
 ){}

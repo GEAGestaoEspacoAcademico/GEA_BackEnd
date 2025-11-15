@@ -130,11 +130,11 @@ public class AgendamentoEventoService {
             agendamentoEvento.getDiaDaSemana(),
             agendamentoEvento.getJanelasHorario().getHoraInicio(),
             agendamentoEvento.getJanelasHorario().getHoraFim(),
-            agendamentoEvento.isTipoEvento(),
+            agendamentoEvento.getIsEvento().booleanValue(),
             agendamentoEvento.getRecorrencia().getId(),
             agendamentoEvento.getStatus(),
             agendamentoEvento.getSolicitante()
-        );
+        );  
     }
 
     public List<AgendamentoEventoResponseDTO> listarAgendamentosEvento(){

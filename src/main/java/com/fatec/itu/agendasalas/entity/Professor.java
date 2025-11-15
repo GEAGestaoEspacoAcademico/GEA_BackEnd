@@ -7,8 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "PROFESSORES")
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Professor extends Usuario {

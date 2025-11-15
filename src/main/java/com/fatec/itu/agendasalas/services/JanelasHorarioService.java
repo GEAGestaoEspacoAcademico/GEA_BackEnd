@@ -15,7 +15,6 @@ import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 
-import com.fatec.itu.agendasalas.entity.JanelasHorario;
 
 
 @Service
@@ -63,7 +62,7 @@ public class JanelasHorarioService {
 
     public List<JanelasHorario> buscaJanelaHorarioPelosHorariosInicioeFim(LocalTime horaInicio, LocalTime horaFim, boolean todosHorarios){
         List<JanelasHorario> listaJanelas = new ArrayList<>();
-        if(!todosHorarios){
+        if(todosHorarios){
             listaJanelas = janelasHorarioRepository.findAll();
         }
         else{

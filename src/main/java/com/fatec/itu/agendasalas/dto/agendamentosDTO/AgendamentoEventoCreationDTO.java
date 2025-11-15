@@ -1,3 +1,5 @@
+
+
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
 
 import java.util.List;
@@ -9,14 +11,14 @@ public record AgendamentoEventoCreationDTO(
 @NotBlank(message = "O nome do evento não pode ser nulo")    
 String nomeEvento,
 
-@NotBlank(message = "O local do evento não pode ser nulo")   
-Long local,
-
-@NotNull (message = "Seu evento deve ter pelo menos 1 dia")
-List<AgendamentoEventoDiasAgendadosDTO> diasAgendados,
+@NotNull(message = "O local do evento não pode ser nulo")   
+Long localId,
 
 @NotNull(message = "O usuario nao pode ser nulo")
-Long usuario
+Long usuario,
+
+@NotNull (message = "Seu evento deve ter pelo menos 1 dia")
+List<AgendamentoEventoDiasAgendadosDTO> diasAgendados
 
 ) {
 
