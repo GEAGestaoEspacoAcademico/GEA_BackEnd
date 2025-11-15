@@ -1,6 +1,8 @@
 package com.fatec.itu.agendasalas.entity;
 
+import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -16,7 +18,7 @@ public class Professor extends Usuario {
     private Long registroProfessor;
 
     @OneToMany(mappedBy = "professor")
-    private List<Disciplina> disciplinas;
+    private List<Disciplina> disciplinas = new ArrayList<>();
 
     protected Professor() {}
 
@@ -26,6 +28,14 @@ public class Professor extends Usuario {
 
     public void setRegistroProfessor(Long registroProfessor) {
         this.registroProfessor = registroProfessor;
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 
     public void addDisciplina(Disciplina disciplina) {
@@ -56,4 +66,5 @@ public class Professor extends Usuario {
             return false;
         return true;
     }
+
 }

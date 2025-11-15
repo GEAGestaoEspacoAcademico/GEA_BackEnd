@@ -310,6 +310,24 @@ Exclui um professor pelo número de registro.
 
 ---
 
+### Editar Professor
+**PUT** `/professores/{id}`
+
+Edita as informações de um professor.
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": 5,
+    "nome": "Prof. Sergio Salgado",
+    "email": "sergio.salgado@fatec.sp.gov.br",
+    "registroProfessor": 1010,
+    "cargoId": 3
+  }
+]
+```
+
 ## 📖 Disciplinas
 
 ### Criar Disciplina

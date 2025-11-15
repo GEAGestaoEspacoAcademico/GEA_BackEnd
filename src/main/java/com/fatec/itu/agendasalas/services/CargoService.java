@@ -30,4 +30,8 @@ public class CargoService {
         return cargoRepository.save(cargo);
     }
 
+    public Cargo findById(Long id) {
+        return cargoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cargo não encontrado"));
+    }
 }

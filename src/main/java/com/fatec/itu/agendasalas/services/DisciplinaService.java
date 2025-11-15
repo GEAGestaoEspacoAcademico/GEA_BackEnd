@@ -1,8 +1,10 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
@@ -70,4 +72,10 @@ public class DisciplinaService {
         }
         disciplinaRepository.deleteById(id);
     }
+
+    public Disciplina findById(Long id) {
+        return disciplinaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
+    }
+
 }
