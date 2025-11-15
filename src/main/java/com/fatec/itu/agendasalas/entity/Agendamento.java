@@ -62,6 +62,9 @@ public class Agendamento implements Serializable {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "solicitante")
+    private String solicitante;
+
     @PrePersist
     @PreUpdate
     public void preencherDiaDaSemana() {
