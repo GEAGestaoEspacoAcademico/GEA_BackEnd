@@ -21,6 +21,13 @@ import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.Parameter;
 
 @CrossOrigin
 @RestController
@@ -66,9 +73,17 @@ public class RecursoController {
   }
 
   @Operation(summary = "Apresenta os recursos existentes de um determinado tipo")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recursos encontrados",
+      content = {@Content(mediaType = "application/json",
+        array = @ArraySchema(schema = @Schema(implementation = RecursoSalaCompletoDTO.class)),
+        examples = @ExampleObject(value = "{ \"recursoId\": 5, \"recursoNome\": \"Licença Microsoft Project\", \"recursoTipoId\": 2, \"quantidadeRecurso\": 40 }") )}),
+      @ApiResponse(responseCode = "500", description = "Internal Server Error",
+        content = {@Content(mediaType = "application/json",
+          examples = @ExampleObject(value = "{ \"message\": \"Nenhum recurso encontrado para o tipo de ID: 8\" }") )})})
   @GetMapping("/tipo/{tipoId}")
-  public ResponseEntity<List<RecursoSalaCompletoDTO>> buscarPorTipo(@PathVariable Long tipoId){
-    List <RecursoSalaCompletoDTO> recursos = recursoService.listarPorTipo(tipoId);
+  public ResponseEntity<List<RecursoSalaCompletoDTO>> buscarPorTipo(
+      @Parameter(description = "ID do tipo de recurso a ser usado como filtro") @PathVariable Long tipoId) {
+    List<RecursoSalaCompletoDTO> recursos = recursoService.listarPorTipo(tipoId);
     return ResponseEntity.ok(recursos);
   }
 }
