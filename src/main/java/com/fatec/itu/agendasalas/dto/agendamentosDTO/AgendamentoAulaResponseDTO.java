@@ -12,11 +12,9 @@ public record AgendamentoAulaResponseDTO(
     String semestre,
     String cursoNome,
     String professorNome,
-    LocalDate dataInicio,
-    LocalDate dataFim,
+    LocalDate data,
     String diaDaSemana,
     LocalTime horaInicio,
     LocalTime horaFim,
-    String tipoAgendamento,
-    Long recorrenciaId
+    boolean isEvento
 ){}

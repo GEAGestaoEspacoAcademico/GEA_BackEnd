@@ -109,8 +109,7 @@ public class NotificacaoService {
         return new AgendamentoNotificacaoDTO(
             agendamento.getId(),
             salaDTO,
-            agendamento.getDataInicio(),
-            agendamento.getDataFim(),
+            agendamento.getData(),
             horaInicio,
             horaFim
         );

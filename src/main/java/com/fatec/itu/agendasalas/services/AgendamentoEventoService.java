@@ -19,6 +19,7 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
+import com.fatec.itu.agendasalas.exceptions.JanelasHorarioNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
@@ -106,10 +107,12 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setEventoId(evento);
                 agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setData(agendamentoDia.dia());
+                agendamentoEvento.preencherDiaDaSemana();
                 agendamentoEvento.setRecorrencia(recorrenciaSalva);
-                agendamentoEvento.setTipoEvento(true);
+                agendamentoEvento.isEvento();
                 agendamentoEvento.setStatus("ATIVO");
-                agendamentoEvento.setSolicitante(usuario.getNome());
+                agendamentoEvento.setSolicitante(usuario.getNome()); 
+                //estou considerando que a propria pessoa que agendou é a solicitante, pois na tela não tem nada disso.
                 agendamentoEventoRepository.save(agendamentoEvento);
 
             }
@@ -121,16 +124,17 @@ public class AgendamentoEventoService {
     private AgendamentoEventoResponseDTO converterParaResponseDTO(AgendamentoEvento agendamentoEvento){
         return new AgendamentoEventoResponseDTO(
             agendamentoEvento.getId(),
-            agendamentoEvento.getUsuario() != null ? agendamentoEvento.getUsuario().getNome() : null,
-            agendamentoEvento.getSala() != null ? agendamentoEvento.getSala().getNome() : null,
-            agendamentoEvento.getEventoId()!=null? agendamentoEvento.getEventoId().getNome(): null,
+            agendamentoEvento.getUsuario().getNome(),
+            agendamentoEvento.getSala().getNome(),
+            agendamentoEvento.getEventoId().getNome(),
             agendamentoEvento.getData(),
             agendamentoEvento.getDiaDaSemana(),
             agendamentoEvento.getJanelasHorario().getHoraInicio(),
             agendamentoEvento.getJanelasHorario().getHoraFim(),
             agendamentoEvento.isTipoEvento(),
             agendamentoEvento.getRecorrencia().getId(),
-            agendamentoEvento.getStatus()
+            agendamentoEvento.getStatus(),
+            agendamentoEvento.getSolicitante()
         );
     }
 

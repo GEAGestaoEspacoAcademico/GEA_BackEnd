@@ -27,10 +27,7 @@ public record AgendamentoAulaCreationComRecorrenciaDTO(
     Long disciplinaId,
 
     @NotNull
-    Long salaId,
-
-    @NotNull
-    Long quantidadeAulas
+    Long salaId
 ) {
     
 }
