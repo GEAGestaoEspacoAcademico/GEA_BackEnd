@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,21 +10,10 @@ public record AgendamentoEventoCreationDTO(
 String nomeEvento,
 
 @NotBlank(message = "O local do evento não pode ser nulo")   
-String local,
+Long local,
 
-@NotNull(message = "O dia de inicio de agendamento de um evento não pode ser nulo")
-LocalDate diaInicio,
-
-@NotNull(message = "O dia de fim de agendamento de um evento não pode ser nulo")
-LocalDate diaFim,
-
-@NotNull(message = "O horario de inicio de agendamento de um evento não pode ser nulo")
-LocalTime horaInicio,
-
-@NotNull(message = "O horario de fim de agendamento de um evento não pode ser nulo")
-LocalTime horafim,
-
-boolean todosHorarios,
+@NotNull (message = "Seu evento deve ter pelo menos 1 dia")
+List<AgendamentoEventoDiasAgendadosDTO> diasAgendados,
 
 @NotNull(message = "O usuario nao pode ser nulo")
 Long usuario
