@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -92,10 +93,10 @@ public class ProfessorService {
 
         if (dto.disciplinasIds() != null) {
 
-            var disciplinas = dto.disciplinasIds()
+                List<Disciplina> disciplinas = dto.disciplinasIds()
                     .stream()
                     .map(disciplinaService::findById)
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
 
             var novasIds = disciplinas.stream()
                     .map(Disciplina::getId)
