@@ -16,8 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.fatec.itu.agendasalas.jwt.JWTAuthenticationFilter;
-import com.fatec.itu.agendasalas.jwt.JWTAuthorizationFilter;
 import com.fatec.itu.agendasalas.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -45,10 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-        JWTAuthenticationFilter authenticationFilter = new JWTAuthenticationFilter(authManager);
-        JWTAuthorizationFilter authorizationFilter = new JWTAuthorizationFilter(authManager, userDetailsService);
-        authenticationFilter.setFilterProcessesUrl("/auth/login"); // endpoint de login
-
+      
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
@@ -57,8 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .addFilter(authenticationFilter)
-                .addFilter(authorizationFilter)
+              
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

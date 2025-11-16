@@ -341,23 +341,23 @@ INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
 (user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
 VALUES 
     -- Agendamentos de aulas
-    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
-    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'APROVADO', 'Sistema'),
-    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'APROVADO', 'Sistema'),
-    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'APROVADO', 'Sistema'),
-    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'APROVADO', 'Sistema'),
-    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'APROVADO', 'Sistema'),
-    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'APROVADO', 'Sistema'),
-    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'APROVADO', 'Sistema'),
-    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'APROVADO', 'Sistema'),
-    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'APROVADO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'ATIVO', 'Sistema'),
+    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'ATIVO', 'Sistema'),
+    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'ATIVO', 'Sistema'),
 
     -- Agendamentos de eventos
-    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'EVENTO', 'Sistema'),
-    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'EVENTO', 'Sistema'),
-    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'EVENTO', 'Sistema'),
-    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'EVENTO', 'Sistema'),
-    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'EVENTO', 'Sistema');
+    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'ATIVO', 'Sistema'),
+    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'ATIVO', 'Sistema'),
+    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'ATIVO', 'Sistema');
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
