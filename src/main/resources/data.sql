@@ -380,8 +380,9 @@ VALUES
 
 INSERT INTO EVENTOS(nome, descricao)
 VALUES
-('AAA', 'aa'),
-('evento2', 'evento2 da silva');
+('InterFATECS', 'Maratona INTERFATECS de programação'),
+('Prova VUNESP', 'Realização da Prova VUNESP'),
+('Semana TG', 'Realização da semana de aperfeiçoamento profissional');
 
 -- AgendamentoEventos
 INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id, evento_id)
