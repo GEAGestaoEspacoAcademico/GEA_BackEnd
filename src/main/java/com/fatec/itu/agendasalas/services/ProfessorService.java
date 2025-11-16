@@ -12,12 +12,14 @@ import com.fatec.itu.agendasalas.services.CargoService;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
 
@@ -25,7 +27,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ProfessorService {
+public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, ProfessorResponseDTO> {
 
     private ProfessorRepository professorRepository;
 
@@ -38,8 +40,25 @@ public class ProfessorService {
     @Autowired
     private CursoRepository cursoRepository;
 
+    @Autowired
+    private PasswordEncryptService passwordEncryptService;
+
     public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
+    }
+
+    @Override
+    @Transactional
+    public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) {
+       Professor novoProfessor = new Professor(
+            professorCreateDTO.login(), 
+            professorCreateDTO.email(), 
+            professorCreateDTO.nome(),
+            professorCreateDTO.registroProfessor());
+
+        novoProfessor.setSenha(passwordEncryptService.criptografarSenha(professorCreateDTO.senha()));
+        professorRepository.save(novoProfessor);
+        return toResponseDTO(novoProfessor);
     }
 
     /********* Lista por ID *********/

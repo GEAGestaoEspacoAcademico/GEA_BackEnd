@@ -24,6 +24,9 @@ public interface JanelasHorarioRepository extends JpaRepository<JanelasHorario, 
     """)
     List<JanelasHorario> findDisponiveisPorData(@Param("data") LocalDate data);
 
+    
+    JanelasHorario findByHoraInicio(LocalTime horaInicio);
+    
     @Query("SELECT j from JanelasHorario j where j.horaInicio >= :horaInicio and j.horaFim <= :horaFim")
     List<JanelasHorario> findByIntervaloIdHorarios(@Param("horaInicio") LocalTime horaInicio, @Param("horaFim") LocalTime horaFim);
 }

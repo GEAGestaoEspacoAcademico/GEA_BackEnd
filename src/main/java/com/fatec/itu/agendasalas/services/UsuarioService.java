@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
@@ -12,27 +11,27 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, UsuarioResponseDTO> {
 
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
     @Autowired
-    private PasswordEncoder cryptPasswordEncoder;
+    private PasswordEncryptService passwordEncryptService;
 
     @Autowired
     private CargoRepository cargoRepository;
 
-
+       @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
-        
         Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.usuarioSenha());
-        usuario.setSenha(senhaCriptografada);
+        usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.usuarioSenha()));
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 

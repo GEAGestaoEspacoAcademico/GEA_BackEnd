@@ -28,12 +28,16 @@ VALUES
     ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
 -- senha: ad123
 
+INSERT INTO AUXILIAR_DOCENTES (area, user_id)
+VALUES
+('MECATRONICA', 4);
+
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
 -- senha: ss123
-
+    
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
@@ -209,9 +213,9 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
+-- Disciplinas: Curso ADS (curso_id = 1)
 INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES 
-    -- Curso: ADS (curso_id = 1)
+VALUES
     ('Engenharia de Software III', '2025.2', 5, 1),
     ('Laboratório de Banco de Dados', '2025.2', 7, 1),
     ('Programação Orientada à objetos', '2025.1', 6, 1),
@@ -227,19 +231,22 @@ VALUES
     ('Banco de Dados', '2024.2', 24, 1),
     ('Contabilidade', '2024.2', 23, 1),
     ('Engenharia de Software I', '2024.2', 25, 1),
-    ('Linguagem de Programação', '2024.2', 24, 1),
+    ('Linguagem de Programação', '2024.2', 24, 1);
 
-    -- Curso: GTI (curso_id = 2)
+-- Disciplinas: Curso GTI (curso_id = 2)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
     ('Gestão de Projetos', '2024.2', 8, 2),
     ('Governança de TI', '2024.2', 7, 2),
     ('Processos Gerenciais', '2025.2', 25, 2),
     ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
     ('Matemática Financeira', '2025.1', 21, 2),
     ('Modelagem de Processos', '2024.2', 20, 2),
-    ('Gestão de Pessoas', '2024.2', 18, 2),
+    ('Gestão de Pessoas', '2024.2', 18, 2);
 
-    
-    -- Curso: Mecatrônica Industrial (curso_id = 3)
+-- Disciplinas: Curso Mecatrônica Industrial (curso_id = 3)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
     ('Eletromagnetismo', '2023.2', 8, 3),
     ('Cálculo', '2023.2', 7, 3),
     ('Comunicação Acadêmica', '2024.1', 9, 3),
@@ -247,6 +254,7 @@ VALUES
     ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
     ('Estatística Descritiva', '2025.2', 5, 3),
     ('Desenho Técnico', '2025.2', 23, 3);
+
 
     INSERT INTO TIPOS_SALAS (nome)
     VALUES 
@@ -288,7 +296,7 @@ VALUES
     ('Mobiliário');
 
 -- Recursos
-INSERT INTO RECURSOS (NOME, id_tipo_recurso) VALUES
+INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
     ('Webcam Logitech C920', 1),
     ('Monitor Dell UltraSharp 24"', 1),
     ('Impressora Multifuncional HP', 1),
@@ -327,28 +335,37 @@ INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
     ('19:00:00', '20:40:00'),
     ('21:00:00', '22:40:00');
 
+
+
+    INSERT INTO RECORRENCIA (data_inicio, data_fim)
+    VALUES
+    ('2025-12-15', '2025-12-15'),
+    ('2025-12-15', '2025-12-15');
+
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Agendamentos
 -- -----------------------------------------------------------------------------
-INSERT INTO AGENDAMENTOS (user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento) VALUES 
-        -- Agendamentos de aulas
-        (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE),
-        (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE),
-        (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE),
-        (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE),
-        (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE),
-        (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE),
-        (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE),
-        (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE),
-        (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE),
-        
-        -- Agendamentos de eventos
-        (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE),
-        (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE),
-        (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE),
-        (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE),
-        (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE);
+INSERT INTO AGENDAMENTOS 
+(user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
+VALUES 
+    -- Agendamentos de aulas
+    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'ATIVO', 'Sistema'),
+    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'ATIVO', 'Sistema'),
+    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'ATIVO', 'Sistema'),
+
+    -- Agendamentos de eventos
+    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'ATIVO', 'Sistema'),
+    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'ATIVO', 'Sistema'),
+    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'ATIVO', 'Sistema');
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
@@ -365,11 +382,17 @@ VALUES
     (10, 6);  -- Gestão de Projetos - Segunda 14:00
 
 
+INSERT INTO EVENTOS(nome, descricao)
+VALUES
+('InterFATECS', 'Maratona INTERFATECS de programação'),
+('Prova VUNESP', 'Realização da Prova VUNESP'),
+('Semana TG', 'Realização da semana de aperfeiçoamento profissional');
+
 -- AgendamentoEventos
-INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id)
+INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id, evento_id)
 VALUES 
-    (11),  -- Evento coordenação - 15/11
-    (12),  -- Evento coordenação - 22/11
-    (13),  -- Evento admin - 10/12
-    (14),  -- Evento coordenação - 27/11
-    (15);  -- Evento coordenação - 01/12
+    (11, 1),  -- Evento coordenação - 15/11
+    (12, 1),  -- Evento coordenação - 22/11
+    (13, 2),  -- Evento admin - 10/12
+    (14, 2),  -- Evento coordenação - 27/11
+    (15, 1);  -- Evento coordenação - 01/12

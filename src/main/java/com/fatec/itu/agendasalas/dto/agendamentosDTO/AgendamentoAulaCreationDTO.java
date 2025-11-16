@@ -1,5 +1,4 @@
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
-
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotNull;

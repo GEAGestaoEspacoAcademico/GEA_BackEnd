@@ -75,7 +75,7 @@ public class AgendamentoService {
 
         Long disciplinaId = null;
         String disciplinaNome = null;
-        boolean isEvento = agendamento.isEvento();
+        boolean isEvento = agendamento.getIsEvento();
 
         if (!isEvento && agendamento instanceof AgendamentoAula aula) {
             if (aula.getDisciplina() != null) {

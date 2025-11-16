@@ -41,7 +41,7 @@ public class Recurso implements Serializable {
   private String nome;
 
   @ManyToOne
-  @JoinColumn(name = "id_tipo_recurso")
+  @JoinColumn(name = "tipo_recurso_id")
   private TipoRecurso tipoRecurso;
 
   @OneToMany(mappedBy = "recurso", cascade = CascadeType.REMOVE, orphanRemoval = true)

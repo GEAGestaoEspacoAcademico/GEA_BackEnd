@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAuxiliarDocenteDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,6 +46,12 @@ public class AgendamentoAulaController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @Operation(summary="Cria um novo agendamento de aula em um dia específico, ")
+    @PostMapping("/auxiliar-docente")
+    public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaByAD(@Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
+        return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")

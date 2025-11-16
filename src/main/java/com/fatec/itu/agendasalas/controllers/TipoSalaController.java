@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaListDTO;
 import com.fatec.itu.agendasalas.services.TipoSalaService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -45,6 +46,7 @@ public class TipoSalaController {
 
   @Operation(summary = "Cria uma novo tipo de sala")
   @PostMapping
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<TipoSalaListDTO> criar(
       @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
     TipoSalaListDTO novoTipoSala = tipoSalaService.criar(nomeTipoSala);
@@ -57,6 +59,7 @@ public class TipoSalaController {
 
   @Operation(summary = "Atualiza um tipo de sala existente")
   @PutMapping("{idTipoSala}")
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<TipoSalaListDTO> atualizar(@PathVariable Long idTipoSala,
       @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
     return ResponseEntity.ok(tipoSalaService.atualizar(idTipoSala, nomeTipoSala));
@@ -64,6 +67,7 @@ public class TipoSalaController {
 
   @Operation(summary = "Deleta um tipo de sala existente")
   @DeleteMapping("{idTipoSala}")
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<Void> excluir(@PathVariable Long idTipoSala) {
     tipoSalaService.deletar(idTipoSala);
     return ResponseEntity.noContent().build();

@@ -53,11 +53,21 @@ public class Agendamento implements Serializable {
     private JanelasHorario janelasHorario;
 
     @Column(name = "is_evento")
-    private Boolean isEvento;
+    private Boolean isEvento; //se true = evento, false = aula
+
+    @ManyToOne
+    @JoinColumn(name="recorrencia_id", referencedColumnName="id", nullable=false)
+    private Recorrencia recorrencia;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "solicitante")
+    private String solicitante;
 
     @PrePersist
     @PreUpdate
-    private void preencherDiaDaSemana() {
+    public void preencherDiaDaSemana() {
         if (this.data != null) {
             this.diaDaSemana = traduzirDiaDaSemana(this.data.getDayOfWeek());
         } else {
@@ -65,7 +75,7 @@ public class Agendamento implements Serializable {
         }
     }
 
-    private String traduzirDiaDaSemana(DayOfWeek day) {
+    public String traduzirDiaDaSemana(DayOfWeek day) {
         if (day == null) return null;
         switch (day) {
             case MONDAY:
@@ -87,11 +97,4 @@ public class Agendamento implements Serializable {
         }
     }
 
-    public boolean isEvento() {
-        return Boolean.TRUE.equals(this.isEvento);
-    }
-
-    public void setIsEvento(Boolean isEvento) {
-        this.isEvento = isEvento;
-    }
 }

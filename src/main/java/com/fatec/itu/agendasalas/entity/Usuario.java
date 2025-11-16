@@ -1,6 +1,10 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.io.Serializable;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,13 +16,18 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Entity
 @Table(name="USUARIOS")
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Usuario implements Serializable{
+public class Usuario implements UserDetails{
 
     private static final long serialVersionUID = 1L;
 
@@ -49,74 +58,48 @@ public class Usuario implements Serializable{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-    public Long getId() {
-        return id;
+   @EqualsAndHashCode.Include
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (cargo == null || cargo.getNome() == null) {
+            return java.util.Collections.emptyList();
+        }
+        String nome = cargo.getNome().trim().toUpperCase();
+       
+        
+        return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSenha() {
+    @Override
+    public String getPassword() {
         return senha;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLogin() {
+    @Override
+    public String getUsername() {
         return login;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public Cargo getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(Cargo cargo) {
-        this.cargo = cargo;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; 
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
+    public boolean isAccountNonLocked() {
+        return true; 
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Usuario other = (Usuario) obj;
-        if (id != other.id)
-            return false;
-        return true;
+    public boolean isCredentialsNonExpired() {
+        return true; 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; 
     }
 
     

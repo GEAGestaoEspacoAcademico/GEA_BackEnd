@@ -9,8 +9,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "PROFESSORES")
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Professor extends Usuario {
@@ -21,7 +23,10 @@ public class Professor extends Usuario {
     @OneToMany(mappedBy = "professor")
     private List<Disciplina> disciplinas = new ArrayList<>();
 
-    protected Professor() {}
+    public Professor(String login, String email, String nome, Long registroProfessor) {
+        super(login, email, nome);
+        this.registroProfessor=registroProfessor;
+    }
 
     public Long getRegistroProfessor() {
         return registroProfessor;
