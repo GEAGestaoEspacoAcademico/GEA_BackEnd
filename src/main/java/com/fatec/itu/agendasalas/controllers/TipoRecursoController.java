@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +45,7 @@ public class TipoRecursoController {
 
   @Operation(summary = "Cria uma novo tipo de recurso")
   @PostMapping
-  @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<TipoRecursoListDTO> criar(
     @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
     TipoRecursoListDTO novoTipoRecurso = tipoRecursoService.criar(nomeTipoRecurso);
@@ -59,7 +58,7 @@ public class TipoRecursoController {
 
   @Operation(summary = "Atualiza um tipo de recurso existente")
   @PutMapping("{idTipoRecurso}")
-  @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<TipoRecursoListDTO> atualizar(@PathVariable Long idTipoRecurso,
       @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
     return ResponseEntity.ok(tipoRecursoService.atualizar(idTipoRecurso, nomeTipoRecurso));
@@ -67,7 +66,7 @@ public class TipoRecursoController {
 
   @Operation(summary = "Deleta um tipo de recurso existente")
   @DeleteMapping("{idTipoRecurso}")
-  @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
   public ResponseEntity<Void> excluir(@PathVariable Long idTipoRecurso) {
     tipoRecursoService.deletar(idTipoRecurso);
     return ResponseEntity.noContent().build();

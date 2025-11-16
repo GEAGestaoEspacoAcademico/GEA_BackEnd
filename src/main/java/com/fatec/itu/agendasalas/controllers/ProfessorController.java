@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +36,7 @@ public class ProfessorController {
     private DisciplinaService disciplinaService;
 
     @Operation(summary = "Lista todos os professores")
-    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     @GetMapping
     public ResponseEntity<List<ProfessorResponseDTO>> listarProfessores() {
         return ResponseEntity.ok(professorService.listarProfessores());
@@ -45,7 +44,7 @@ public class ProfessorController {
 
     @PostMapping
     /*Se não me engano é função da secretaria, mas isso é o de menos é só adicionar aqui */
-    @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     public ResponseEntity<ProfessorResponseDTO> cadastrarProfessor(@RequestBody ProfessorCreateDTO professorCreateDTO){
         return ResponseEntity.created(null).body(professorService.cadastrarUsuario(professorCreateDTO));
     }
