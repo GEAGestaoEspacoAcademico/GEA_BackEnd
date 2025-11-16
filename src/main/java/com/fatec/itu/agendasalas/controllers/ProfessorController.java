@@ -78,6 +78,7 @@ public class ProfessorController {
         @RequestBody ProfessorUpdateDTO dto) {
         
             return ResponseEntity.ok(
-                professorService.atualizarProfessor(dto, disciplinaService, cargoService)
+                professorService.atualizarProfessor(professorId, dto, disciplinaService, cargoService)
     );
-}}
+    }
+}

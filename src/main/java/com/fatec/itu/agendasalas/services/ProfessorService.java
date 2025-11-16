@@ -76,11 +76,12 @@ public class ProfessorService {
 
     @Transactional
     public ProfessorResponseDTO atualizarProfessor(
+        Long professorId,
         ProfessorUpdateDTO dto,
         DisciplinaService disciplinaService,
         CargoService cargoService) {
 
-        Professor professor = professorRepository.findById(dto.usuarioId())
+        Professor professor = professorRepository.findById(professorId)
                 .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
 
         if (dto.nome() != null) professor.setNome(dto.nome());
