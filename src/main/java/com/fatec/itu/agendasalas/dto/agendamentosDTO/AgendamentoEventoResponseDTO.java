@@ -12,7 +12,7 @@ public record AgendamentoEventoResponseDTO(
     String diaDaSemana,
     LocalTime horaInicio,
     LocalTime horaFim,
-    boolean tipoAgendamento,
+    boolean isEvento,
     Long recorrenciaId,
     String status,
     String solicitante
