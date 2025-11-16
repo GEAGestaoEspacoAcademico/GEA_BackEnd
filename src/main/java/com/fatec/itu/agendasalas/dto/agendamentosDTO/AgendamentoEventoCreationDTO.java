@@ -10,9 +10,5 @@ public record AgendamentoEventoCreationDTO(
     @NotBlank String eventoNome,
     @NotNull Long salaId,
     @NotNull List<AgendamentoEventoDiasAgendadosDTO> dias
-    //@NotNull LocalDate data,
-    //@NotNull LocalTime horarioInicio,
-    //@NotNull LocalTime horarioFim,
-    //@NotNull boolean isEvento
     ) {
 }

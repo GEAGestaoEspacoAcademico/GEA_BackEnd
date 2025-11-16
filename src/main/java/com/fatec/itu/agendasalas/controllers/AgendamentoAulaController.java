@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAuxiliarDocenteDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
@@ -45,6 +46,12 @@ public class AgendamentoAulaController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @Operation(summary="Cria um novo agendamento de aula em um dia específico, ")
+    @PostMapping("/auxiliar-docente")
+    public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaByAD(@Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
+        return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")

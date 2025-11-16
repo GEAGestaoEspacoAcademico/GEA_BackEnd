@@ -75,7 +75,7 @@ public class Agendamento implements Serializable {
         }
     }
 
-    private String traduzirDiaDaSemana(DayOfWeek day) {
+    public String traduzirDiaDaSemana(DayOfWeek day) {
         if (day == null) return null;
         switch (day) {
             case MONDAY:

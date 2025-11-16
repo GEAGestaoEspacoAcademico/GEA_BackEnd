@@ -117,9 +117,9 @@ public class AgendamentoAulaService {
 
         LocalDate data = dto.data();
 
-        Recorrencia recorrencia = new Recorrencia(data, data);
+        Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(data, data));
 
-        List<JanelasHorario> janelasHorarios = janelasHorarioRepository.findAllById(dto.janelasHorarioId());
+        List<JanelasHorario> janelasHorarios = janelasHorarioRepository.findByIntervaloIdHorarios(dto.horaInicio(), dto.horaFim());
         String solicitante = dto.solicitante();
 
         for(JanelasHorario janela : janelasHorarios){
