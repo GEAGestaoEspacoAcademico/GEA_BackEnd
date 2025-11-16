@@ -173,16 +173,16 @@ VALUES
     (6, 1011),   -- Prof. Dimas Cardoso
     (7, 1012),   -- Prof. Fabricio Londero
     (8, 1013),   -- Prof. Francisco Bianchi
-    (9, 1014);   -- Prof. Luis dos Santos
-    --(26, 1015),  -- Prof. Glauco Todesco
-    --(27, 1016),  -- Prof. Onei Junior
-    --(28, 1017),  -- Prof. Marcos Araujo
-    --(29, 1018),  -- Prof. Sergio Clauss
-    --(30, 1019),  -- Prof. Marcio Camargo
-    --(31, 1020),  -- Prof. Bruno Henrique
-    --(32, 1021),  -- Prof. Andre Egreggio
-    --(33, 1022),  -- Prof. Ricardo Leme
-    --(34, 1023);  -- Prof. Levi Munhoz
+    (9, 1014),   -- Prof. Luis dos Santos
+    (17, 1015),  -- Prof. Glauco Todesco
+    (18, 1016),  -- Prof. Onei Junior
+    (19, 1017),  -- Prof. Marcos Araujo
+    (20, 1018),  -- Prof. Sergio Clauss
+    (21, 1019),  -- Prof. Marcio Camargo
+    (22, 1020),  -- Prof. Bruno Henrique
+    (23, 1021),  -- Prof. Andre Egreggio
+    (24, 1022),  -- Prof. Ricardo Leme
+    (25, 1023);  -- Prof. Levi Munhoz
 
 
 -- Coordenadores
