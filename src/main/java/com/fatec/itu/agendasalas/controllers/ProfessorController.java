@@ -17,7 +17,6 @@ import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
-import com.fatec.itu.agendasalas.services.CargoService;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 import com.fatec.itu.agendasalas.services.ProfessorService;
 
@@ -68,8 +67,7 @@ public class ProfessorController {
         return ResponseEntity.noContent().build();
     }
 
-    @Autowired
-    private CargoService cargoService;
+    
 
     @Operation(summary = "Atualiza professor existente")
     @PutMapping("/{professorId}") 
@@ -78,7 +76,7 @@ public class ProfessorController {
         @RequestBody ProfessorUpdateDTO dto) {
         
             return ResponseEntity.ok(
-                professorService.atualizarProfessor(professorId, dto, disciplinaService, cargoService)
+                professorService.atualizarProfessor(professorId, dto)
     );
     }
 }

@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.services.CargoService;
+import com.fatec.itu.agendasalas.services.DisciplinaService;
+
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
@@ -25,6 +28,12 @@ import jakarta.transaction.Transactional;
 public class ProfessorService {
 
     private ProfessorRepository professorRepository;
+
+    @Autowired
+    private DisciplinaService disciplinaService;
+
+    @Autowired
+    private CargoService cargoService;
 
     @Autowired
     private CursoRepository cursoRepository;
@@ -77,9 +86,7 @@ public class ProfessorService {
     @Transactional
     public ProfessorResponseDTO atualizarProfessor(
         Long professorId,
-        ProfessorUpdateDTO dto,
-        DisciplinaService disciplinaService,
-        CargoService cargoService) {
+        ProfessorUpdateDTO dto) {
 
         Professor professor = professorRepository.findById(professorId)
                 .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
