@@ -46,4 +46,5 @@ public class Recurso implements Serializable {
 
   @OneToMany(mappedBy = "recurso", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<RecursoSala> salas;
+
 }

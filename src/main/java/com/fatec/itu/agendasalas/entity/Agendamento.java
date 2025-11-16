@@ -45,7 +45,7 @@ public class Agendamento implements Serializable {
     @Column(name="data", nullable = false)
     private LocalDate data;
 
-    @Column(name="dia_da_semana", nullable = false)
+    @Column(name="dia_da_semana")
     private String diaDaSemana;
 
     @ManyToOne

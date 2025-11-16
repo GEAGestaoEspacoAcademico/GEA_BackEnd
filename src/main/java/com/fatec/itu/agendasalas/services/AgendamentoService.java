@@ -1,11 +1,12 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisciplinaDTO;
@@ -20,7 +21,32 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
-    public List<AgendamentoNotificacaoDisciplinaDTO> listarAgendamentos() {
+    public List<AgendamentoDTO> listarAgendamentos() {
+
+        List<Agendamento> listaAgendamentos = agendamentoRepository.findAll();
+        List<AgendamentoDTO> listaAgendamentoDTOS = new ArrayList<>();
+        for (Agendamento agendamento : listaAgendamentos) {
+            AgendamentoDTO agendamentoDTO = conversaoAgendamentoParaDTO(agendamento);
+            listaAgendamentoDTOS.add(agendamentoDTO);
+        }
+        return listaAgendamentoDTOS;
+    }
+
+    private AgendamentoDTO conversaoAgendamentoParaDTO(Agendamento agendamento){
+        AgendamentoDTO agendamentoDTO = new AgendamentoDTO(
+        agendamento.getUsuario().getNome(), 
+        agendamento.getSala().getNome(),
+        agendamento.getData(), 
+        agendamento.getDiaDaSemana(), 
+        agendamento.getJanelasHorario().getHoraInicio(), 
+        agendamento.getJanelasHorario().getHoraFim(),
+        agendamento.getIsEvento()
+        );
+
+        return agendamentoDTO;
+    }
+
+    public List<AgendamentoNotificacaoDisciplinaDTO> listarAgendamentosDisciplina() {
         List<Agendamento> listaAgendamentos = agendamentoRepository.findAll();
 
         return listaAgendamentos.stream()

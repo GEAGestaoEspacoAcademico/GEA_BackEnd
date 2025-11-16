@@ -24,5 +24,4 @@ public class AgendamentoAula extends Agendamento {
     public AgendamentoAula(Disciplina disciplina) {
         this.disciplina = disciplina;
     }
-
 }

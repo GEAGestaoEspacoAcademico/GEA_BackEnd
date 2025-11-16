@@ -3,13 +3,11 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotNull;
 
-public record AgendamentoAulaCreationDTO(
-
-
-
+public record   AgendamentoAulaCreationDTO(
     @NotNull Long usuarioId,
     @NotNull Long salaId,
     @NotNull Long disciplinaId,
+    @NotNull int quantidade,
     @NotNull LocalDate data,
     @NotNull Long janelasHorarioId,
     @NotNull boolean isEvento

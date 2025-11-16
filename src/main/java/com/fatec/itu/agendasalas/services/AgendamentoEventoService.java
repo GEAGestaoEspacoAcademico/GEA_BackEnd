@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoDiasAgendadosDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.DEVAgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.AgendamentoEvento;
 import com.fatec.itu.agendasalas.entity.Evento;
@@ -22,46 +24,79 @@ import com.fatec.itu.agendasalas.exceptions.JanelasHorarioNaoEncontradaException
 import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
-
 @Service
 public class AgendamentoEventoService {
-    
-    private AgendamentoEventoRepository agendamentoEventoRepository;
-    private AgendamentoConflitoService agendamentoConflitoService;
-    private JanelasHorarioRepository janelasHorarioRepository;
-    private UsuarioRepository usuarioRepository;
-    private SalaRepository salaRepository;
-    private EventoRepository eventoRepository;
-    private RecorrenciaRepository recorrenciaRepository;
-    private AgendamentoAulaService agendamentoAulaService;
+        @Autowired
+        private UsuarioRepository usuarioRepository;
 
-    public AgendamentoEventoService(
-        AgendamentoEventoRepository agendamentoEventoRepository, 
-        JanelasHorarioRepository janelasHorarioRepository,
-        AgendamentoAulaService agendamentoAulaService, 
-        UsuarioRepository usuarioRepository,
-        SalaRepository salaRepository,
-        EventoRepository eventoRepository,
-        RecorrenciaRepository recorrenciaRepository,
-        AgendamentoConflitoService agendamentoConflitoService){
-            this.agendamentoEventoRepository = agendamentoEventoRepository;
-            this.janelasHorarioRepository = janelasHorarioRepository;
-            this.usuarioRepository = usuarioRepository;
-            this.salaRepository = salaRepository;
-            this.eventoRepository = eventoRepository;
-            this.recorrenciaRepository = recorrenciaRepository;
-            this.agendamentoConflitoService = agendamentoConflitoService;
-            this.agendamentoAulaService = agendamentoAulaService;
+        @Autowired
+        private AgendamentoEventoRepository agendamentoEventoRepository;
+
+        @Autowired
+        private AgendamentoRepository agendamentoRepository;
+
+        @Autowired
+        private SalaRepository salaRepository;
+
+        @Autowired
+        private EventoRepository eventoRepository;
+
+        @Autowired
+        private JanelasHorarioRepository janelasHorarioRepository;
+
+        @Autowired
+        private RecorrenciaRepository recorrenciaRepository;
+
+        @Autowired
+        private AgendamentoConflitoService agendamentoConflitoService;
+
+        @Autowired
+        private AgendamentoAulaService agendamentoAulaService;
+
+        @Transactional
+        public void criar(AgendamentoEventoCreationDTO dto) {
+                Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
+                                () -> new RuntimeException("Usuário não encontrado com ID: "
+                                                + dto.usuarioId()));
+
+                Sala sala = salaRepository.findById(dto.salaId())
+                                .orElseThrow(() -> new RuntimeException(
+                                                "Sala não encontrada com ID: " + dto.salaId()));
+
+                List<JanelasHorario> horariosEncontrados = janelasHorarioRepository
+                                .findByIntervaloIdHorarios(dto.horarioInicio(), dto.horarioFim());
+
+                List<Long> idsDeHorariosParaExcluirAgendamento =
+                                horariosEncontrados.stream().map(h -> h.getId()).toList();
+
+                List<Long> idsDeAgendamentoParaExcluir =
+                                agendamentoRepository.findByDataAndJanelaHorario(dto.data(),
+                                                idsDeHorariosParaExcluirAgendamento, dto.salaId());
+
+                agendamentoRepository.deleteAllById(idsDeAgendamentoParaExcluir);
+
+                for (int i = 0; i < horariosEncontrados.size(); i++) {
+                        AgendamentoEvento proximoAgendamento = new AgendamentoEvento();
+
+                        proximoAgendamento.setUsuario(usuario);
+                        proximoAgendamento.setSala(sala);
+                        proximoAgendamento.setData(dto.data());
+                        proximoAgendamento.setIsEvento((dto.isEvento()));
+                        proximoAgendamento.setJanelasHorario(horariosEncontrados.get(i));
+
+                        agendamentoEventoRepository.save(proximoAgendamento);
+                }
         }
 
     @Transactional
-    public void criarAgendamentoEvento(AgendamentoEventoCreationDTO agendamentoEventoCreationDTO) throws ConflitoAoAgendarException{ 
+    public void criarAgendamentoEvento(DEVAgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
        
         LocalDate diaInicial = agendamentoEventoCreationDTO.diasAgendados().stream()
         .map(AgendamentoEventoDiasAgendadosDTO::dia)

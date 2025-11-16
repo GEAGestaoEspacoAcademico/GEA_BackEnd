@@ -32,7 +32,7 @@ public class AgendamentoController {
     @Operation(summary = "Lista todos os agendamentos existentes")
     @GetMapping
     public ResponseEntity<List<AgendamentoNotificacaoDisciplinaDTO>> listarAgendamentos() {
-        return ResponseEntity.ok(agendamentoService.listarAgendamentos());
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosDisciplina());
     }
 
     @Operation(summary = "Busca todos os agendamentos correspondentes à data informada")

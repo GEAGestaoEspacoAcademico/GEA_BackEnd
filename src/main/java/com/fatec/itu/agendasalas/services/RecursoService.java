@@ -1,14 +1,17 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
-import com.fatec.itu.agendasalas.entity.TipoRecurso;
+import com.fatec.itu.agendasalas.entity.TipoRecurso;  
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.TipoRecursoRepository;
 
@@ -74,4 +77,30 @@ public class RecursoService {
     }
     recursoRepository.deleteById(id);
   }
+
+  @Transactional(readOnly = true)
+  public List<RecursoSalaCompletoDTO> listarPorTipo(Long tipoId) {
+    List<Recurso> recursos = recursoRepository.findByTipoRecursoId(tipoId);
+
+    if (recursos.isEmpty()) {
+      throw new NoSuchElementException("Nenhum recurso encontrado para o tipo de ID: " + tipoId);
+    }
+
+    return recursos.stream()
+        .map(r -> {
+
+          int quantidadeTotal = r.getSalas().stream()
+              .mapToInt(rs -> rs.getQuantidade() == null ? 0 : rs.getQuantidade())
+              .sum();
+
+          return new RecursoSalaCompletoDTO(
+              r.getId(),
+              r.getNome(),
+              r.getTipoRecurso().getId(),
+              Integer.valueOf(quantidadeTotal)
+          );
+        })
+        .toList();
+  }
+
 }
