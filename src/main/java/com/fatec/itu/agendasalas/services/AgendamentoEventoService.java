@@ -49,7 +49,7 @@ public class AgendamentoEventoService {
                                 horariosEncontrados.stream().map(h -> h.getId()).toList();
 
                 List<Long> idsDeAgendamentoParaExcluir =
-                                agendamentoRepository.findByDataAndJanelaHorario(dto.dataInicio(),
+                                agendamentoRepository.findByDataAndJanelaHorario(dto.data(),
                                                 idsDeHorariosParaExcluirAgendamento, dto.salaId());
 
                 agendamentoRepository.deleteAllById(idsDeAgendamentoParaExcluir);
@@ -59,9 +59,8 @@ public class AgendamentoEventoService {
 
                         proximoAgendamento.setUsuario(usuario);
                         proximoAgendamento.setSala(sala);
-                        proximoAgendamento.setDataInicio(dto.dataInicio());
-                        proximoAgendamento.setDataFim(dto.dataFim());
-                        // proximoAgendamento.setEvento((dto.isEvento()));
+                        proximoAgendamento.setData(dto.data());
+                        proximoAgendamento.setIsEvento((dto.isEvento()));
                         proximoAgendamento.setJanelasHorario(horariosEncontrados.get(i));
 
                         agendamentoEventoRepository.save(proximoAgendamento);
