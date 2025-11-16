@@ -280,6 +280,10 @@ VALUES
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
+
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Recursos
+-- -----------------------------------------------------------------------------
 -- TipoRecurso
 INSERT INTO TIPO_RECURSO (NOME)
 VALUES 
@@ -314,50 +318,41 @@ INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (9, 1, 5),
     (10, 2, 1);
 
--- Janelas de Horário
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Janelas de Horário
+-- -----------------------------------------------------------------------------
 INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
-    ('07:40:00', '08:30:00'),
-    ('09:10:00', '09:20:00'),
-    ('09:30:00', '10:20:00'),
-    ('10:20:00', '11:10:00'),
-    ('11:20:00', '12:10:00'),
-    ('12:10:00', '13:00:00'),
-    ('13:20:00', '14:10:00'),
-    ('14:10:00', '15:00:00'),
-    ('15:10:00', '16:00:00'),
-    ('16:00:00', '16:50:00'),
-    ('19:00:00', '19:50:00'),
-    ('19:50:00', '20:40:00'),
-    ('20:50:00', '21:40:00'),
-    ('21:40:00', '22:30:00'),
-    ('23:00:00', '23:50:00');
+    ('07:40:00', '09:20:00'),
+    ('09:30:00', '11:20:00'),
+    ('11:30:00', '13:00:00'),
+    ('13:20:00', '15:00:00'),
+    ('15:10:00', '16:50:00'),
+    ('17:00:00', '18:40:00'),
+    ('19:00:00', '20:40:00'),
+    ('21:00:00', '22:40:00');
 
-    INSERT INTO RECORRENCIA (data_inicio, data_fim)
-    VALUES
-    ('2025-12-15', '2025-12-15'),
-    ('2025-12-15', '2025-12-15');
-
-    INSERT INTO AGENDAMENTOS 
-(user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
-VALUES 
-    -- Agendamentos de aulas
-    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
-    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'ATIVO', 'Sistema'),
-    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'ATIVO', 'Sistema'),
-    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'ATIVO', 'Sistema'),
-    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'ATIVO', 'Sistema'),
-    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
-    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'ATIVO', 'Sistema'),
-    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'ATIVO', 'Sistema'),
-    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'ATIVO', 'Sistema'),
-    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'ATIVO', 'Sistema'),
-
-    -- Agendamentos de eventos
-    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'ATIVO', 'Sistema'),
-    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'ATIVO', 'Sistema'),
-    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'ATIVO', 'Sistema'),
-    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'ATIVO', 'Sistema'),
-    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'ATIVO', 'Sistema');
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Agendamentos
+-- -----------------------------------------------------------------------------
+INSERT INTO AGENDAMENTOS (user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento) VALUES 
+        -- Agendamentos de aulas
+        (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE),
+        (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE),
+        (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE),
+        (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE),
+        (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE),
+        (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE),
+        (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE),
+        (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE),
+        (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE),
+        (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE),
+        
+        -- Agendamentos de eventos
+        (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE),
+        (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE),
+        (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE),
+        (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE),
+        (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE);
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
