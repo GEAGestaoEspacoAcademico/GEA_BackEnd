@@ -1,7 +1,14 @@
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-public record AgendamentoEventoDiasAgendadosDTO() {
-    LocalDateTime dia;
+import jakarta.validation.constraints.NotNull;
+
+public record AgendamentoEventoDiasAgendadosDTO(
+    @NotNull LocalDate dia,
+    @NotNull LocalTime horaInicio,
+    @NotNull LocalTime horaFim
+) {
+    
 }

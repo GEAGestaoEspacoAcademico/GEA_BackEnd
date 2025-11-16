@@ -20,5 +20,5 @@ public class AgendamentoEvento extends Agendamento {
     
     @ManyToOne
     @JoinColumn(name = "evento_id", referencedColumnName = "id", nullable = false)
-    private Evento eventoId;
+    private Evento evento;
 }
