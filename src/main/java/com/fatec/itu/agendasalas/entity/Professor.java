@@ -1,9 +1,11 @@
 package com.fatec.itu.agendasalas.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+// cargo is inherited from Usuario; no additional mapping here
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -19,7 +21,7 @@ public class Professor extends Usuario {
     private Long registroProfessor;
 
     @OneToMany(mappedBy = "professor")
-    private List<Disciplina> disciplinas;
+    private List<Disciplina> disciplinas = new ArrayList<>();
 
     public Professor(String login, String email, String nome, Long registroProfessor) {
         super(login, email, nome);
@@ -32,6 +34,14 @@ public class Professor extends Usuario {
 
     public void setRegistroProfessor(Long registroProfessor) {
         this.registroProfessor = registroProfessor;
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 
     public void addDisciplina(Disciplina disciplina) {
@@ -62,4 +72,5 @@ public class Professor extends Usuario {
             return false;
         return true;
     }
+
 }
