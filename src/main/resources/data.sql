@@ -213,44 +213,48 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
+-- Disciplinas: Curso ADS (curso_id = 1)
 INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES 
-    -- Curso: ADS (curso_id = 1)
+VALUES
     ('Engenharia de Software III', '2025.2', 5, 1),
     ('Laboratório de Banco de Dados', '2025.2', 7, 1),
     ('Programação Orientada à objetos', '2025.1', 6, 1),
     ('Segurança da Informação', '2025.1', 8, 1),
     ('Sistemas de Informação', '2024.1', 9, 1),
-    --('Algoritmos', '2024.1', 26, 1),
-    --('Programação Web', '2025.1', 26, 1),
-    --('Arq e Organização de Computadores', '2024.1', 27, 1),
-    --('Administração Geral', '2024.1', 28, 1),
-    --('Programação em Microinformática', '2024.1', 29, 1),
-    --('Comunicação e Expressão', '2024.1', 30, 1),
-    --('Matemática Discreta', '2024.1', 31, 1),
-    --('Banco de Dados', '2024.2', 33, 1),
-    --('Contabilidade', '2024.2', 32, 1),
-    --('Engenharia de Software I', '2024.2', 34, 1),
-    --('Linguagem de Programação', '2024.2', 33, 1),
+    ('Algoritmos', '2024.1', 17, 1),
+    ('Programação Web', '2025.1', 17, 1),
+    ('Arq e Organização de Computadores', '2024.1', 18, 1),
+    ('Administração Geral', '2024.1', 19, 1),
+    ('Programação em Microinformática', '2024.1', 20, 1),
+    ('Comunicação e Expressão', '2024.1', 21, 1),
+    ('Matemática Discreta', '2024.1', 22, 1),
+    ('Banco de Dados', '2024.2', 24, 1),
+    ('Contabilidade', '2024.2', 23, 1),
+    ('Engenharia de Software I', '2024.2', 25, 1),
+    ('Linguagem de Programação', '2024.2', 24, 1);
 
-    -- Curso: GTI (curso_id = 2)
+-- Disciplinas: Curso GTI (curso_id = 2)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
     ('Gestão de Projetos', '2024.2', 8, 2),
     ('Governança de TI', '2024.2', 7, 2),
-    --('Processos Gerenciais', '2025.2', 34, 2),
-    --('Gestão de Sistemas Operacionais', '2025.2', 26, 2),
-    --('Matemática Financeira', '2025.1', 30, 2),
-   -- ('Modelagem de Processos', '2024.2', 29, 2),
-   -- ('Gestão de Pessoas', '2024.2', 27, 2),
+    ('Processos Gerenciais', '2025.2', 25, 2),
+    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
+    ('Matemática Financeira', '2025.1', 21, 2),
+    ('Modelagem de Processos', '2024.2', 20, 2),
+    ('Gestão de Pessoas', '2024.2', 18, 2);
 
-    
-    -- Curso: Mecatrônica Industrial (curso_id = 3)
+-- Disciplinas: Curso Mecatrônica Industrial (curso_id = 3)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
     ('Eletromagnetismo', '2023.2', 8, 3),
     ('Cálculo', '2023.2', 7, 3),
-    ('Comunicação Acadêmica', '2024.1', 9, 3);
-   -- ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 30, 3),
-   -- ('Int. Sistemas Dimensionais', '2025.1', 34, 3),
-   -- ('Estatística Descritiva', '2025.2', 5, 3),
-   -- ('Desenho Técnico', '2025.2', 32, 3);
+    ('Comunicação Acadêmica', '2024.1', 9, 3),
+    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
+    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
+    ('Estatística Descritiva', '2025.2', 5, 3),
+    ('Desenho Técnico', '2025.2', 23, 3);
+
 
     INSERT INTO TIPOS_SALAS (nome)
     VALUES 
