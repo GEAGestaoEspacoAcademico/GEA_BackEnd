@@ -30,8 +30,8 @@ public class UsuarioService {
 
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
         
-        Usuario usuario = new Usuario(usuarioDTO.login(), usuarioDTO.email(), usuarioDTO.nome());
-        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.senha());
+        Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
+        String senhaCriptografada = cryptPasswordEncoder.encode(usuarioDTO.usuarioSenha());
         usuario.setSenha(senhaCriptografada);
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
@@ -70,10 +70,10 @@ public class UsuarioService {
     public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
         
-        if(usuarioUpdateAdminDTO.nome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.nome());
-        if(usuarioUpdateAdminDTO.email()!=null){
-            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.email(), id)){
-                auxiliar.setEmail(usuarioUpdateAdminDTO.email());
+        if(usuarioUpdateAdminDTO.usuarioNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.usuarioNome());
+        if(usuarioUpdateAdminDTO.usuarioEmail()!=null){
+            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.usuarioEmail(), id)){
+                auxiliar.setEmail(usuarioUpdateAdminDTO.usuarioEmail());
             }
             else{
                 throw new RuntimeException("Tentando usar email já cadastrado");

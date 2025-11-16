@@ -1,15 +1,14 @@
 package com.fatec.itu.agendasalas.dto.agendamentosDTO;
 
 import java.time.LocalDate;
-
+import java.time.LocalTime;
 import jakarta.validation.constraints.NotNull;
 
-public record   AgendamentoAulaCreationDTO(
-    @NotNull Long usuarioId,
+public record AgendamentoEventoCreationDTO(@NotNull Long usuarioId,
     @NotNull Long salaId,
-    @NotNull Long disciplinaId,
-    @NotNull int quantidade,
     @NotNull LocalDate data,
-    @NotNull Long janelasHorarioId,
+    @NotNull LocalTime horarioInicio,
+    @NotNull LocalTime horarioFim,
     @NotNull boolean isEvento
-){}
+    ) {
+}

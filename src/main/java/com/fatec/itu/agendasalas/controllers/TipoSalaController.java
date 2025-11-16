@@ -50,7 +50,7 @@ public class TipoSalaController {
     TipoSalaListDTO novoTipoSala = tipoSalaService.criar(nomeTipoSala);
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idTipoSala}")
-        .buildAndExpand(novoTipoSala.id()).toUri();
+        .buildAndExpand(novoTipoSala.tipoSalaId()).toUri();
 
     return ResponseEntity.created(uri).body(novoTipoSala);
   }

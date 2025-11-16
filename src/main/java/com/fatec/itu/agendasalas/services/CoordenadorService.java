@@ -33,7 +33,7 @@ public class CoordenadorService {
 
 	@Transactional
 	public Coordenador promoverParaCoordenador(CoordenadorCreationDTO dto) {
-		Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+		Usuario usuario = usuarioRepository.findById(dto.coordenadorUsuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 		if (coordenadorRepository.existsById(usuario.getId())) {
 			throw new RuntimeException("Usuário já é coordenador");
