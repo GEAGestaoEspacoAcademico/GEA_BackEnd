@@ -62,8 +62,9 @@ public class AgendamentoAulaService {
                                                 dto.janelasHorarioId() + dto.quantidade())
                                 .boxed().collect(Collectors.toSet());
 
-                Set<Long> idsDisponiveis = horariosDisponiveis.stream().map(JanelasHorario::getId)
-                                .limit(dto.quantidade()).collect(Collectors.toSet());
+                Set<Long> idsDisponiveis = horariosDisponiveis.stream()
+                                .map(JanelasHorario::getId)
+                                .collect(Collectors.toSet());
 
                 boolean sequenciaEstaDisponivel = idsDisponiveis.containsAll(idsDesejados);
 
@@ -71,6 +72,13 @@ public class AgendamentoAulaService {
                         int quantidadeAulasRestantes = dto.quantidade() - 1;
 
                         for (int i = 0; i <= quantidadeAulasRestantes; i++) {
+                                long idDesejado = dto.janelasHorarioId() + i;
+                                JanelasHorario janela = horariosDisponiveis.stream()
+                                                .filter(j -> j.getId().longValue() == idDesejado)
+                                                .findFirst()
+                                                .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
+                                                                "Janela de horário inválida: " + idDesejado));
+
                                 AgendamentoAula proximoAgendamento = new AgendamentoAula();
 
                                 proximoAgendamento.setUsuario(usuario);
@@ -78,7 +86,7 @@ public class AgendamentoAulaService {
                                 proximoAgendamento.setDisciplina(disciplina);
                                 proximoAgendamento.setData(dto.data());
                                 proximoAgendamento.setIsEvento((dto.isEvento()));
-                                proximoAgendamento.setJanelasHorario(horariosDisponiveis.get(i));
+                                proximoAgendamento.setJanelasHorario(janela);
 
                                 agendamentoAulaRepository.save(proximoAgendamento);
                         }
