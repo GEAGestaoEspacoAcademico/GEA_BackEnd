@@ -31,8 +31,6 @@ public class Professor extends Usuario {
         this.registroProfessor = registroProfessor;
     }
 
-    
-
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
     }

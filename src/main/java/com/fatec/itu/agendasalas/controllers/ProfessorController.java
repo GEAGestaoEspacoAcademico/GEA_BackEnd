@@ -70,11 +70,17 @@ public class ProfessorController {
     
 
     @Operation(summary = "Atualiza professor existente")
-    @PutMapping("/{professorId}") 
+    @PutMapping("/{professorId}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
-        @PathVariable Long professorId, 
+        @PathVariable Long professorId,
         @RequestBody ProfessorUpdateDTO dto) {
-        
+            ProfessorUpdateDTO dtoComId = new ProfessorUpdateDTO(
+                professorId,
+                dto.nome(),
+                dto.email(),
+                dto.cargoId(),
+                dto.disciplinasIds()
+            );
             return ResponseEntity.ok(
                 professorService.atualizarProfessor(professorId, dto)
     );
