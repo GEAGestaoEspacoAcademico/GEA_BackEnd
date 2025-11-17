@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/eventos")
+@RequestMapping("eventos")
 @Tag(name = "Evento", description = "Operações relacionadas a eventos")
 public class EventoController {
 
