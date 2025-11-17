@@ -17,6 +17,7 @@ import com.fatec.itu.agendasalas.services.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -41,14 +42,13 @@ public class AuthController {
     @Operation(summary = "Valida um usuário")
     @PostMapping("login")
     public ResponseEntity<UsuarioAuthenticationResponseDTO> login(
-             @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
+        @Valid @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
 
-         try {
-             UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
-             return ResponseEntity.ok(authDTO);
-         } catch (Exception e) {
-             throw new RuntimeException(e.getMessage());
-         }
-
+         
+        UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
+        return ResponseEntity.ok(authDTO);
      }
+
+
+
 }
