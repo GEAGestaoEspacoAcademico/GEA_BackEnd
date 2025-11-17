@@ -28,6 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             usuario.getCargo().getNome(); 
         }
 
+
         return usuario;
     }
 }

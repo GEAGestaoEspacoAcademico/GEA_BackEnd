@@ -2,7 +2,7 @@
 -- Alimenta o BD com cargos
 -- -----------------------------------------------------------------------------
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('ADMIN'), ('PROFESSOR'), ('COORDENADOR');
+VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com usuarios
@@ -28,12 +28,16 @@ VALUES
     ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
 -- senha: ad123
 
+INSERT INTO AUXILIAR_DOCENTES (area, user_id)
+VALUES
+('MECATRONICA', 4);
+
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
 -- senha: ss123
-
+    
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
     ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
@@ -65,6 +69,98 @@ VALUES
     ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio@fatec.sp.gov.br', 4);
 -- senha: ao123
 
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Juliana Lima', 'juliana.lima', '$2b$10$17RkgaoI/nIF7iTOwaKFP.i7welZIKTNM9w7Wo.tCAT7l14ePJ5Pq', 'juliana.lima@fatec.sp.gov.br', 4);
+-- senha: jl123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Jose Henrique', 'jose.henrique', '$2b$10$a6lEHhhCB5w.QD6oFNGhQOLAUSL.blqLEAGkyQhjz/6Lrfm1AlZn2', 'jose.henrique@fatec.sp.gov.br', 4);
+-- senha: jh123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Rosa Marciani', 'rosa.marciani', '$2b$10$SWvYMaztqjkqswabJ4L9wO9JB2hy8R4JuJ.Nknm5nV2rQb42.813.', 'rosa.marciani@fatec.sp.gov.br', 4);
+-- senha: rm123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Paulo Macedo', 'paulo.macedo', '$2b$10$LIgfzaWEAgIxvr8DyLjQZuhMJb/jgd74mEnPTpcr7l/pm8rbhsPVq', 'paulo.macedo@fatec.sp.gov.br', 4);
+-- senha: pm123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Coord. Patricia Silva', 'patricia.silva', '$2b$10$DT.B5Udk.4xjq/x4Ky2s.u69mbqvcrhAGoRClQxpEZlpSWLaYEeRa', 'patricia.silva@fatec.sp.gov.br', 4);
+-- senha: ps123
+
+-- Adição de Professores (usuários com cargo de professor)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Glauco Todesco', 'glauco.todesco', '$2b$10$WvG0kVJflyTS92VSf3Y/Nul8hIjDbwZw.b.CX4ZDmtqMKEN8VQd8O', 'glauco.todesco@fatec.sp.gov.br', 3);
+-- senha: gt123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Onei Junior', 'onei.junior', '$2b$10$uX8iarxMfrxrX098ycfld.29ARd7ZRpAerebW75yogzPp/tarHUyO', 'onei.junior@fatec.sp.gov.br', 3);
+-- senha: oj123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Marcos Araujo', 'marcos.araujo', '$2b$10$3NkwFH4IqK4vrw.GYFlXaurC0vas6m.xWzpH/tydelk9tTaFKu8Zi', 'marcos.araujo@fatec.sp.gov.br', 3);
+-- senha: ma123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Sergio Clauss', 'sergio.clauss', '$2b$10$KwNe5kvEl92Wn.TMAv4LeeZSmRAnrcwzYRaGx6OWUc7EyFG6sTf/a', 'sergio.clauss@fatec.sp.gov.br', 3);
+-- senha: sc123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Marcio Camargo', 'marcio.camargo', '$2b$10$59b6RtfU3fl0rY7FtBIGz.8P0xhlL3OSi6WcmzJYGoPBMrvj60/ii', 'marcio.camargo@fatec.sp.gov.br', 3);
+-- senha: mc123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Bruno Henrique', 'bruno.henrique', '$2b$10$XuQ/0chQkfKsHeRJchQfmeMXV7LXVKX2aPIH4vkTixzSf4dt3XcrK', 'bruno.henrique@fatec.sp.gov.br', 3);
+-- senha: bh123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Andre Egreggio', 'andre.egreggio', '$2b$10$aZHG/0z3dtSrbdqwbsN20Ok8lZYfbmRjwNHGbUE0HTjEwYuQqXOhO', 'andre.egreggio@fatec.sp.gov.br', 3);
+-- senha: ae123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Ricardo Leme', 'ricardo.leme', '$2b$10$8lOnaLNjfjBs7PdHSQIjm.yfEHG8ao2fGjEjxHHqjCZNlSIGzwz42', 'ricardo.leme@fatec.sp.gov.br', 3);
+-- senha: rl123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Prof. Levi Munhoz', 'levi.munhoz', '$2b$10$KzspyFMadrJvkxkK5kfWju0woWOWcEzWAcNlyD/.fYNH0Z3taCqpq', 'levi.munhoz@fatec.sp.gov.br', 3);
+-- senha: lm123
+
+-- Adição de Alunos (usuários com cargo de aluno)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Caio Mortal', 'caio.mortal', '$2a$10$yQxY2f/Ti2kgkjB7F5Jw8Olq4r8yx2aXrYz6IVs9V/owC5Z3bMZcC', 'caio.mortal@exemplo.com', 1);
+-- senha: cm123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Jenivan Silva', 'jenivan.silva', '$2a$10$C4t7S0Vb9FnpK9kTHe2vqe0mN9m8jXcPv3/1GhJw3wUOZ4ypx2eKq', 'jenivan.silva@exemplo.com', 1);
+-- senha: js123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Lucas Guerra', 'lucas.guerra', '$2a$10$8v2TbFQh0kN7V0qZqP6xH.6X/2KNcYQ8lD4/YcWx4fHhKJ9tWzGHy', 'lucas.guerra@exemplo.com', 1);
+-- senha: lg123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES 
+    ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1);
+-- senha: ar123
+
 
 
 -- -----------------------------------------------------------------------------
@@ -73,49 +169,94 @@ VALUES
 -- Professores
 INSERT INTO PROFESSORES (user_id, registro_professor)
 VALUES 
-    (4, 1010),  -- Prof. Sergio Salgado
-    (5, 1011),  -- Prof. Dimas Cardoso
-    (6, 1012),  -- Prof. Fabricio Londero
-    (7, 1013);  -- Prof. Francisco Bianchi
+    (5, 1010),   -- Prof. Sergio Salgado
+    (6, 1011),   -- Prof. Dimas Cardoso
+    (7, 1012),   -- Prof. Fabricio Londero
+    (8, 1013),   -- Prof. Francisco Bianchi
+    (9, 1014),   -- Prof. Luis dos Santos
+    (17, 1015),  -- Prof. Glauco Todesco
+    (18, 1016),  -- Prof. Onei Junior
+    (19, 1017),  -- Prof. Marcos Araujo
+    (20, 1018),  -- Prof. Sergio Clauss
+    (21, 1019),  -- Prof. Marcio Camargo
+    (22, 1020),  -- Prof. Bruno Henrique
+    (23, 1021),  -- Prof. Andre Egreggio
+    (24, 1022),  -- Prof. Ricardo Leme
+    (25, 1023);  -- Prof. Levi Munhoz
 
 
 -- Coordenadores
 INSERT INTO COORDENADORES (user_id, registro_coordenacao)
 VALUES 
-    (8, 2001),  -- Coord. Lucimar de Santi
-    (9, 2002);  -- Coord. Andre Olimpio
+    (10, 2001),  -- Coord. Lucimar de Santi
+    (11, 2002),  -- Coord. Andre Olimpio
+    (12, 2003),  -- Coord. Juliana Lima
+    (13, 2004),  -- Coord. Jose Henrique
+    (14, 2005),  -- Coord. Rosa Marciani
+    (15, 2006),  -- Coord. Paulo Macedo
+    (16, 2007);  -- Coord. Patricia Silva     
 
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Cursos
 -- -----------------------------------------------------------------------------
-INSERT INTO CURSOS (nome_curso, coordenador_id)
+INSERT INTO CURSOS (nome_curso, sigla, coordenador_id)
 VALUES 
-    ('Análise e Desenvolvimento de Sistemas', 8),
-    ('Gestão da Tecnologia da Informação', 9),
-    ('Mecatrônica Industrial', 8);
-
+    ('Análise e Desenvolvimento de Sistemas', 'ADS', 10),
+    ('Gestão da Tecnologia da Informação', 'GTI', 13),
+    ('Mecatrônica Industrial', 'MEC', 11),
+    ('Eventos', 'EVE', 12),
+    ('Gestão Empresarial', 'GE', 14),
+    ('Gestão Empresarial EAD', 'GE-EAD', 15),
+    ('AMS Processos Gerenciais', 'AMS-PG', 16);
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
+-- Disciplinas: Curso ADS (curso_id = 1)
 INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES 
-    -- Curso: ADS (curso_id = 1)
-    ('Engenharia de Software III', '2025.2', 4, 1),
-    ('Laboratório de Banco de Dados', '2025.2', 6, 1),
-    ('Programação Orientada à objetos', '2025.1', 5, 1),
-    ('Segurança da Informação', '2025.1', 7, 1),
-    
-    -- Curso: GTI (curso_id = 2)
-    ('Gestão de Projetos', '2024.2', 7, 2),
-    ('Governança de TI', '2024.2', 6, 2),
-    
-    -- Curso: Mecatrônica Industrial (curso_id = 3)
-    ('Eletromagnetismo', '2023.2', 7, 3),
-    ('Cálculo', '2023.2', 6, 3);
+VALUES
+    ('Engenharia de Software III', '2025.2', 5, 1),
+    ('Laboratório de Banco de Dados', '2025.2', 7, 1),
+    ('Programação Orientada à objetos', '2025.1', 6, 1),
+    ('Segurança da Informação', '2025.1', 8, 1),
+    ('Sistemas de Informação', '2024.1', 9, 1),
+    ('Algoritmos', '2024.1', 17, 1),
+    ('Programação Web', '2025.1', 17, 1),
+    ('Arq e Organização de Computadores', '2024.1', 18, 1),
+    ('Administração Geral', '2024.1', 19, 1),
+    ('Programação em Microinformática', '2024.1', 20, 1),
+    ('Comunicação e Expressão', '2024.1', 21, 1),
+    ('Matemática Discreta', '2024.1', 22, 1),
+    ('Banco de Dados', '2024.2', 24, 1),
+    ('Contabilidade', '2024.2', 23, 1),
+    ('Engenharia de Software I', '2024.2', 25, 1),
+    ('Linguagem de Programação', '2024.2', 24, 1);
 
-    INSERT INTO TIPOSSALAS (nome)
+-- Disciplinas: Curso GTI (curso_id = 2)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
+    ('Gestão de Projetos', '2024.2', 8, 2),
+    ('Governança de TI', '2024.2', 7, 2),
+    ('Processos Gerenciais', '2025.2', 25, 2),
+    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
+    ('Matemática Financeira', '2025.1', 21, 2),
+    ('Modelagem de Processos', '2024.2', 20, 2),
+    ('Gestão de Pessoas', '2024.2', 18, 2);
+
+-- Disciplinas: Curso Mecatrônica Industrial (curso_id = 3)
+INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
+VALUES
+    ('Eletromagnetismo', '2023.2', 8, 3),
+    ('Cálculo', '2023.2', 7, 3),
+    ('Comunicação Acadêmica', '2024.1', 9, 3),
+    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
+    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
+    ('Estatística Descritiva', '2025.2', 5, 3),
+    ('Desenho Técnico', '2025.2', 23, 3);
+
+
+    INSERT INTO TIPOS_SALAS (nome)
     VALUES 
     ('Sala de Aula'),               
     ('Laboratório de Informática'), 
@@ -143,19 +284,33 @@ VALUES
     ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
 
+
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Recursos
+-- -----------------------------------------------------------------------------
+-- TipoRecurso
+INSERT INTO TIPO_RECURSO (NOME)
+VALUES 
+    ('Hardware'),
+    ('Software'),
+    ('Mobiliário');
+
 -- Recursos
-INSERT INTO RECURSOS (NOME, TIPO) VALUES
-    ('Webcam Logitech C920', 'Hardware'),
-    ('Monitor Dell UltraSharp 24"', 'Hardware'),
-    ('Impressora Multifuncional HP', 'Hardware'),
-    ('Teclado Mecânico ABNT2', 'Hardware'),
-    ('Licença Microsoft Project', 'Software'),
-    ('Licença Visual Studio Code', 'Software'),
-    ('Cadeira de Escritório Ergonômica', 'Mobiliário'),
-    ('Mesa de Trabalho com Gaveteiro', 'Mobiliário');
+INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
+    ('Webcam Logitech C920', 1),
+    ('Monitor Dell UltraSharp 24"', 1),
+    ('Impressora Multifuncional HP', 1),
+    ('Teclado Mecânico ABNT2', 1),
+    ('Licença Microsoft Project', 2),
+    ('Licença Visual Studio Code', 2),
+    ('Cadeira de Escritório Ergonômica', 3),
+    ('Mesa de Trabalho com Gaveteiro', 3),
+    ('Projetor', 1),
+    ('Televisão LG 50', 1),
+    ('Quadro Branco', 3);
 
 -- RecursosSalas
-INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
+INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (1, 1, 1),
     (2, 2, 1),
     (3, 3, 30),
@@ -167,42 +322,50 @@ INSERT INTO RECURSOSSALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
     (9, 1, 5),
     (10, 2, 1);
 
--- Janelas de Horário
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Janelas de Horário
+-- -----------------------------------------------------------------------------
 INSERT INTO JANELAS_HORARIO (hora_inicio, hora_fim) VALUES
-    ('07:40:00', '08:30:00'),
-    ('09:10:00', '09:20:00'),
-    ('09:30:00', '10:20:00'),
-    ('10:20:00', '11:10:00'),
-    ('11:20:00', '12:10:00'),
-    ('12:10:00', '13:00:00'),
-    ('13:20:00', '14:10:00'),
-    ('14:10:00', '15:00:00'),
-    ('15:10:00', '16:00:00'),
-    ('16:00:00', '16:50:00'),
-    ('19:00:00', '19:50:00'),
-    ('19:50:00', '20:40:00'),
-    ('20:50:00', '21:40:00'),
-    ('21:40:00', '22:30:00'),
-    ('23:00:00', '23:50:00');
+    ('07:40:00', '09:20:00'),
+    ('09:30:00', '11:20:00'),
+    ('11:30:00', '13:00:00'),
+    ('13:20:00', '15:00:00'),
+    ('15:10:00', '16:50:00'),
+    ('17:00:00', '18:40:00'),
+    ('19:00:00', '20:40:00'),
+    ('21:00:00', '22:40:00');
 
-INSERT INTO AGENDAMENTOS (user_id, sala_id, data_inicio, data_fim, dia_da_semana, janela_horario_id, tipo)
+
+
+    INSERT INTO RECORRENCIA (data_inicio, data_fim)
+    VALUES
+    ('2025-12-15', '2025-12-15'),
+    ('2025-12-15', '2025-12-15');
+
+-- -----------------------------------------------------------------------------
+-- Alimenta o BD com Agendamentos
+-- -----------------------------------------------------------------------------
+INSERT INTO AGENDAMENTOS 
+(user_id, sala_id, data, dia_da_semana, janela_horario_id, is_evento, recorrencia_id, status, solicitante)
 VALUES 
     -- Agendamentos de aulas
-    (1, 1, '2025-10-20', '2025-12-15', 'Segunda-feira',1, 'AULA'),
-    (1, 1, '2025-10-20', '2025-12-15', 'Quarta-feira',5, 'AULA'),
-    (1, 5, '2025-10-20', '2025-12-15', 'Terça-feira',6, 'AULA'),
-    (2, 2, '2025-10-20', '2025-12-15', 'Segunda-feira',2,'AULA'),
-    (2, 2, '2025-10-20', '2025-12-15', 'Quinta-feira',3,'AULA'),
-    (1, 5, '2025-10-20', '2025-12-15', 'Sexta-feira',1, 'AULA'),
-    (3, 3, '2025-10-20', '2025-12-15', 'Quarta-feira',4,'AULA'),
-    (3, 6, '2025-10-20', '2025-12-15', 'Terça-feira', 6, 'AULA'),
-    (1, 7, '2025-10-20', '2025-12-15', 'Quinta-feira', 5, 'AULA'),
-    (2, 4, '2025-10-20', '2025-12-15', 'Segunda-feira', 3, 'AULA'),
-    
+    (1, 1, '2025-12-15', 'Segunda-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 1, '2025-12-15', 'Quarta-feira', 5, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Terça-feira', 6, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Segunda-feira', 2, FALSE, 1, 'ATIVO', 'Sistema'),
+    (2, 2, '2025-12-15', 'Quinta-feira', 3, FALSE, 1, 'ATIVO', 'Sistema'),
+    (1, 5, '2025-12-15', 'Sexta-feira', 1, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 3, '2025-12-15', 'Quarta-feira', 4, FALSE, 1, 'ATIVO', 'Sistema'),
+    (3, 6, '2025-12-15', 'Terça-feira', 6, FALSE, 2, 'ATIVO', 'Sistema'),
+    (1, 7, '2025-12-15', 'Quinta-feira', 5, FALSE, 2, 'ATIVO', 'Sistema'),
+    (2, 4, '2025-12-15', 'Segunda-feira', 3, FALSE, 2, 'ATIVO', 'Sistema'),
+
     -- Agendamentos de eventos
-    (8, 3, '2025-11-15', '2025-11-15', 'Sexta-feira', 2, 'EVENTO'),
-    (9, 3, '2025-11-22', '2025-11-22', 'Sexta-feira', 3,'EVENTO'),
-    (10, 2, '2025-12-10', '2025-12-10', 'Terça-feira', 4,'EVENTO');
+    (8, 3, '2025-11-15', 'Sexta-feira', 2, TRUE, 2, 'ATIVO', 'Sistema'),
+    (9, 3, '2025-11-22', 'Sexta-feira', 3, TRUE, 2, 'ATIVO', 'Sistema'),
+    (10, 2, '2025-12-10', 'Terça-feira', 4, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-11-27', 'Quinta-feira', 1, TRUE, 2, 'ATIVO', 'Sistema'),
+    (8, 3, '2025-12-01', 'Segunda-feira', 6, TRUE, 2, 'ATIVO', 'Sistema');
 
 -- Relação agendamento-disciplina
 INSERT INTO AGENDAMENTO_AULAS (agendamento_id, disciplina_id)
@@ -219,9 +382,17 @@ VALUES
     (10, 6);  -- Gestão de Projetos - Segunda 14:00
 
 
+INSERT INTO EVENTOS(nome, descricao)
+VALUES
+('InterFATECS', 'Maratona INTERFATECS de programação'),
+('Prova VUNESP', 'Realização da Prova VUNESP'),
+('Semana TG', 'Realização da semana de aperfeiçoamento profissional');
+
 -- AgendamentoEventos
-INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id)
+INSERT INTO AGENDAMENTO_EVENTOS (agendamento_id, evento_id)
 VALUES 
-    (11),  -- Evento coordenação - 15/11
-    (12),  -- Evento coordenação - 22/11
-    (13);  -- Evento admin - 10/12
+    (11, 1),  -- Evento coordenação - 15/11
+    (12, 1),  -- Evento coordenação - 22/11
+    (13, 2),  -- Evento admin - 10/12
+    (14, 2),  -- Evento coordenação - 27/11
+    (15, 1);  -- Evento coordenação - 01/12

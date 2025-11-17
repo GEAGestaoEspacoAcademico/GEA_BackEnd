@@ -2,6 +2,7 @@ package com.fatec.itu.agendasalas.dto.janelasHorario;
 
 import java.time.LocalTime;
 
-public record JanelasHorarioUpdateDTO (
+public record JanelasHorarioUpdateDTO(
     LocalTime horaInicio, 
-    LocalTime horaFim) {}
+    LocalTime horaFim
+){}

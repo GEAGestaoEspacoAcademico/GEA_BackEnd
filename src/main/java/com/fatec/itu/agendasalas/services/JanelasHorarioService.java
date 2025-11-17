@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
+
 
 
 @Service
@@ -55,5 +58,26 @@ public class JanelasHorarioService {
        janelasHorarioAntiga.setHoraFim(janelasHorarioUpdateDTO.horaFim());
        JanelasHorario janelasHorarioAtualizada = janelasHorarioRepository.save(janelasHorarioAntiga);
        return transformarEmJanelasHorarioResponseDTO(janelasHorarioAtualizada);
+    }
+
+    public List<JanelasHorario> buscaJanelaHorarioPelosHorariosInicioeFim(LocalTime horaInicio, LocalTime horaFim, boolean todosHorarios){
+        List<JanelasHorario> listaJanelas = new ArrayList<>();
+        if(todosHorarios){
+            listaJanelas = janelasHorarioRepository.findAll();
+        }
+        else{
+            while(horaInicio!=horaFim){
+                JanelasHorario provisoria = janelasHorarioRepository.findByHoraInicio(horaInicio);
+                listaJanelas.add(provisoria);
+                horaInicio = provisoria.getHoraFim();
+            }
+            
+        }
+
+        return listaJanelas;
+    }
+
+    public List<JanelasHorario> buscarDisponiveisPorData(LocalDate data) {
+        return janelasHorarioRepository.findDisponiveisPorData(data);
     }
 }

@@ -22,7 +22,7 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome());
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome(), curso.getSigla());
     }
 
     public CursoService(CursoRepository cursoRepository) {
@@ -32,8 +32,9 @@ public class CursoService {
     public CursoListDTO criar(CursoCreateDTO curso) {
         Curso novoCurso = new Curso();
 
-        novoCurso.setNomeCurso(curso.nome());
-        novoCurso.setCoordenador(coordenadorRepository.findById(curso.idCoordenador()).orElseThrow());
+        novoCurso.setNomeCurso(curso.cursoNome());
+        novoCurso.setCoordenador(coordenadorRepository.findById(curso.coordenadorId()).orElseThrow());
+        novoCurso.setSigla(curso.cursoSigla());
 
         Curso cursoSalvo = cursoRepository.save(novoCurso);
 
@@ -60,9 +61,10 @@ public class CursoService {
     public CursoListDTO atualizar(Long id, CursoCreateDTO novoCurso) {
         Curso atual = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
-        atual.setNomeCurso(novoCurso.nome());
-        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.idCoordenador()).orElseThrow();
+        atual.setNomeCurso(novoCurso.cursoNome());
+        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow();
         atual.setCoordenador(coordenadorEncontrado);
+        atual.setSigla(novoCurso.cursoSigla());
 
         Curso cursoAtualizado = cursoRepository.save(atual);
 

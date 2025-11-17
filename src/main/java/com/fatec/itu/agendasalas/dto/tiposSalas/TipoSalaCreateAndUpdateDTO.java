@@ -1,3 +1,5 @@
 package com.fatec.itu.agendasalas.dto.tiposSalas;
 
-public record TipoSalaCreateAndUpdateDTO(String nome) {}
+public record TipoSalaCreateAndUpdateDTO(
+    String tipoSalaNome
+){}

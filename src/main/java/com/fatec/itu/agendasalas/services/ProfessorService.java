@@ -1,28 +1,64 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fatec.itu.agendasalas.services.CargoService;
+import com.fatec.itu.agendasalas.services.DisciplinaService;
+
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
+import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Curso;
+import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ProfessorService {
+public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, ProfessorResponseDTO> {
 
     private ProfessorRepository professorRepository;
 
     @Autowired
+    private DisciplinaService disciplinaService;
+
+    @Autowired
+    private CargoService cargoService;
+
+    @Autowired
     private CursoRepository cursoRepository;
+
+    @Autowired
+    private PasswordEncryptService passwordEncryptService;
 
     public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
+    }
+
+    @Override
+    @Transactional
+    public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) {
+       Professor novoProfessor = new Professor(
+            professorCreateDTO.login(), 
+            professorCreateDTO.email(), 
+            professorCreateDTO.nome(),
+            professorCreateDTO.registroProfessor());
+
+        novoProfessor.setSenha(passwordEncryptService.criptografarSenha(professorCreateDTO.senha()));
+        professorRepository.save(novoProfessor);
+        return toResponseDTO(novoProfessor);
     }
 
     /********* Lista por ID *********/
@@ -42,7 +78,7 @@ public class ProfessorService {
     public List<CursoListByProfessorDTO> listarCursosPorProfessor(Long idProfessor) {
         List<Curso> cursosEncontrados = cursoRepository.findCursosByProfessorRegistro(idProfessor);
         return cursosEncontrados.stream()
-                .map(curso -> new CursoListByProfessorDTO(curso.getId(), curso.getNomeCurso()))
+                .map(curso -> new CursoListByProfessorDTO(curso.getId(), curso.getNomeCurso(), curso.getSigla()))
                 .toList();
     }
 
@@ -65,4 +101,46 @@ public class ProfessorService {
         return new ProfessorResponseDTO(p.getId(), p.getNome(), p.getEmail(),
                 p.getRegistroProfessor(), p.getCargo() != null ? p.getCargo().getId() : null);
     }
+
+    @Transactional
+    public ProfessorResponseDTO atualizarProfessor(
+        Long professorId,
+        ProfessorUpdateDTO dto) {
+
+        Professor professor = professorRepository.findById(professorId)
+                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
+
+        if (dto.nome() != null) professor.setNome(dto.nome());
+        if (dto.email() != null) professor.setEmail(dto.email());
+
+        if (dto.cargoId() != null) {
+            Cargo cargo = cargoService.findById(dto.cargoId());
+            professor.setCargo(cargo);
+        }
+
+        if (dto.disciplinasIds() != null) {
+
+                List<Disciplina> disciplinas = dto.disciplinasIds()
+                    .stream()
+                    .map(disciplinaService::findById)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            var novasIds = disciplinas.stream()
+                    .map(Disciplina::getId)
+                    .collect(Collectors.toSet());
+
+            var disciplinasAtuais = professor.getDisciplinas();
+            if (disciplinasAtuais != null) {
+                disciplinasAtuais.stream()
+                        .filter(d -> d.getId() != null && !novasIds.contains(d.getId()))
+                        .forEach(d -> d.setProfessor(null));
+            }
+
+            disciplinas.forEach(d -> d.setProfessor(professor));
+
+            professor.setDisciplinas(disciplinas);
+        }
+
+    return toResponseDTO(professorRepository.save(professor));
+}
 }
