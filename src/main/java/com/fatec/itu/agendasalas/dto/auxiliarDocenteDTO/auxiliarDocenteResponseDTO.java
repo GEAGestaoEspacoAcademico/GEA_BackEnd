@@ -6,3 +6,4 @@ public record AuxiliarDocenteResponseDTO(
         String email,
         String area
 ){}
+//
