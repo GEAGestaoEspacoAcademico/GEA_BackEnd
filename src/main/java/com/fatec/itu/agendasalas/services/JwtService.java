@@ -17,7 +17,7 @@ public class JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
-
+    org.apache.logging.log4j.simple
     @Value("${jwt.expiration}")
     private long expiration;
 
