@@ -18,8 +18,8 @@ public interface SalaRepository extends JpaRepository<Sala, Long> {
         @Query(value = "SELECT SALA_ID FROM AGENDAMENTOS A "
                         + "JOIN JANELAS_HORARIO J ON A.JANELA_HORARIO_ID = J.ID "
                         + "JOIN SALAS S ON S.ID = A.SALA_ID "
-                        + "WHERE ( :horaInicioParam <= J.HORA_FIM) "
-                        + "AND ( :horaFimParam >= J.HORA_INICIO) "
+                        + "WHERE ( :horaInicioParam < J.HORA_FIM) "
+                        + "AND ( :horaFimParam > J.HORA_INICIO) "
                         + "AND :data = A.DATA "
                         + "AND S.CAPACIDADE >= :capacidade", nativeQuery = true)
         List<Long> findByDataEHorario(@Param("data") LocalDate data,
