@@ -1,18 +1,28 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoRequestDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoResponseDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisciplinaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
+import com.fatec.itu.agendasalas.entity.AgendamentoEvento;
+import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 
 @Service
@@ -20,6 +30,15 @@ public class AgendamentoService {
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
+    
+    @Autowired
+    private AgendamentoAulaRepository agendamentoAulaRepository;
+
+    @Autowired
+    private AgendamentoEventoRepository agendamentoEventoRepository;
+
+    @Autowired
+    private AgendamentoCanceladoRepository agendamentoCanceladoRepository;
 
     public List<AgendamentoDTO> listarAgendamentos() {
 
@@ -94,4 +113,74 @@ public class AgendamentoService {
             disciplinaNome,
             isEvento);
     }
+
+    @Transactional
+    public AgendamentoCanceladoResponseDTO cancelarAgendamento(
+        Long agendamentoId,
+        Usuario usuarioCancelador,
+        AgendamentoCanceladoRequestDTO request
+    ) {
+        Agendamento agendamentoOriginal = agendamentoRepository.findById(agendamentoId)
+            .orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
+
+        String motivoCancelamento = request.motivoCancelamento();
+
+        AgendamentoCancelado registroCancelado = buildRegistroCancelado(
+            agendamentoOriginal,
+            usuarioCancelador,
+            motivoCancelamento
+    );
+
+        AgendamentoCancelado registroPersistido = agendamentoCanceladoRepository.save(registroCancelado);
+
+        agendamentoRepository.deleteById(agendamentoId);
+
+        return AgendamentoCanceladoResponseDTO.builder()
+            .idCancelamento(registroPersistido.getId())
+            .agendamentoOriginalId(registroPersistido.getAgendamentoOriginalId())
+            .tipoAgendamento(registroPersistido.getTipoAgendamento())
+            .motivoCancelamento(registroPersistido.getMotivoCancelamento())
+            .dataHoraCancelamento(registroPersistido.getDataHoraCancelamento())
+            .build();
+        }
+
+    private AgendamentoCancelado buildRegistroCancelado(
+        Agendamento agendamentoOriginal, 
+        Usuario usuarioCancelador,
+        String motivoCancelamento
+    ) {
+    
+        AgendamentoCancelado.AgendamentoCanceladoBuilder builder = AgendamentoCancelado.builder()
+            .agendamentoOriginalId(agendamentoOriginal.getId())
+            .data(agendamentoOriginal.getData())
+            .statusOriginal(agendamentoOriginal.getStatus())
+            .solicitante(agendamentoOriginal.getSolicitante())
+            .motivoCancelamento(motivoCancelamento)
+            .dataHoraCancelamento(LocalDateTime.now())
+            .usuario(agendamentoOriginal.getUsuario()) 
+            .canceladoPor(usuarioCancelador) 
+            .sala(agendamentoOriginal.getSala())
+            .janelasHorario(agendamentoOriginal.getJanelasHorario()) 
+            .recorrencia(agendamentoOriginal.getRecorrencia())
+            .disciplina(null) 
+            .evento(null);    
+
+        if (agendamentoOriginal instanceof AgendamentoAula aula) {
+            builder.disciplina(aula.getDisciplina()); 
+            builder.tipoAgendamento("AULA");
+        
+        } else if (agendamentoOriginal instanceof AgendamentoEvento evento) {
+            builder.evento(evento.getEvento()); 
+            builder.tipoAgendamento("EVENTO");
+    }
+
+        return builder.build();
+    }
+    
+    private static class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
+
 }
