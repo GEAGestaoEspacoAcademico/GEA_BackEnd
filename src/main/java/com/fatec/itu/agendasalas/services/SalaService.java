@@ -118,6 +118,7 @@ public class SalaService {
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
     Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
         tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    novaSala.setDisponibilidade(salaDTO.disponibilidade());
     novaSala.setObservacoes(salaDTO.salaObservacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
