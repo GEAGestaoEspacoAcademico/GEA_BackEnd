@@ -79,14 +79,14 @@ public class SalaController {
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = SalaDetailDTO.class),
                     examples = @ExampleObject(
-                            value = "{ \"id\": 1,\"nome\": \"Sala 101\", \"capacidade\": 10, \"piso\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala\", \"observacoes\": \"Sala com notebooks\"}"))})})
+                            value = "{ \"salaId\": 1,\"salaNome\": \"Sala 101\", \"capacidade\": 10, \"piso\": 2, \"disponibilidade\": true, \"tipoSala\": \"Laboratório de informática\", \"observacoes\": \"Sala com notebooks\"}"))})})
     public ResponseEntity<SalaDetailDTO> criar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Sala para ser criada", required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
                             examples = @ExampleObject(
-                                    value = "{ \"nome\": \"Nova sala\", \"capacidade\": 10, \"piso\": 1, \"disponibilidade\": true, \"idTipoSala\": 1, \"observacoes\": \"Sala em perfeito estado\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
+                                    value = "{ \"salaNome\": \"Sala 101\", \"salaCapacidade\": 10, \"piso\": 2, \"disponibilidade\": true, \"tipoSalaId\": 1, \"salaObservacoes\": \"Sala com notebooks\"}"))) @Valid @RequestBody SalaCreateAndUpdateDTO sala) {
         SalaDetailDTO salaCriada = salaService.criar(sala);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(salaCriada.salaId()).toUri();
@@ -189,7 +189,7 @@ public class SalaController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
                             examples = @ExampleObject(
-                                    value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
+                                    value = "{ \"salaNome\": \"Sala 101 - Atualizada\", \"salaCapacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"tipoSalaId\": 1, \"salaObservacoes\": \"Sala em manutenção\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
         SalaDetailDTO salaAtualizada = salaService.atualizar(salaId, sala);
         return ResponseEntity.ok(salaAtualizada);
     }

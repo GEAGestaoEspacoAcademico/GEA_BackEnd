@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
@@ -30,6 +31,9 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
+
+        passwordEncryptService.validarSenha(usuarioDTO.usuarioSenha());
+
         Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
         usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.usuarioSenha()));
         Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
@@ -87,5 +91,26 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuarioRepository.save(auxiliar);
     }
 
+    public void alterarSenha(Long usuarioId, UsuarioAlterarSenhaDTO dto) {
 
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!passwordEncryptService.matches(dto.senhaAtual(), usuario.getSenha())) {
+            throw new RuntimeException("Senha atual incorreta");
+        }
+
+        if (!dto.novaSenha().equals(dto.repetirNovaSenha())) {
+            throw new RuntimeException("A nova senha e a de confirmação não coincidem");
+        }
+
+        passwordEncryptService.validarSenha(dto.novaSenha());
+
+        if (passwordEncryptService.matches(dto.novaSenha(), usuario.getSenha())){
+            throw new RuntimeException("A nova senha não pode ser igual à última utilizada.");
+        }
+
+        usuario.setSenha(passwordEncryptService.criptografarSenha(dto.novaSenha()));
+
+        usuarioRepository.save(usuario);
+    }
 }
