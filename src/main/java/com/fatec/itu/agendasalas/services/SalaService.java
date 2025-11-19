@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
+
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaIndividualCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecursosDTO;
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
@@ -20,7 +23,9 @@ import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
+import com.fatec.itu.agendasalas.entity.RecursoSalaId;
 import com.fatec.itu.agendasalas.entity.Sala;
+import com.fatec.itu.agendasalas.exceptions.RecursoJaAdicionadoNaSalaException;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
@@ -148,29 +153,32 @@ public class SalaService {
   }
 
   @Transactional
-  public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
+  public void adicionarRecurso(Long salaId, RecursoSalaListaCreationDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.recursoId())
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
+    for(RecursoSalaIndividualCreationDTO recurso : dto.listaDeRecursosParaAdicionar()){
+        Recurso recursoExistente = recursoRepository.findById(recurso.recursoId())
+            .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
-    boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoId()));
+        boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
+                .anyMatch(rs -> rs.getRecurso().getId().equals(recurso.recursoId()));
 
-    if (recursoJaAdicionado) {
-      throw new RuntimeException();
+            if (recursoJaAdicionado) {
+                throw new RecursoJaAdicionadoNaSalaException(recurso.recursoId(), salaId);
+            }
+
+        RecursoSala novoLink = new RecursoSala();
+        RecursoSalaId chaveCompostaId = new RecursoSalaId(recursoExistente.getId(), salaId);
+
+        novoLink.setId(chaveCompostaId);
+        novoLink.setQuantidade(recurso.quantidadeRecurso());
+        novoLink.setSala(salaExistente);
+        novoLink.setRecurso(recursoExistente);
+        recursoSalaRepository.save(novoLink);
+
+          
     }
-
-    RecursoSala novoLink = new RecursoSala();
-
-    novoLink.setIdRecurso(recursoExistente.getId());
-    novoLink.setIdSala(salaId);
-    novoLink.setQuantidade(dto.quantidadeRecurso());
-
-    recursoSalaRepository.save(novoLink);
-
-    return new RecursoSalaCompletoDTO(dto.recursoId(), recursoExistente.getNome(),
-        recursoExistente.getTipoRecurso().getId(), dto.quantidadeRecurso());
+    
   }
 
   @Transactional
@@ -188,7 +196,7 @@ public class SalaService {
   }
 
   @Transactional
-  public RecursoSalaCompletoDTO atualizarQuantidade(Long salaId, Long recursoId,
+  public void atualizarQuantidade(Long salaId, Long recursoId,
       RecursoSalaUpdateQuantidadeDTO dto) {
     Sala sala = salaRepository.findById(salaId)
         .orElseThrow(() -> new RuntimeException("Sala não encontrada!"));
@@ -201,17 +209,15 @@ public class SalaService {
 
     salaRepository.save(sala);
 
-    return new RecursoSalaCompletoDTO(linkParaAtualizar.getRecurso().getId(),
-        linkParaAtualizar.getRecurso().getNome(),
-        linkParaAtualizar.getRecurso().getTipoRecurso().getId(), linkParaAtualizar.getQuantidade());
   }
 
-  public List<RecursoSalaCompletoDTO> listarRecursosPorSala(Long id) {
+  public List<RecursoSalaListagemRecursosDTO> listarRecursosPorSala(Long id) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    List<RecursoSala> recursoNaSala = recursoSalaRepository.findByIdSala(salaExistente.getId());
+    List<RecursoSala> recursoNaSala = recursoSalaRepository.findBySalaId(salaExistente.getId());
     return recursoNaSala.stream()
-        .map(recurso -> new RecursoSalaCompletoDTO(recurso.getRecurso().getId(),
-            recurso.getRecurso().getNome(), recurso.getRecurso().getTipoRecurso().getId(),
+        .map(recurso -> new RecursoSalaListagemRecursosDTO(
+            recurso.getRecurso().getNome(), 
+            recurso.getRecurso().getTipoRecurso().getNome(),
             recurso.getQuantidade()))
         .toList();
   }

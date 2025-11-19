@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaIndividualCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecursosDTO;
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
@@ -108,34 +109,36 @@ public class SalaController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200",
             description = "Recurso adicionado à sala",
             content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RecursoSalaCompletoDTO.class),
+                    schema = @Schema(implementation = RecursoSalaListaCreationDTO.class),
                     examples = @ExampleObject(
                             value = "  { \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 10 }"))})})
     @PostMapping("/{salaId}/recursos")
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<RecursoSalaCompletoDTO> adicionarRecurso(
+    public ResponseEntity<Void> adicionarRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "ID do recurso e quantidade a ser adicionada", required = true,
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RecursoSalaResumidoDTO.class),
+                            schema = @Schema(implementation = RecursoSalaIndividualCreationDTO.class),
                             examples = @ExampleObject(
-                                    value = "{ \"idRecurso\": 1, \"quantidade\": 10 }"))) @RequestBody RecursoSalaResumidoDTO recurso) {
-        return ResponseEntity.ok(salaService.adicionarRecurso(salaId, recurso));
+                                    value = "{ \"idRecurso\": 1, \"quantidade\": 10 }"))) @RequestBody RecursoSalaListaCreationDTO recurso) {
+        
+        salaService.adicionarRecurso(salaId, recurso);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Lista todos os recursos de uma sala existente")
     @ApiResponses(value = {@ApiResponse(responseCode = "200",
             description = "Recursos da sala listados",
             content = {@Content(mediaType = "application/json",
-                    schema = @Schema(type = "array", implementation = RecursoSalaCompletoDTO.class),
+                    schema = @Schema(type = "array", implementation = RecursoSalaListaCreationDTO.class),
                     examples = @ExampleObject(value = "[ "
                             + "  { \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 1 }, "
                             + "  { \"idRecurso\": 2, \"nome\": \"Cadeiras\", \"tipo\": \"Mobiliário\", \"quantidade\": 30 }, "
                             + "  { \"idRecurso\": 3, \"nome\": \"Ar Condicionado\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 2 } "
                             + "]"))})})
     @GetMapping("/{salaId}/recursos")
-    public ResponseEntity<List<RecursoSalaCompletoDTO>> listarRecursos(
+    public ResponseEntity<List<RecursoSalaListagemRecursosDTO>> listarRecursos(
             @Parameter(description = "ID da sala") @PathVariable Long salaId) {
         return ResponseEntity.ok(salaService.listarRecursosPorSala(salaId));
     }
@@ -156,12 +159,12 @@ public class SalaController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200",
             description = "Quantidade do recurso atualizada com sucesso",
             content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RecursoSalaCompletoDTO.class),
+                    schema = @Schema(implementation = RecursoSalaListaCreationDTO.class),
                     examples = @ExampleObject(
                             value = "{ \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 5 }"))})})
     @PutMapping("/{salaId}/recursos/{recursoId}")
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<RecursoSalaCompletoDTO> atualizarQuantidadeRecurso(
+    public ResponseEntity<Void> atualizarQuantidadeRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @Parameter(description = "ID do recurso a ser atualizado") @PathVariable Long recursoId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -170,7 +173,9 @@ public class SalaController {
                             schema = @Schema(implementation = RecursoSalaUpdateQuantidadeDTO.class),
                             examples = @ExampleObject(
                                     value = "{ \"quantidade\": 5 }"))) @RequestBody RecursoSalaUpdateQuantidadeDTO quantidade) {
-        return ResponseEntity.ok(salaService.atualizarQuantidade(salaId, recursoId, quantidade));
+        
+        salaService.atualizarQuantidade(salaId, recursoId, quantidade);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Atualiza uma sala existente")
