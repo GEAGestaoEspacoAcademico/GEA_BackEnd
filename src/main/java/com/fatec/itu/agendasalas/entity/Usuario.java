@@ -27,6 +27,7 @@ import lombok.Setter;
 @Table(name="USUARIOS")
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded=true)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements UserDetails{
 
@@ -39,6 +40,7 @@ public class Usuario implements UserDetails{
     }
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private Long id;
@@ -59,7 +61,7 @@ public class Usuario implements UserDetails{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-   @EqualsAndHashCode.Include
+   
 
 
     @Override
