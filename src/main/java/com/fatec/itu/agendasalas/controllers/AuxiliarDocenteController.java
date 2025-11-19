@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class AuxiliarDocenteController {
     private AuxiliarDocenteService auxiliarDocenteService;
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    @PreAuthorize("hasRole('AUXILIAR_DOCENTE')")
     public ResponseEntity<PageableResponseDTO<AuxiliarDocenteResponseDTO>> listarAuxiliaresDocentes(@RequestParam (defaultValue="0") int page, @RequestParam(defaultValue="10") int size){
         Page<AuxiliarDocenteResponseDTO> paginacaoAuxiliarDocentes = auxiliarDocenteService.listarAuxiliaresDocentes(page, size);
 

@@ -69,6 +69,7 @@ public class Usuario implements UserDetails{
 
         return switch(cargoNome){
             case "USER" ->  List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            case "SECRETARIA" -> List.of(new SimpleGrantedAuthority("ROLE_SECRETARIA"));
             case "AUXILIAR_DOCENTE" -> List.of(new SimpleGrantedAuthority("ROLE_AUXILIAR_DOCENTE"), new SimpleGrantedAuthority("ROLE_USER"));
             case "COORDENADOR" -> List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));
             case "PROFESSOR" -> List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));

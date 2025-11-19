@@ -23,11 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
         
-                        
-        if (usuario.getCargo() != null) {
-            usuario.getCargo().getNome(); 
-        }
-
 
         return usuario;
     }

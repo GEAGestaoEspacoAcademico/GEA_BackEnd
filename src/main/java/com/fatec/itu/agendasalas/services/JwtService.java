@@ -1,18 +1,17 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.security.Key;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.Usuario;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -37,8 +36,8 @@ public class JwtService {
             .claim("cargo", usuario.getCargo().getNome())
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
-        } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar o JWT TOKEN", exception);
+        } catch (Exception e) {
+            throw new JwtException("Erro ao gerar o JWT TOKEN", e.getCause());
         }
                
     }
@@ -50,9 +49,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token, String username) {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
             final String extractedUsername = extractUsername(token);
-            return extractedUsername.equals(username) && !isTokenExpired(token);
+            return extractedUsername.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     

@@ -50,7 +50,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        jwt = authHeader.substring(7);
+        userna
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);   

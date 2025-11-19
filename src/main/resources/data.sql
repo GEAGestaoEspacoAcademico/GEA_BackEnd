@@ -2,7 +2,7 @@
 -- Alimenta o BD com cargos
 -- -----------------------------------------------------------------------------
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
+VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETARIA');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com usuarios
