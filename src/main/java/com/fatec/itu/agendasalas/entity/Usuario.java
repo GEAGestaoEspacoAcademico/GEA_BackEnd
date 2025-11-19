@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -63,13 +64,18 @@ public class Usuario implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (cargo == null || cargo.getNome() == null) {
-            return java.util.Collections.emptyList();
-        }
-        String nome = cargo.getNome().trim().toUpperCase();
-       
         
-        return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
+        String cargoNome = this.cargo.getNome();
+
+        return switch(cargoNome){
+            case "USER" ->  List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            case "AUXILIAR_DOCENTE" -> List.of(new SimpleGrantedAuthority("ROLE_AUXILIAR_DOCENTE"), new SimpleGrantedAuthority("ROLE_USER"));
+            case "COORDENADOR" -> List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));
+            case "PROFESSOR" -> List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));
+            default -> java.util.Collections.emptyList();
+
+        };
+       
     }
 
     @Override

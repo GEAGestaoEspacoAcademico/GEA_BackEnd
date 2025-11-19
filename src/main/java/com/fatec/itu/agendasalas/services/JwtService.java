@@ -1,11 +1,16 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.security.Key;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fatec.itu.agendasalas.entity.Usuario;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,19 +22,30 @@ public class JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
-    org.apache.logging.log4j.simple
+    
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(String username){
-        return Jwts.builder()
-            .setSubject(username)
+    public String generateToken(Usuario usuario){
+        try {
+             return Jwts.builder()
+            .setIssuer("agendasalas-fatec")
+            .setSubject(usuario.getLogin())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + expiration))
+            .setExpiration(new Date(System.currentTimeMillis()+expiration))
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .claim("nome", usuario.getNome())
+            .claim("cargo", usuario.getCargo().getNome())
             .compact();
+        } catch (Exception e) {
+            throw new r
+        }
+       
             
     }
+
+ 
+    
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);

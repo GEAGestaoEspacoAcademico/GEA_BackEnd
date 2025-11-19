@@ -26,30 +26,34 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtService jwtService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager, UserDetailsServiceImpl userDetailsServiceImpl) {
-        super(authManager);
+    public JWTAuthorizationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsServiceImpl) {
+        
+        this.jwtService = jwtService;
         this.userDetailsService = userDetailsServiceImpl;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
                                         
-        String header = req.getHeader(HEADER_STRING);
+        final String authHeader = request.getHeader(HEADER_STRING);
+        final String jwt;
+        final String username;
 
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-            chain.doFilter(req, res);
+            chain.doFilter(request, response);
             return;
         }
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(req, res);
+        chain.doFilter(req, res);   
     }
 
     // Reads the JWT from the Authorization header, and then uses JWT to validate the token

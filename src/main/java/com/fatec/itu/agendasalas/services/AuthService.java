@@ -1,8 +1,8 @@
 package com.fatec.itu.agendasalas.services;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +34,8 @@ public class AuthService {
         );
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
-        String token = jwtService.generateToken(usuario.getUsername());
+        String token = jwtService.generateToken(usuario);
         return new UsuarioAuthenticationResponseDTO(token);
-
-
     }
 
  
