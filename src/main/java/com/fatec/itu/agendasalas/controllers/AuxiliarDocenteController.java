@@ -37,7 +37,7 @@ public class AuxiliarDocenteController {
     }
     
     @PostMapping
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    @PreAuthorize("hasRole('AUXILIAR_DOCENTE')")
     public ResponseEntity<AuxiliarDocenteResponseDTO> cadastrarAuxiliarDocente(@RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
         return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarUsuario(auxiliarDocenteCreationDTO));
 

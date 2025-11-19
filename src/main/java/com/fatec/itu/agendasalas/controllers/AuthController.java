@@ -43,11 +43,10 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<UsuarioAuthenticationResponseDTO> login(
         @Valid @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
-
-         
+        
         UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
         return ResponseEntity.ok(authDTO);
-     }
+    }
 
 
 
