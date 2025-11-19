@@ -28,20 +28,19 @@ public class JwtService {
 
     public String generateToken(Usuario usuario){
         try {
-             return Jwts.builder()
+            return Jwts.builder()
             .setIssuer("agendasalas-fatec")
             .setSubject(usuario.getLogin())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis()+expiration))
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .claim("nome", usuario.getNome())
             .claim("cargo", usuario.getCargo().getNome())
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
-        } catch (Exception e) {
-            throw new r
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Erro ao gerar o JWT TOKEN", exception);
         }
-       
-            
+               
     }
 
  
@@ -51,9 +50,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token, String username){
-        final String extractedUsername = extractUsername(token);
-        return extractedUsername.equals(username) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String username) {
+            final String extractedUsername = extractUsername(token);
+            return extractedUsername.equals(username) && !isTokenExpired(token);
     }
 
     
