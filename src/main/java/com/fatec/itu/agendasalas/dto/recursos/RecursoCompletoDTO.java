@@ -4,4 +4,8 @@ public record RecursoCompletoDTO(
         Long recursoId,
         String recursoNome,
         Long recursoTipoId
-){}
+) {
+
+
+
+}
