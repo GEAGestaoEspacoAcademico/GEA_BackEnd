@@ -162,7 +162,7 @@ public class SalaController {
     @PutMapping("/{salaId}/recursos/{recursoId}")
     @Operation(summary = "Atualiza a quantidade de um recurso em uma sala")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
+        @ApiResponse(responseCode = "204",
             description = "Quantidade atualizada",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = RecursoSalaUpdateQuantidadeDTO.class),
@@ -208,6 +208,9 @@ public class SalaController {
     }
 
     @PostMapping("/recomendacoes")
+    @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Recomendações retornadas")
+        })
     @Operation(summary = "Lista recomendações de sala baseado nos parâmetros passados")
     public ResponseEntity<List<SalaDetailDTO>> recomendacoes(
             @RequestBody @Valid RequisicaoDeSalaDTO requisicao) {
