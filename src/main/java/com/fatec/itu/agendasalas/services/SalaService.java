@@ -50,23 +50,25 @@ public class SalaService {
       return transformarSalaEmSalaDetailDTO(salaExistente);
     }
 
-  private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
+    private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
-    return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
-        sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
-  }
+      return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
+          sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
+    }
 
+    public List<SalaDetailDTO> listarSalasDisponiveis() {
+      return salaRepository.findByDisponibilidade(true)
+      .stream()
+      .map(this::transformarSalaEmSalaDetailDTO)
+      .toList();
 
+    }
 
-  public List<SalaDetailDTO> listarSalasDisponiveis() {
-    return salaRepository.findByDisponibilidade(true)
-    .stream()
-    .map(this::transformarSalaEmSalaDetailDTO)
-    transformarSalaEmSalaDetailDTO(salaRepository.findByDisponibilidade(true));
-  }
-
-  public List<SalaListDTO> listarTodasAsSalas() {
-    return transformaEmSalaListDTO(salaRepository.findAll());
+  public List<SalaDetailDTO> listarTodasAsSalas() {
+    return salaRepository.findAll()
+      .stream()
+      .map(this::transformarSalaEmSalaDetailDTO)
+      .toList();
   }
 
   private List<SalaListDTO> transformaEmSalaListDTO(List<Sala> salas) {
@@ -76,12 +78,12 @@ public class SalaService {
         .toList();
   }
 
-  public List<SalaListDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
     List<Long> salasParaExcluir =
         salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
             requisicao.horarios().horaFim(), requisicao.capacidade());
 
-    List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
+    List<SalaDetailDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.salaId())).toList();
 
     List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.salaId()).toList();
@@ -90,14 +92,14 @@ public class SalaService {
         salaRepository.findSalasComRecursosByIds(idsDeSalasCandidatas);
 
     Map<Long, Set<Long>> mapaDasSalasESeusRecursos = salasComSeusRecursos.stream()
-        .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
+            .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
             .map(recursoSala -> recursoSala.getRecurso().getId()).collect(Collectors.toSet())));
 
     List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
 
     String nomeDoTipoSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
 
-    for (SalaListDTO sala : salasCandidatas) {
+    for (SalaDetailDTO sala : salasCandidatas) {
       int pontuacao = 0;
 
       Set<Long> recursosDaSala =
