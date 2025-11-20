@@ -5,18 +5,26 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-// cargo is inherited from Usuario; no additional mapping here
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "PROFESSORES")
 @PrimaryKeyJoinColumn(name = "user_id")
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 public class Professor extends Usuario {
 
+    @EqualsAndHashCode.Include
     @Column(name = "registro_professor", nullable = false, unique = true)
     private Long registroProfessor;
 
@@ -25,52 +33,10 @@ public class Professor extends Usuario {
 
     public Professor(String login, String email, String nome, Long registroProfessor) {
         super(login, email, nome);
-        this.registroProfessor=registroProfessor;
-    }
-
-    public Long getRegistroProfessor() {
-        return registroProfessor;
-    }
-
-    public void setRegistroProfessor(Long registroProfessor) {
         this.registroProfessor = registroProfessor;
-    }
-
-    public List<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
-
-    public void setDisciplinas(List<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
     }
 
     public void addDisciplina(Disciplina disciplina) {
         this.disciplinas.add(disciplina);
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((registroProfessor == null) ? 0 : registroProfessor.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Professor other = (Professor) obj;
-        if (registroProfessor == null) {
-            if (other.registroProfessor != null)
-                return false;
-        } else if (!registroProfessor.equals(other.registroProfessor))
-            return false;
-        return true;
-    }
-
 }

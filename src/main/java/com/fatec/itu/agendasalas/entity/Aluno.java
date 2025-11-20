@@ -4,30 +4,28 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "ALUNOS")
 @PrimaryKeyJoinColumn(name = "user_id")
-public class Aluno extends Usuario{
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Aluno extends Usuario {
     
+    @EqualsAndHashCode.Include
     @Column(name = "ra", nullable = false, unique = true)
     private int ra;
-    
-    public Aluno() {
-        super();
-    }
     
     public Aluno(String login, String email, String nome, int ra){
         super(login, email, nome);
         this.ra = ra;
     }
-
-    public int getRa() {
-        return ra;
-    }
-
-    public void setRa(int ra) {
-        this.ra = ra;
-    }
-
 }
