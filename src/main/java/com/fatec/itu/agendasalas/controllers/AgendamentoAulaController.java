@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,13 @@ public class AgendamentoAulaController {
     @Operation(summary="Cria um novo agendamento de aula em um dia específico, ")
     @PostMapping("/auxiliar-docente")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaByAD(@Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
-        return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
+        List<AgendamentoAulaResponseDTO> novosAgendamentos = agendamentoAulaService.criarAgendamentoAulaByAD(dto);
+        if (novosAgendamentos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        Long idPrimeiroAgendamento = novosAgendamentos.get(0).agendamentoAulaId();
+        URI location = URI.create("/agendamentos/aulas/" + idPrimeiroAgendamento);
+        return ResponseEntity.created(location).body(novosAgendamentos);
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")
