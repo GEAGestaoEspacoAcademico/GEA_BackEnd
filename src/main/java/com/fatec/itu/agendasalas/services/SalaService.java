@@ -32,22 +32,23 @@ import com.fatec.itu.agendasalas.repositories.SalaRepository;
 
 @Service
 public class SalaService {
-  @Autowired
-  private SalaRepository salaRepository;
 
-  @Autowired
-  private RecursoRepository recursoRepository;
+    @Autowired
+    private SalaRepository salaRepository;
 
-  @Autowired
-  private RecursoSalaRepository recursoSalaRepository;
+    @Autowired
+    private RecursoRepository recursoRepository;
 
-  @Autowired
-  private TipoSalaService tipoSalaService;
+    @Autowired
+    private RecursoSalaRepository recursoSalaRepository;
 
-  public SalaDetailDTO buscarPorId(Long id) {
-    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    return transformarSalaEmSalaDetailDTO(salaExistente);
-  }
+    @Autowired
+    private TipoSalaService tipoSalaService;
+
+    public SalaDetailDTO buscarPorId(Long id) {
+      Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+      return transformarSalaEmSalaDetailDTO(salaExistente);
+    }
 
   private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
@@ -55,15 +56,13 @@ public class SalaService {
         sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
   }
 
-  public List<SalaListDTO> listarSalasDisponiveis(boolean disponivel) {
-    return salaRepository.findByDisponibilidade(disponivel).stream()
-        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
-            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
-        .toList();
-  }
 
-  public List<SalaListDTO> listarSalasDisponiveis() {
-    return transformaEmSalaListDTO(salaRepository.findByDisponibilidade(true));
+
+  public List<SalaDetailDTO> listarSalasDisponiveis() {
+    return salaRepository.findByDisponibilidade(true)
+    .stream()
+    .map(this::transformarSalaEmSalaDetailDTO)
+    transformarSalaEmSalaDetailDTO(salaRepository.findByDisponibilidade(true));
   }
 
   public List<SalaListDTO> listarTodasAsSalas() {
