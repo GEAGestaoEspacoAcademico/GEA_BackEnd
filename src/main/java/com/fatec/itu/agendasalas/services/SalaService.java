@@ -19,7 +19,6 @@ import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecurso
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
@@ -71,12 +70,6 @@ public class SalaService {
       .toList();
   }
 
-  private List<SalaListDTO> transformaEmSalaListDTO(List<Sala> salas) {
-    return salas.stream()
-        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
-            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
-        .toList();
-  }
 
   public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
     List<Long> salasParaExcluir =
@@ -217,6 +210,7 @@ public class SalaService {
     List<RecursoSala> recursoNaSala = recursoSalaRepository.findBySalaId(salaExistente.getId());
     return recursoNaSala.stream()
         .map(recurso -> new RecursoSalaListagemRecursosDTO(
+            recurso.getRecurso().getId(),
             recurso.getRecurso().getNome(), 
             recurso.getRecurso().getTipoRecurso().getNome(),
             recurso.getQuantidade()))

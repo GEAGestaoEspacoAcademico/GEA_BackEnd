@@ -15,17 +15,20 @@ import com.fatec.itu.agendasalas.entity.Sala;
 @Repository
 public interface SalaRepository extends JpaRepository<Sala, Long> {
 
-        @Query(value = "SELECT SALA_ID FROM AGENDAMENTOS A "
-                        + "JOIN JANELAS_HORARIO J ON A.JANELA_HORARIO_ID = J.ID "
-                        + "JOIN SALAS S ON S.ID = A.SALA_ID "
-                        + "WHERE ( :horaInicioParam <= J.HORA_FIM) "
-                        + "AND ( :horaFimParam >= J.HORA_INICIO) "
-                        + "AND :data BETWEEN A.DATA_INICIO AND A.DATA_FIM "
-                        + "AND S.CAPACIDADE >= :capacidade", nativeQuery = true)
-        List<Long> findByDataEHorario(@Param("data") LocalDate data,
-                        @Param("horaInicioParam") LocalTime horaInicio,
-                        @Param("horaFimParam") LocalTime horaFim,
-                        @Param("capacidade") int capacidade);
+                @Query(value = "SELECT A.SALA_ID FROM AGENDAMENTOS A "
+                + "JOIN JANELAS_HORARIO J ON A.JANELA_HORARIO_ID = J.ID "
+                + "JOIN SALAS S ON S.ID = A.SALA_ID "
+                + "WHERE A.DATA = :data "
+                + "AND :horaInicioParam <= J.HORA_FIM "
+                + "AND :horaFimParam >= J.HORA_INICIO "
+                + "AND S.CAPACIDADE >= :capacidade",
+                nativeQuery = true)
+        List<Long> findByDataEHorario(
+                @Param("data") LocalDate data,
+                @Param("horaInicioParam") LocalTime horaInicio,
+                @Param("horaFimParam") LocalTime horaFim,
+                @Param("capacidade") int capacidade
+        );
 
         public List<Sala> findByDisponibilidade(boolean disponibilidade);
 
