@@ -112,11 +112,8 @@ public class SalaController {
     @Operation(summary = "Adiciona recursos a uma sala existente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204",
-            description = "Recurso(s) adicionados à sala",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = RecursoSalaListaCreationDTO.class),
-                examples = @ExampleObject(
-                    value = "{ \"listaDeRecursosParaAdicionar\": [ { \"recursoId\": 1, \"quantidadeRecurso\": 10 } ] }")))
+            description = "Recurso(s) adicionados à sala")
+              
     })
     public ResponseEntity<Void> adicionarRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
@@ -126,7 +123,7 @@ public class SalaController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = RecursoSalaListaCreationDTO.class),
                     examples = @ExampleObject(
-                        value = "{ \"listaDeRecursosParaAdicionar\": [ { \"recursoId\": 1, \"quantidadeRecurso\": 10, \"tipo\": \"Equipamento Eletrônico\" } ] }")))
+                        value = "{ \"listaDeRecursosParaAdicionar\": [ { \"recursoId\": 1, \"quantidadeRecurso\": 10} ] }")))
             @RequestBody RecursoSalaListaCreationDTO recurso) {
 
         salaService.adicionarRecurso(salaId, recurso);
@@ -164,9 +161,7 @@ public class SalaController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204",
             description = "Quantidade atualizada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = RecursoSalaUpdateQuantidadeDTO.class),
-                examples = @ExampleObject(value = "{ \"quantidade\": 5 }")))
+            content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<Void> atualizarQuantidadeRecurso(
             @PathVariable Long salaId,
