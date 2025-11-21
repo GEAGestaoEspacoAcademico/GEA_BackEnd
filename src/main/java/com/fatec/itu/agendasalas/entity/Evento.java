@@ -37,7 +37,7 @@ public class Evento implements Serializable {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = true)
     private String descricao;
 
 }
