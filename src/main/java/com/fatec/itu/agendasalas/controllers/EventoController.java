@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -40,7 +41,7 @@ public class EventoController {
                                                                 ,required = true, content = @Content(mediaType = "application/json"
                                                                 , schema = @Schema(implementation = EventoCreationDTO.class)
                                                                 , examples = @ExampleObject(value = "{ \"nomeEvento\": \"Reunião Geral\", \"descricaoEvento\": \"Reunião mensal\" }"))) 
-                                                                @RequestBody EventoCreationDTO novoEvento) {
+                                                                @Valid @RequestBody EventoCreationDTO novoEvento) {
 
         EventoResponseDTO criado = eventoService.criar(novoEvento);
         return ResponseEntity.status(201).body(criado);
