@@ -7,6 +7,5 @@ public record EventoCreationDTO(
     @NotBlank(message="O nome do evento não pode ser vazio")
     String nomeEvento,
 
-    @NotBlank(message="A descrição do evento não pode ser nula")
     String descricaoEvento
 ){}
