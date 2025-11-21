@@ -6,6 +6,7 @@ public record SalaDetailDTO(
     int capacidade, 
     int piso, 
     boolean disponibilidade,
+    Long tipoSalaId,
     String tipoSala, 
     String salaObservacoes
-){}
+){ }
