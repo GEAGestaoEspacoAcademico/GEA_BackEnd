@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
@@ -47,6 +48,13 @@ public class UsuarioController {
     public ResponseEntity<Void> atualizarUsuarioAdmin(@PathVariable Long usuarioId,
             @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO) {
         usuarioService.atualizarUsuario(usuarioUpdateAdminDTO, usuarioId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Altera a senha do usuário quando o mesmo está logado")
+    @PatchMapping("{usuarioId}/senha")
+    public ResponseEntity<Void> alterarSenha(@PathVariable Long usuarioId, @RequestBody UsuarioAlterarSenhaDTO dto) {
+        usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();
     }
 

@@ -51,7 +51,7 @@ public class TipoRecursoController {
     TipoRecursoListDTO novoTipoRecurso = tipoRecursoService.criar(nomeTipoRecurso);
 
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idTipoRecurso}")
-        .buildAndExpand(novoTipoRecurso.id()).toUri();
+        .buildAndExpand(novoTipoRecurso.tipoRecursoId()).toUri();
 
     return ResponseEntity.created(uri).body(novoTipoRecurso);
   }
