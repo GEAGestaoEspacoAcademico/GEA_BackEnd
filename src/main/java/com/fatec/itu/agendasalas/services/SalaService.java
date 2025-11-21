@@ -129,12 +129,29 @@ public class SalaService {
   public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
-    salaExistente.setNome(salaDTO.salaNome());
-    salaExistente.setCapacidade(salaDTO.salaCapacidade());
-    salaExistente.setPiso(salaDTO.piso());
-    salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
-    salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    if (salaDTO.salaNome() != null) {
+      salaExistente.setNome(salaDTO.salaNome());
+    }
+
+    if (salaDTO.salaCapacidade() != null) {
+      salaExistente.setCapacidade(salaDTO.salaCapacidade());
+    }
+
+    if (salaDTO.piso() != null) {
+      salaExistente.setPiso(salaDTO.piso());
+    }
+
+    if (salaDTO.disponibilidade() != null) {
+      salaExistente.setDisponibilidade(salaDTO.disponibilidade());
+    }
+
+    if (salaDTO.tipoSalaId() != null) {
+      salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    }
+
+    if (salaDTO.salaObservacoes() != null) {
+      salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    }
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
   }
