@@ -16,28 +16,59 @@ import com.fatec.itu.agendasalas.dto.auxiliarDocenteDTO.AuxiliarDocenteResponseD
 import com.fatec.itu.agendasalas.dto.paginacaoDTO.PageableResponseDTO;
 import com.fatec.itu.agendasalas.services.AuxiliarDocenteService;
 
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @CrossOrigin
+@Tag(name = "Auxiliar Docente", description = "Operações relacionadas ao cadastro de auxiliares docentes")
 @RequestMapping("auxiliar-docentes")
 public class AuxiliarDocenteController {
 
     @Autowired
     private AuxiliarDocenteService auxiliarDocenteService;
 
+    @Operation(summary = "Lista todos os auxiliares docentes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Lista de auxiliares docentes encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = PageableResponseDTO.class)))
+    })
     @GetMapping
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<PageableResponseDTO<AuxiliarDocenteResponseDTO>> listarAuxiliaresDocentes(@RequestParam (defaultValue="0") int page, @RequestParam(defaultValue="10") int size){
+    public ResponseEntity<PageableResponseDTO<AuxiliarDocenteResponseDTO>> listarAuxiliaresDocentes(
+        @Parameter(description = "Número da página (0..N)") @RequestParam (defaultValue="0") int page,
+        @Parameter(description = "Tamanho da página") @RequestParam(defaultValue="10") int size){
         Page<AuxiliarDocenteResponseDTO> paginacaoAuxiliarDocentes = auxiliarDocenteService.listarAuxiliaresDocentes(page, size);
 
         return ResponseEntity.ok(PageableResponseDTO.fromPage(paginacaoAuxiliarDocentes));
 
     }
     
+
+    @Operation(summary = "Cadastra um novo auxiliar docente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201",
+            description = "Auxiliar docente cadastrado com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = AuxiliarDocenteResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    })
     @PostMapping
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<AuxiliarDocenteResponseDTO> cadastrarAuxiliarDocente(@RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
+    public ResponseEntity<AuxiliarDocenteResponseDTO> cadastrarAuxiliarDocente(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados para criação de um auxiliar docente",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AuxiliarDocenteCreationDTO.class)))
+            @RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
         return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarUsuario(auxiliarDocenteCreationDTO));
 
     } 

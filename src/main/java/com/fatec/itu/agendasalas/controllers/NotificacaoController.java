@@ -15,6 +15,10 @@ import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
 import com.fatec.itu.agendasalas.services.NotificacaoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
@@ -26,14 +30,21 @@ public class NotificacaoController {
     @Autowired
     private NotificacaoService notificacaoService;
 
-    @GetMapping
     @Operation(summary = "Lista todas as notificações")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = NotificacaoResponseDTO.class)))
+    })
+    @GetMapping
     public List<NotificacaoResponseDTO> listarNotificacoes() {
         return notificacaoService.listarNotificacoesComoDTO();
     }
     
     @PostMapping
     @Operation(summary = "Criar uma nova notificação")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Notificações enviadas")
+    })
     public void enviarNotificacoes(@RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
         notificacaoService.enviarNotificacoes(notificacoesDTO);
     }
