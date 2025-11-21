@@ -84,6 +84,7 @@ public class EventoService {
 
         try {
             eventoRepository.delete(evento);
+            eventoRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException(
                     "Não é possível excluir o evento pois ele está vinculado a agendamentos.");
