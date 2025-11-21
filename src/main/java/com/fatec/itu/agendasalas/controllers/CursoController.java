@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
+import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.services.CursoService;
+import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +31,9 @@ public class CursoController {
 
     @Autowired
     private CursoService cursoService;
+
+    @Autowired
+    private DisciplinaService disciplinaService;
 
     @Operation(summary = "Cria um novo curso")
     @PostMapping
@@ -61,8 +67,8 @@ public class CursoController {
     }
 
     @Operation(summary = "Lista todas as disciplina do curso")
-    @GetMapping("{cursoId}")
-    public ResponseEntity<DisciplinaListDTO> listarDisciplinasDoCurso(@PathVariable Long cursoId){
-        disciplinaService.
+    @GetMapping("{cursoId}/disciplinas")
+    public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinasDoCurso(@PathVariable Long cursoId){
+        return ResponseEntity.ok(disciplinaService.listarDisciplinasPorCurso(cursoId));
     }
 }

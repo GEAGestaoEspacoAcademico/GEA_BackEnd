@@ -11,6 +11,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;

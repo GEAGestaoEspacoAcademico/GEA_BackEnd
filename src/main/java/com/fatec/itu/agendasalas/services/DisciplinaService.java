@@ -42,8 +42,12 @@ public class DisciplinaService {
         return converterParaDTO(disciplinaRepository.findAll());
     }
 
-    public List<DisciplinaListDTO> listarDisciplinasPorProfessor(Long idProfessor) {
-        return converterParaDTO(disciplinaRepository.findByProfessorId(idProfessor));
+    public List<DisciplinaListDTO> listarDisciplinasPorProfessor(Long professorId) {
+        return converterParaDTO(disciplinaRepository.findByProfessorId(professorId));
+    }
+
+    public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long cursoId){
+        return converterParaDTO(disciplinaRepository.findByCursoId(cursoId));
     }
 
     public DisciplinaListDTO buscarPorId(Long id) {

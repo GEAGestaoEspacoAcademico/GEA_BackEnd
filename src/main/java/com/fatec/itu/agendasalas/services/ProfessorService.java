@@ -16,6 +16,7 @@ import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.ProfessorNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.RegistroProfessorDuplicadoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
@@ -42,6 +43,9 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
     private CargoService cargoService;
 
     @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
     private CargoRepository cargoRepository;
 
     @Autowired
@@ -62,7 +66,10 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
         String primeiroNome =  nomeSeparado[0].toLowerCase();
         String ultimoNome = nomeSeparado[nomeSeparado.length-1].toLowerCase();
         String login = primeiroNome + "." + ultimoNome; 
-
+        
+        if(usuarioService.existeEmailCadastrado(professorCreateDTO.email())){
+            throw new EmailJaCadastradoException(professorCreateDTO.email());
+        }
 
         Professor novoProfessor = new Professor(
                 login,
