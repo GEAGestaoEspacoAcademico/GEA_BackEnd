@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorAdicionandoDisciplinaDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
@@ -77,8 +78,6 @@ public class ProfessorController {
         return ResponseEntity.noContent().build();
     }
 
-    
-
     @Operation(summary = "Atualiza professor existente")
     @PutMapping("/{professorId}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
@@ -95,4 +94,11 @@ public class ProfessorController {
                 professorService.atualizarProfessor(professorId, dto)
     );
     }
+
+    @Operation(summary="Adiciona uma disciplina no cadastro do professor")
+    @PostMapping("/{professorId}/disciplinas")
+    public ResponseEntity<Void> adicionarDisciplinaNoProfessor(@PathVariable Long professorId, @RequestBody ProfessorAdicionandoDisciplinaDTO dto){
+        professorService.adicionarDisciplinaNoProfessor(professorId, dto);
+        return ResponseEntity.noContent().build();
+    } 
 }

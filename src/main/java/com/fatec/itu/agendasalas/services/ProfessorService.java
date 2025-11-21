@@ -12,6 +12,7 @@ import com.fatec.itu.agendasalas.services.CargoService;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
+import com.fatec.itu.agendasalas.dto.professores.ProfessorAdicionandoDisciplinaDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
@@ -19,8 +20,10 @@ import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.exceptions.ProfessorNotFoundException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
+import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,6 +36,9 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
 
     @Autowired
     private DisciplinaService disciplinaService;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
 
     @Autowired
     private CargoService cargoService;
@@ -50,8 +56,13 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
     @Override
     @Transactional
     public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) {
+
+        String[] nomeSeparado = professorCreateDTO.nome().split();
+        String nome = professorCreateDTO.nome().;
+        String login = 
+
        Professor novoProfessor = new Professor(
-            professorCreateDTO.login(), 
+            
             professorCreateDTO.email(), 
             professorCreateDTO.nome(),
             professorCreateDTO.registroProfessor());
@@ -143,4 +154,19 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
 
     return toResponseDTO(professorRepository.save(professor));
 }
+
+    public void adicionarDisciplinaNoProfessor(Long professorId, ProfessorAdicionandoDisciplinaDTO dto) {
+       Professor professor = professorRepository.findById(professorId).orElseThrow(()-> new ProfessorNotFoundException(professorId));
+       List<Disciplina> disciplinasParaAdicionar = dto.disciplinaId()
+                .stream()
+                .map(disciplinaService::findById)
+                .toList();
+       
+       disciplinasParaAdicionar.forEach(disciplina -> {
+            disciplina.setProfessor(professor);
+       });
+       
+       disciplinaRepository.saveAll(disciplinasParaAdicionar);
+    }
+    
 }
