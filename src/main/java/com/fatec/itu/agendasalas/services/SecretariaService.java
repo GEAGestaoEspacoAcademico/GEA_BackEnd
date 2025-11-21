@@ -28,6 +28,8 @@ public class SecretariaService {
         return converterParaResponseDTO(secretaria);
     }
 
+    
+
     private SecretariaResponseDTO converterParaResponseDTO(Secretaria secretaria){
         return new SecretariaResponseDTO(secretaria.getId(), secretaria.getNome(), secretaria.getEmail(), secretaria.getMatricula(), secretaria.getCargo().getId());
     }
