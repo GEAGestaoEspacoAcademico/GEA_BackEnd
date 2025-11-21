@@ -1,8 +1,8 @@
 package com.fatec.itu.agendasalas.exceptions;
 
-public class ProfessorNotFoundException extends RuntimeException{
+public class ProfessorNaoEncontradoException extends RuntimeException{
 
-    public ProfessorNotFoundException(Long id) {
+    public ProfessorNaoEncontradoException(Long id) {
         super("O professor de id: " + id + " não foi encontrado");
     }
     

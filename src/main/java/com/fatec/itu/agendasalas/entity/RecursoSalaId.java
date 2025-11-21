@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

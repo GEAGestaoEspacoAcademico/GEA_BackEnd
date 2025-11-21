@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
-import com.fatec.itu.agendasalas.dto.professores.ProfessorAdicionandoDisciplinaDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
@@ -25,6 +26,7 @@ import com.fatec.itu.agendasalas.services.ProfessorService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -48,8 +50,13 @@ public class ProfessorController {
     @PostMapping
     /*Se não me engano é função da secretaria, mas isso é o de menos é só adicionar aqui */
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<ProfessorResponseDTO> cadastrarProfessor(@RequestBody ProfessorCreateDTO professorCreateDTO){
-        return ResponseEntity.created(null).body(professorService.cadastrarUsuario(professorCreateDTO));
+    public ResponseEntity<ProfessorResponseDTO> cadastrarProfessor(@Valid @RequestBody ProfessorCreateDTO professorCreateDTO){
+
+        ProfessorResponseDTO professorResponseDTO = professorService.cadastrarUsuario(professorCreateDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(professorResponseDTO.usuarioId()).toUri();
+
+        return ResponseEntity.created(uri).body(professorResponseDTO);
     }
 
     @Operation(summary = "Busca professor pelo ID")
@@ -83,22 +90,11 @@ public class ProfessorController {
     public ResponseEntity<ProfessorResponseDTO> atualizar(
         @PathVariable Long professorId,
         @RequestBody ProfessorUpdateDTO dto) {
-            ProfessorUpdateDTO dtoComId = new ProfessorUpdateDTO(
-                professorId,
-                dto.nome(),
-                dto.email(),
-                dto.cargoId(),
-                dto.disciplinasIds()
-            );
+            
             return ResponseEntity.ok(
                 professorService.atualizarProfessor(professorId, dto)
     );
     }
 
-    @Operation(summary="Adiciona uma disciplina no cadastro do professor")
-    @PostMapping("/{professorId}/disciplinas")
-    public ResponseEntity<Void> adicionarDisciplinaNoProfessor(@PathVariable Long professorId, @RequestBody ProfessorAdicionandoDisciplinaDTO dto){
-        professorService.adicionarDisciplinaNoProfessor(professorId, dto);
-        return ResponseEntity.noContent().build();
-    } 
+  
 }
