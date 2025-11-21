@@ -13,6 +13,7 @@ import com.fatec.itu.agendasalas.dto.professores.ProfessorCreateDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorResponseDTO;
 import com.fatec.itu.agendasalas.dto.professores.ProfessorUpdateDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
+import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
@@ -21,6 +22,7 @@ import com.fatec.itu.agendasalas.exceptions.ProfessorNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.RegistroProfessorDuplicadoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
+import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
@@ -47,6 +49,9 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
 
     @Autowired
     private CargoRepository cargoRepository;
+
+    @Autowired
+    private CoordenadorRepository coordenadorRepository;
 
     @Autowired
     private CursoRepository cursoRepository;
@@ -156,9 +161,20 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
             professor.setRegistroProfessor(dto.registroProfessor());
         }  
 
-        if (dto.cargoId() != null) {
-            Cargo cargo = cargoService.findById(dto.cargoId());
-            professor.setCargo(cargo);
+        if (dto.siglaCurso() != null) {
+            Curso curso = cursoRepository.findBySigla(dto.siglaCurso())
+                .orElseThrow(()-> new CursoNaoEncontradoException(dto.siglaCurso()));
+            Coordenador coordenador = coordenadorRepository.findByProfessorId(professor.getId())
+            .orElseGet(() -> {
+                Coordenador c = new Coordenador(professor.getId(), professor.getLogin(), professor.getEmail(), professor.getNome(), professor.getRegistroProfessor());
+                return c;
+            });
+           
+            curso.setCoordenador(coordenador);
+            Cargo cargo = cargoService.findByNome("COORDENADOR");
+            coordenador.setCargo(cargo);
+            coordenadorRepository.save(coordenador);
+            cursoRepository.save(curso);
         }
 
         if (dto.disciplinasIds() != null) {

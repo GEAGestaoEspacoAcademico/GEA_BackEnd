@@ -7,7 +7,7 @@ public record ProfessorUpdateDTO(
         String nome,
         String email,
         Long registroProfessor,
-        Long cargoId,
+        String cursoParaVirarCoordenador,
         List<Long> disciplinasIds
 ) {}
 

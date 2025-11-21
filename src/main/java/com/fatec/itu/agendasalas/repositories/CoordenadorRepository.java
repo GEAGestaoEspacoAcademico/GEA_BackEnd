@@ -13,4 +13,5 @@ public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> 
     boolean existsByRegistroCoordenacao(int registroCoordenacao);
     
     Optional<Coordenador> findByRegistroCoordenacao(int registroCoordenacao);
+    Optional<Coordenador> findByProfessorId(Long professorId);
 }
