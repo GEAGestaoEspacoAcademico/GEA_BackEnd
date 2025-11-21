@@ -59,4 +59,10 @@ public class CursoController {
     public void excluirCurso(@PathVariable Long cursoId) {
         cursoService.excluir(cursoId);
     }
+
+    @Operation(summary = "Lista todas as disciplina do curso")
+    @GetMapping("{cursoId}")
+    public ResponseEntity<DisciplinaListDTO> listarDisciplinasDoCurso(@PathVariable Long cursoId){
+        disciplinaService.
+    }
 }
