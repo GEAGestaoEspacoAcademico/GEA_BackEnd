@@ -51,8 +51,15 @@ public class SalaService {
 
     private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
-      return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
-          sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
+      return new SalaDetailDTO(
+          sala.getId(),
+          sala.getNome(),
+          sala.getCapacidade(),
+          sala.getPiso(),
+          sala.isDisponibilidade(),
+          sala.getTipoSala() != null ? sala.getTipoSala().getId() : null,
+          sala.getTipoSala() != null ? sala.getTipoSala().getNome() : null,
+          sala.getObservacoes());
     }
 
     public List<SalaDetailDTO> listarSalasDisponiveis() {
