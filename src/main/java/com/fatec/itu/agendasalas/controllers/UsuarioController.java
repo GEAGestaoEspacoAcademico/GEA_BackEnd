@@ -18,6 +18,12 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
@@ -29,33 +35,65 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Operation(summary = "Lista todos os usuários")
+    @Operation(summary = "Lista todos os usuários do sistema")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de usuários encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = UsuarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 } ]")))
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
         List<UsuarioResponseDTO> responseDTOList = usuarioService.listarUsuarios();
         return ResponseEntity.ok(responseDTOList);
     }
 
-    @Operation(summary = "Apresenta um usuário por id")
+    @Operation(summary = "Busca um usuário específico pelo ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuário encontrado",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 }"))),
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @GetMapping("{usuarioId}")
-    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long usuarioId) {
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(
+        @Parameter(description = "ID do usuário") @PathVariable Long usuarioId) {
         UsuarioResponseDTO responseDTO = usuarioService.buscarUsuarioPorId(usuarioId);
         return ResponseEntity.ok(responseDTO);
     }
 
-    @Operation(summary = "Atualiza um usuário existente por id")
+    @Operation(summary = "Atualiza dados administrativos de um usuário (Admin)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Usuário atualizado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
     @PatchMapping("{usuarioId}")
-    public ResponseEntity<Void> atualizarUsuarioAdmin(@PathVariable Long usuarioId,
+    public ResponseEntity<Void> atualizarUsuarioAdmin(
+        @Parameter(description = "ID do usuário a ser atualizado") @PathVariable Long usuarioId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados para atualização administrativa",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioUpdateAdminDTO.class),
+                    examples = @ExampleObject(value = "{ \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 }")))
             @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO) {
         usuarioService.atualizarUsuario(usuarioUpdateAdminDTO, usuarioId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Altera a senha do usuário quando o mesmo está logado")
+    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Senha alterada") })
     @PatchMapping("{usuarioId}/senha")
-    public ResponseEntity<Void> alterarSenha(@PathVariable Long usuarioId, @RequestBody UsuarioAlterarSenhaDTO dto) {
+    public ResponseEntity<Void> alterarSenha(
+        @Parameter(description = "ID do usuário") @PathVariable Long usuarioId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados para troca de senha",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioAlterarSenhaDTO.class),
+                    examples = @ExampleObject(value = "{ \"senhaAtual\": \"SenhaAntiga123!\", \"novaSenha\": \"NovaSenhaSegura2025!\", \"repetirNovaSenha\": \"NovaSenhaSegura2025!\" }")))
+            @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
-        return ResponseEntity.noContent().build();
-    }
+        return ResponseEntity.noContent().build();    }
 
 }

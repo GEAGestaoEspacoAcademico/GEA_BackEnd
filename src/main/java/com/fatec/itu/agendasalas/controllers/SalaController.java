@@ -51,7 +51,7 @@ public class SalaController {
             description = "Lista de salas encontrada",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(type = "array", implementation = SalaDetailDTO.class),
-                examples = @ExampleObject(value = "[ { \"salaId\": 1, \"salaNome\": \"Sala 101\", \"capacidade\": 30, \"andarId\": 1, \"disponibilidade\": true, \"tipoSala\": \"Laboratório de Informática\", \"salaObservacoes\": \"Nenhuma\" } ]")))
+                examples = @ExampleObject(value = "{ \"salaId\": 7, \"salaNome\": \"Sala 101\", \"capacidade\": 40, \"disponibilidade\": false, \"tipoSalaId\": 1, \"tipoSala\": \"Sala de Aula\", \"andarId\": 1, \"andarNome\": \"1º Andar\", \"salaObservacoes\": \"Sala com projetor e ar condicionado\" }")))
     })
     public ResponseEntity<List<SalaDetailDTO>> listarTodas() {
         return ResponseEntity.ok(salaService.listarTodasAsSalas());
@@ -196,7 +196,7 @@ public class SalaController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
                     examples = @ExampleObject(
-                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101 - Atualizada\", \"salaCapacidade\": 20, \"andarId\": 1, \"disponibilidade\": false, \"salaObservacoes\": \"Sala em manutenção\" }")))
+                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101 - Atualizada\", \"salaCapacidade\": 20, \"andarId\": 1, \"salaObservacoes\": \"Sala em manutenção\" }")))
             @RequestBody SalaCreateAndUpdateDTO sala) {
 
         return ResponseEntity.ok(salaService.atualizar(salaId, sala));

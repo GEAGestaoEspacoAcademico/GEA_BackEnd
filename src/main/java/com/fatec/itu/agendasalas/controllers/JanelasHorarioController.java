@@ -24,6 +24,7 @@ import com.fatec.itu.agendasalas.services.JanelasHorarioService;
 import com.fatec.itu.agendasalas.dto.janelasHorario.DatasRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,15 +43,33 @@ public class JanelasHorarioController {
     @Autowired
     private JanelasHorarioService janelasHorarioService;
 
-    @Operation(summary = "Lista todas as janelas de horários")
+    @Operation(summary = "Lista todas as janelas de horários cadastradas")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }, { \"janelasHorarioId\": 2, \"horaInicio\": \"09:30:00\", \"horaFim\": \"11:10:00\" } ]")))
+    })
     @GetMapping
     public ResponseEntity<List<JanelasHorarioResponseDTO>> listarTodasJanelasHorario() {
         return ResponseEntity.ok(janelasHorarioService.listarTodasJanelasHorario());
     }
 
     @Operation(summary = "Cria uma nova janela de horário")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Janela criada com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 3, \"horaInicio\": \"13:30:00\", \"horaFim\": \"15:10:00\" }")))
+    })
     @PostMapping
     public ResponseEntity<JanelasHorarioResponseDTO> criarJanelaHorario(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados da nova janela de horário",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = JanelasHorarioCreationDTO.class),
+                    examples = @ExampleObject(value = "{ \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }")))
             @RequestBody JanelasHorarioCreationDTO janelasHorarioCreationDTO) {
         JanelasHorarioResponseDTO janelasHorarioResponseDTO =
                 janelasHorarioService.criarJanelaHorario(janelasHorarioCreationDTO);
@@ -60,23 +79,47 @@ public class JanelasHorarioController {
         return ResponseEntity.created(uri).body(janelasHorarioResponseDTO);
     }
 
-    @Operation(summary = "Lista uma janela de horário existente por id")
+    @Operation(summary = "Busca uma janela de horário pelo ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Janela encontrada",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }"))),
+        @ApiResponse(responseCode = "404", description = "Janela não encontrada")
+    })
     @GetMapping("/{janelaHorarioId}")
     public ResponseEntity<JanelasHorarioResponseDTO> filtrarJanelaHorarioPeloID(
-            @PathVariable Long janelaHorarioId) {
+            @Parameter(description = "ID da janela") @PathVariable Long janelaHorarioId) {
         return ResponseEntity.ok(janelasHorarioService.filtrarJanelaHorarioPeloID(janelaHorarioId));
     }
 
-    @Operation(summary = "Atualiza uma janela de horário por id")
+    @Operation(summary = "Atualiza uma janela de horário existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Janela atualizada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }"))),
+        @ApiResponse(responseCode = "404", description = "Janela não encontrada")
+    })
     @PutMapping("/{janelaHorarioId}")
     public ResponseEntity<JanelasHorarioResponseDTO> atualizarJanelasHorario(
-            @PathVariable Long janelaHorarioId,
+        @Parameter(description = "ID da janela a ser atualizada") @PathVariable Long janelaHorarioId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Novos dados da janela",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = JanelasHorarioUpdateDTO.class),
+                    examples = @ExampleObject(value = "{ \"horaInicio\": \"09:30:00\", \"horaFim\": \"11:10:00\" }")))
             @RequestBody JanelasHorarioUpdateDTO janelasHorarioUpdateDTO) {
         return ResponseEntity.ok(janelasHorarioService.atualizarJanelasHorario(janelaHorarioId,
                 janelasHorarioUpdateDTO));
     }
 
-    @Operation(summary = "Lista os horários disponíveis pela data")
+    @Operation(summary = "Lista os horários disponíveis em uma data específica")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de horários disponíveis",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" } ]")))
+    })
     @GetMapping("/disponiveis/{data}")
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveis(
         @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {

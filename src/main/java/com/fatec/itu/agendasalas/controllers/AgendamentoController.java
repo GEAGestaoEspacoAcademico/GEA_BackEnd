@@ -15,6 +15,11 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisci
 import com.fatec.itu.agendasalas.services.AgendamentoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
@@ -30,14 +35,32 @@ public class AgendamentoController {
     }
 
     @Operation(summary = "Lista todos os agendamentos existentes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Lista de agendamentos encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = AgendamentoNotificacaoDisciplinaDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"agendamentoId\": 201, \"sala\": { \"salaId\": 5, \"salaNome\": \"Lab 301\" }, \"data\": \"2025-12-01\", \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\", \"disciplinaId\": 12, \"disciplinaNome\": \"Engenharia de Software III\", \"isEvento\": false } ]")))
+    })
     @GetMapping
     public ResponseEntity<List<AgendamentoNotificacaoDisciplinaDTO>> listarAgendamentos() {
         return ResponseEntity.ok(agendamentoService.listarAgendamentosDisciplina());
     }
 
     @Operation(summary = "Busca todos os agendamentos correspondentes à data informada")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Agendamentos encontrados",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = AgendamentoNotificacaoDisciplinaDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"agendamentoId\": 202, \"sala\": { \"salaId\": 3, \"salaNome\": \"Sala 204\" }, \"data\": \"2025-11-25\", \"horaInicio\": \"13:30:00\", \"horaFim\": \"15:10:00\", \"disciplinaId\": 7, \"disciplinaNome\": \"Redes de Computadores\", \"isEvento\": false } ]"))),
+        @ApiResponse(responseCode = "204", description = "Nenhum agendamento encontrado para a data informada")
+    })
     @GetMapping("/{data}")
     public ResponseEntity<List<AgendamentoNotificacaoDisciplinaDTO>> buscarAgendamentosPorData(
+            @Parameter(description = "Data a ser buscada no formato YYYY-MM-DD", example = "2025-11-25")
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
 
                 List<AgendamentoNotificacaoDisciplinaDTO> agendamentos = agendamentoService.buscarAgendamentosPorData(data);
