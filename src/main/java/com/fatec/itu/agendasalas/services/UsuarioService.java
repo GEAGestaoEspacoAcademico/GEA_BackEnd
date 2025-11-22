@@ -12,6 +12,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
@@ -72,16 +73,19 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
     public void atualizarUsuario(UsuarioUpdateAdminDTO usuarioUpdateAdminDTO, Long id){
         Usuario auxiliar = usuarioRepository.getReferenceById(id);
-        
+        String novoEmail = usuarioUpdateAdminDTO.usuarioEmail();
         if(usuarioUpdateAdminDTO.usuarioNome()!=null) auxiliar.setNome(usuarioUpdateAdminDTO.usuarioNome());
-        if(usuarioUpdateAdminDTO.usuarioEmail()!=null){
-            if(!usuarioRepository.existsByEmailAndIdNot(usuarioUpdateAdminDTO.usuarioEmail(), id)){
-                auxiliar.setEmail(usuarioUpdateAdminDTO.usuarioEmail());
+        
+        if (novoEmail != null && !novoEmail.equals(auxiliar.getEmail())) {
+
+            boolean emailJaUsadoPorOutroUsuario = usuarioRepository.existsByEmailAndIdNot(novoEmail, id);
+            if(emailJaUsadoPorOutroUsuario){
+                 throw new EmailJaCadastradoException(novoEmail);
             }
-            else{
-                throw new RuntimeException("Tentando usar email já cadastrado");
-            }
-        } 
+            auxiliar.setEmail(usuarioUpdateAdminDTO.usuarioEmail());
+          
+        }
+        
         if(usuarioUpdateAdminDTO.cargoId() != null){
             Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.cargoId())
             .orElseThrow(()-> new RuntimeException("Não encontrado cargo desejado"));
@@ -89,6 +93,10 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         }
 
         usuarioRepository.save(auxiliar);
+    }
+
+    public boolean existeEmailCadastrado(String email){
+        return usuarioRepository.existsByEmail(email);
     }
 
     public void alterarSenha(Long usuarioId, UsuarioAlterarSenhaDTO dto) {

@@ -1,8 +1,10 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
@@ -64,8 +67,8 @@ public class DisciplinaController {
                 examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
     })
     @GetMapping
-    public List<DisciplinaListDTO> listarDisciplinas() {
-        return disciplinaService.listar();
+    public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {
+        return ResponseEntity.ok(disciplinaService.listar());
     }
 
     @Operation(summary = "Apresenta uma disciplina existente pelo ID")
@@ -101,7 +104,7 @@ public class DisciplinaController {
                     schema = @Schema(implementation = DisciplinaCreateDTO.class),
                     examples = @ExampleObject(value = "{ \"nome\": \"Algoritmos e Estruturas\" }")))
             @RequestBody DisciplinaCreateDTO novaDisciplina) {
-        return disciplinaService.atualizar(disciplinaId, novaDisciplina);
+        return ResponseEntity.ok(disciplinaService.atualizar(disciplinaId, novaDisciplina));
     }
 
     @Operation(summary = "Deleta uma disciplina pelo ID")
@@ -113,5 +116,6 @@ public class DisciplinaController {
     public void excluirDisciplina(
         @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
         disciplinaService.excluir(disciplinaId);
+        return ResponseEntity.noContent().build();
     }
 }

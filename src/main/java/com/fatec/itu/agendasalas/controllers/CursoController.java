@@ -41,9 +41,8 @@ public class CursoController {
     @Autowired
     private CursoService cursoService;
 
-    CursoController(DisciplinaService disciplinaService) {
-        this.disciplinaService = disciplinaService;
-    }
+    @Autowired
+    private DisciplinaService disciplinaService;
 
     @Operation(summary = "Cria um novo curso")
     @ApiResponses(value = {
