@@ -2,7 +2,7 @@
 -- Alimenta o BD com cargos
 -- -----------------------------------------------------------------------------
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
+VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETARIA');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com usuarios
@@ -265,24 +265,34 @@ VALUES
 
 
 -- -----------------------------------------------------------------------------
+-- Alimenta o BD com Andares
+-- -----------------------------------------------------------------------------
+INSERT INTO ANDARES (nome)
+VALUES 
+    ('1º Andar'),
+    ('2º Andar'),
+    ('3º Andar');
+
+    
+-- -----------------------------------------------------------------------------
 -- Alimenta o BD com Salas
 -- -----------------------------------------------------------------------------
 -- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
-INSERT INTO SALAS (nome, capacidade, piso, disponibilidade, id_tipo_sala, observacoes)
+INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, andar_id, observacoes)
 VALUES 
-    ('Lab 301', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 302', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 303', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Lab 304', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 305', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 306', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Sala 101', 40, 1, FALSE, 1, 'Sala com projetor e ar condicionado'),
-    ('Sala 102', 40, 1, FALSE, 1, 'Sala com lousa digital'),
-    ('Sala 201', 50, 2, FALSE, 1, 'Auditório pequeno'),
-    ('Sala 202', 35, 2, FALSE, 2, 'Sala com projetor'),
-    ('Sala 103', 40, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'),
-    ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
-    ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
+    ('Lab 301', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 302', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 303', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Lab 304', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 305', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 306', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Sala 101', 40, FALSE, 1, 1, 'Sala com projetor e ar condicionado'),
+    ('Sala 102', 40, FALSE, 1, 1, 'Sala com lousa digital'),
+    ('Sala 201', 50, FALSE, 1, 2, 'Auditório pequeno'),
+    ('Sala 202', 35, FALSE, 2, 2, 'Sala com projetor'),
+    ('Sala 103', 40, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'),
+    ('Sala 104', 35, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'), 
+    ('Sala 203', 50, TRUE, 1, 2, 'Sala ampla com duas lousas');
 
 
 -- -----------------------------------------------------------------------------
