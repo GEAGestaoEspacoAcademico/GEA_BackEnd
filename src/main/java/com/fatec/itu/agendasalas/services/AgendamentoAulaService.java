@@ -181,6 +181,8 @@ public class AgendamentoAulaService {
 
                 if (sequenciaEstaDisponivel) {
                         int quantidadeAulasRestantes = dto.quantidade() - 1;
+                        
+                        Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(dto.data(), dto.data()));
 
                         for (int i = 0; i <= quantidadeAulasRestantes; i++) {
                                 long idDesejado = dto.janelasHorarioId() + i;
@@ -198,6 +200,7 @@ public class AgendamentoAulaService {
                                 proximoAgendamento.setData(dto.data());
                                 proximoAgendamento.setIsEvento((dto.isEvento()));
                                 proximoAgendamento.setJanelasHorario(janela);
+                                proximoAgendamento.setRecorrencia(recorrencia);
 
                                 agendamentoAulaRepository.save(proximoAgendamento);
                         }
@@ -330,6 +333,9 @@ public class AgendamentoAulaService {
         agendamento.setData(dto.data());
         agendamento.setJanelasHorario(janelasHorario);
         agendamento.setIsEvento(dto.isEvento());
+
+        Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(dto.data(), dto.data()));
+        agendamento.setRecorrencia(recorrencia);
 
         
         AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
