@@ -171,7 +171,7 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
                 return c;
             });
            
-            //Pode ser que dê erro aqui
+            //Pode ser que dê erro aqui..
             curso.setCoordenador(coordenador);
             Cargo cargo = cargoService.findByNome("COORDENADOR");
             coordenador.setCargo(cargo);
