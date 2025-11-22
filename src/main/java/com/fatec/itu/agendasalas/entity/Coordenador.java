@@ -27,11 +27,11 @@ public class Coordenador extends Usuario {
         super(login, email, nome);
         this.registroCoordenacao = registroCoordenacao;
     }
-    public int getRegistroCoordenacao() {
+    public Long getRegistroCoordenacao() {
         return registroCoordenacao;
     }
 
-    public void setRegistroCoordenacao(int registroCoordenacao) {
+    public void setRegistroCoordenacao(Long registroCoordenacao) {
         this.registroCoordenacao = registroCoordenacao;
     }
 
