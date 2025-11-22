@@ -20,8 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
-import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.services.JanelasHorarioService;
+import com.fatec.itu.agendasalas.dto.janelasHorario.DatasRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -122,15 +122,35 @@ public class JanelasHorarioController {
     })
     @GetMapping("/disponiveis/{data}")
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveis(
-        @Parameter(description = "Data para verificar disponibilidade (YYYY-MM-DD)") @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-            List<JanelasHorario> lista = janelasHorarioService.buscarDisponiveisPorData(data);
-            List<JanelasHorarioResponseDTO> listaDTO = lista.stream()
-            .map(j -> new JanelasHorarioResponseDTO(
-                    j.getId(),
-                    j.getHoraInicio(),
-                    j.getHoraFim()
-            ))
-            .toList();
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+            List<JanelasHorarioResponseDTO> listaDTO = janelasHorarioService.buscarDisponiveisPorDataDTO(data);
             return ResponseEntity.ok(listaDTO);
-}
+    }
+
+
+
+    @Operation(summary = "Lista os horários disponíveis em várias datas")
+    @PostMapping("/disponiveis/datas")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "OK",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(
+                    value = "[{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }]")))
+    })
+    public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveisEmVariasDatas(
+        @PathVariable Long salaId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Lista de datas a serem checadas",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DatasRequestDTO.class),
+                    examples = @ExampleObject(
+                        value = "{ \"datas\": [\"2026-01-10\", \"2026-01-11\", \"2026-01-12\", \"2026-01-13\", \"2026-01-14\", \"2026-01-15\", \"2026-01-16\", \"2026-01-17\", \"2026-01-18\", \"2026-01-19\"] }")))
+        @RequestBody DatasRequestDTO datasRequest) {
+
+        List<JanelasHorarioResponseDTO> listaDTO = janelasHorarioService.buscarDisponiveisEmVariasDatas(datasRequest);
+        return ResponseEntity.ok(listaDTO);
+    }
 }
