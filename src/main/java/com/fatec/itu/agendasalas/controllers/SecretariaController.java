@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,11 +22,12 @@ import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaUpdateDTO;
 import com.fatec.itu.agendasalas.services.SecretariaService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -49,14 +51,14 @@ public class SecretariaController {
                     "    \"secretarioNome\": \"Maria Silva\",\n" +
                     "    \"secretarioEmail\": \"maria.silva@email.com\",\n" +
                     "    \"matricula\": 12345,\n" +
-                    "    \"cargoId\": 2\n" +
+                    "    \"cargoId\": 5\n" +
                     "  },\n" +
                     "  {\n" +
                     "    \"usuarioId\": 2,\n" +
                     "    \"secretarioNome\": \"João Souza\",\n" +
                     "    \"secretarioEmail\": \"joao.souza@email.com\",\n" +
                     "    \"matricula\": 12346,\n" +
-                    "    \"cargoId\": 2\n" +
+                    "    \"cargoId\": 5\n" +
                     "  }\n" +
                     "]"))
     )
@@ -65,13 +67,44 @@ public class SecretariaController {
         return ResponseEntity.ok(secretariaService.listarSecretarios());
     }
 
+
+    @Operation(summary = "Busca uma secretaria pelo ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Secretaria encontrada",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SecretariaResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Secretaria não encontrada")
+    })
     @GetMapping("{id}")
     public ResponseEntity<SecretariaResponseDTO> buscarSecretariaPeloId(@PathVariable Long id){
         return ResponseEntity.ok(secretariaService.buscarSecretarioPorId(id));
     }
 
+
+    @Operation(summary = "Cadastra uma nova secretaria")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Secretaria cadastrada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SecretariaResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
-    public ResponseEntity<SecretariaResponseDTO> cadastrarSecretaria(@Valid @RequestBody SecretariaCreationDTO secretariaCreationDTO){
+    public ResponseEntity<SecretariaResponseDTO> cadastrarSecretaria(
+        @Parameter(description = "Dados da secretaria a ser cadastrada", required = true)
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "DTO com informações da secretaria",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = SecretariaCreationDTO.class),
+                examples = @ExampleObject(
+                    value = "{\n" +
+                            "  \"nome\": \"Maria Silva\",\n" +
+                            "  \"email\": \"maria.silva@email.com\",\n" +
+                            "  \"matricula\": 12345\n" +
+                            "}"
+                )
+            )
+        )
+        @Valid @RequestBody SecretariaCreationDTO secretariaCreationDTO){
         SecretariaResponseDTO secretariaResponseDTO = secretariaService.cadastrarSecretaria(secretariaCreationDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(secretariaResponseDTO.usuarioId()).toUri();
@@ -79,11 +112,42 @@ public class SecretariaController {
         return ResponseEntity.created(uri).body(secretariaResponseDTO);
     }
 
+
+     @Operation(summary = "Atualiza uma secretaria existente")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Secretaria atualizada com sucesso",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SecretariaResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Secretaria não encontrada"),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PutMapping("{id}")
-    public ResponseEntity<SecretariaResponseDTO> atualizarSecretaria(@PathVariable Long id, @Valid @RequestBody SecretariaUpdateDTO secretariaUpdateDTO){
+    public ResponseEntity<SecretariaResponseDTO> atualizarSecretaria(
+         @PathVariable Long id,
+        @Parameter(description = "Campos a serem atualizados na secretaria", required = true)
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "DTO com campos opcionais para atualização",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = SecretariaUpdateDTO.class),
+                examples = @ExampleObject(
+                    value = "{\n" +
+                            "  \"nome\": \"Maria Souza\",\n" +
+                            "  \"email\": \"maria.souza@email.com\"\n" +
+                            "}"
+                )
+            )
+        )
+        @Valid @RequestBody SecretariaUpdateDTO secretariaUpdateDTO){
         return ResponseEntity.ok(secretariaService.atualizarSecretaria(id, secretariaUpdateDTO));
     }
 
+
+     @Operation(summary = "Deleta uma secretaria pelo ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Secretaria deletada com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Secretaria não encontrada")
+    })
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletarSecretaria(@PathVariable Long id){
         secretariaService.deletarSecretaria(id);

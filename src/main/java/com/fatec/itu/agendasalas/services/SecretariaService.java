@@ -30,6 +30,9 @@ public class SecretariaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncryptService passwordEncryptService;
+
     public List<SecretariaResponseDTO> listarSecretarios() {
         return secretariaRepository.findAll().stream()
         .map(this::converterParaResponseDTO)
@@ -50,8 +53,11 @@ public class SecretariaService {
         if(usuarioRepository.existsByEmail(dto.email())){
             throw new EmailJaCadastradoException(dto.email());
         }
-
+        String[] nomeSeparado = dto.nome().split(" ");
+        String login = nomeSeparado[0].toLowerCase() + "." + nomeSeparado[nomeSeparado.length-1].toLowerCase();  
+        String senha = nomeSeparado[0].toLowerCase()+"123";
         Secretaria secretaria = new Secretaria();
+        secretaria.setLogin(login);
         secretaria.setNome(dto.nome());
         secretaria.setEmail(dto.email());
         secretaria.setMatricula(dto.matricula());
@@ -62,13 +68,7 @@ public class SecretariaService {
 
         secretariaRepository.save(secretaria);
 
-        return new SecretariaResponseDTO(
-            secretaria.getId(),
-            secretaria.getNome(),
-            secretaria.getEmail(),
-            secretaria.getMatricula(),
-            secretaria.getCargo().getId()
-        );
+        return converterParaResponseDTO(secretaria);
     }
 
     public SecretariaResponseDTO atualizarSecretaria(Long id, SecretariaUpdateDTO dto) {
@@ -85,17 +85,11 @@ public class SecretariaService {
         }
         secretariaRepository.save(secretaria);
 
-        return new SecretariaResponseDTO(
-            secretaria.getId(),
-            secretaria.getNome(),
-            secretaria.getEmail(),
-            secretaria.getMatricula(),
-            secretaria.getCargo().getId()
-        );
+        return converterParaResponseDTO(secretaria);
     }
 
     private SecretariaResponseDTO converterParaResponseDTO(Secretaria secretaria){
-        return new SecretariaResponseDTO(secretaria.getId(), secretaria.getNome(), secretaria.getEmail(), secretaria.getMatricula(), secretaria.getCargo().getId());
+        return new SecretariaResponseDTO(secretaria.getId(), secretaria.getNome(), secretaria.getLogin(), secretaria.getEmail(), secretaria.getMatricula(), secretaria.getCargo().getId());
     }
 
     public void deletarSecretaria(Long id) {
