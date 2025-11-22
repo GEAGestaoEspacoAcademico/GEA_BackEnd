@@ -2,9 +2,9 @@ package com.fatec.itu.agendasalas.dto.salas;
 
 public record SalaCreateAndUpdateDTO(
         Long tipoSalaId,
+        Long andarId,
         String salaNome, 
         Integer salaCapacidade, 
-        Integer piso, 
         Boolean disponibilidade,
         String salaObservacoes
 ){ }
