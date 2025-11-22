@@ -8,4 +8,6 @@ import com.fatec.itu.agendasalas.entity.Secretaria;
 @Repository
 public interface SecretariaRepository extends JpaRepository<Secretaria, Long> {
 
+    public boolean existsByMatricula(Long matricula);
+
 }
