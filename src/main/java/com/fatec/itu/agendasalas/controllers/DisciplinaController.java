@@ -1,6 +1,5 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
@@ -96,7 +94,7 @@ public class DisciplinaController {
         @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @PutMapping("{disciplinaId}")
-    public DisciplinaListDTO editarDisciplina(@Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
+    public ResponseEntity<DisciplinaListDTO> editarDisciplina(@Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Novos dados para a disciplina",
                 required = true,
@@ -113,7 +111,7 @@ public class DisciplinaController {
         @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @DeleteMapping("{disciplinaId}")
-    public void excluirDisciplina(
+    public ResponseEntity<Void> excluirDisciplina(
         @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
         disciplinaService.excluir(disciplinaId);
         return ResponseEntity.noContent().build();

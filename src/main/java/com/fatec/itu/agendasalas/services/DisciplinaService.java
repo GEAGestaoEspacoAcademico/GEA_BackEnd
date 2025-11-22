@@ -48,6 +48,8 @@ public class DisciplinaService {
     }
 
     public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long cursoId){
+        Curso curso = cursoRepository.findById(cursoId)
+            .orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
         return converterParaDTO(disciplinaRepository.findByCursoId(cursoId));
     }
 
@@ -83,9 +85,5 @@ public class DisciplinaService {
             .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
     }
 
-    public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long idCurso){
-        cursoRepository.findById(idCurso)
-            .orElseThrow(() -> new CursoNaoEncontradoException("Curso não encontrado"));
-        return converterParaDTO(disciplinaRepository.findByCursoId(idCurso));
-    }
+   
 }
