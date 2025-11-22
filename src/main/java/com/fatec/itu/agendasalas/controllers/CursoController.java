@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
+import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.services.CursoService;
+import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @CrossOrigin
 @RestController
@@ -26,8 +35,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Curso", description = "Operações relacionadas a curso")
 public class CursoController {
 
+    private final DisciplinaService disciplinaService;
+
     @Autowired
     private CursoService cursoService;
+
+    CursoController(DisciplinaService disciplinaService) {
+        this.disciplinaService = disciplinaService;
+    }
 
     @Operation(summary = "Cria um novo curso")
     @PostMapping
@@ -59,4 +74,34 @@ public class CursoController {
     public void excluirCurso(@PathVariable Long cursoId) {
         cursoService.excluir(cursoId);
     }
+
+    @Operation(summary = "Lista todas as disciplinas pelo id do Curso")
+    @ApiResponses(value = {
+
+        @ApiResponse(responseCode = "200",
+            description = "Disciplinas encontradas",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(
+                    value = "[\n" +
+                            "  {\n" +
+                            "    \"disciplinaId\": 1,\n" +
+                            "    \"disciplinaNome\": \"Engenharia de Software III\",\n" +
+                            "    \"disciplinaSemestre\": \"2025.2\",\n" +
+                            "    \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\"\n" +
+                            "  }\n" +
+                            "]"
+                )
+            )
+        ),
+
+    @ApiResponse(responseCode = "404",
+        description = "Curso não encontrado",
+        content = @Content(mediaType = "text/plain"))
+    })
+    @GetMapping("/{cursoId}/disciplinas")
+    public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinasPorCurso(@PathVariable Long cursoId) {
+        return ResponseEntity.ok(disciplinaService.listarDisciplinasPorCurso(cursoId));
+    }  
 }
