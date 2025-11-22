@@ -47,7 +47,8 @@ public class ProfessorController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de professores encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = ProfessorResponseDTO.class)))
+                schema = @Schema(type = "array", implementation = ProfessorResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 } ]")))
     })
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     @GetMapping
@@ -58,7 +59,8 @@ public class ProfessorController {
     @Operation(summary = "Cadastra um novo professor")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Professor criado com sucesso",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 }")))
     })
     @PostMapping
     /*Se não me engano é função da secretaria, mas isso é o de menos é só adicionar aqui */
@@ -68,7 +70,8 @@ public class ProfessorController {
                 description = "Dados do professor",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ProfessorCreateDTO.class)))
+                    schema = @Schema(implementation = ProfessorCreateDTO.class),
+                    examples = @ExampleObject(value = "{ \"login\": \"sergio.salgado\", \"nome\": \"Sergio Salgado\", \"email\": \"sergio.salgado@fatec.edu.br\", \"senha\": \"SenhaProf2025!\", \"registroProfessor\": 12345 }")))
             @RequestBody ProfessorCreateDTO professorCreateDTO){
         return ResponseEntity.created(null).body(professorService.cadastrarUsuario(professorCreateDTO));
     }
@@ -76,7 +79,8 @@ public class ProfessorController {
     @Operation(summary = "Busca professor pelo ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Professor encontrado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 }"))),
         @ApiResponse(responseCode = "404", description = "Professor não encontrado")
     })
     @GetMapping("/{professorId}")
@@ -89,7 +93,8 @@ public class ProfessorController {
     @Operation(summary = "Lista os cursos que o professor ministra")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Cursos encontrados",
-            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = CursoListByProfessorDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = CursoListByProfessorDTO.class),
+                examples = @ExampleObject(value = "[ { \"cursoId\": 12, \"cursoNome\": \"Engenharia de Software\", \"cursoSigla\": \"ES\" } ]")))
     })
     @GetMapping("/{professorId}/cursos")
     public List<CursoListByProfessorDTO> listarCursosPorProfessor(
@@ -100,7 +105,8 @@ public class ProfessorController {
     @Operation(summary = "Lista as disciplinas do professor")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Disciplinas encontradas",
-            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(value = "[ { \"disciplinaId\": 4, \"disciplinaNome\": \"Engenharia de Software III\", \"disciplinaSemestre\": \"2025.2\", \"cursoNome\": \"Engenharia de Software\" } ]")))
     })
     @GetMapping("/{professorId}/disciplinas")
     public List<DisciplinaListDTO> listarDisciplinasPorProfessor(
@@ -120,7 +126,8 @@ public class ProfessorController {
     @Operation(summary = "Atualiza professor existente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Professor atualizado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 }")))
     })
     @PutMapping("/{professorId}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
@@ -129,7 +136,8 @@ public class ProfessorController {
             description = "Dados atualizados do professor",
             required = true,
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = ProfessorUpdateDTO.class)))
+                schema = @Schema(implementation = ProfessorUpdateDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"nome\": \"Sergio Salgado\", \"email\": \"sergio.salgado@fatec.edu.br\", \"cargoId\": 3, \"disciplinasIds\": [4,5] }")))
         @RequestBody ProfessorUpdateDTO dto) {
             ProfessorUpdateDTO dtoComId = new ProfessorUpdateDTO(
                 professorId,

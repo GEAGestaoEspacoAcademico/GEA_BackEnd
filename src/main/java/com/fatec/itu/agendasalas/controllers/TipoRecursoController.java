@@ -40,8 +40,9 @@ public class TipoRecursoController {
   @Operation(summary = "Lista todos os tipos de recurso existentes")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Lista retornada",
-        content = @Content(mediaType = "application/json",
-            schema = @Schema(type = "array", implementation = TipoRecursoListDTO.class)))
+      content = @Content(mediaType = "application/json",
+        schema = @Schema(type = "array", implementation = TipoRecursoListDTO.class),
+        examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Eletrônico\" }, { \"id\": 2, \"nome\": \"Mobiliário\" } ]")))
   })
   @GetMapping
   public ResponseEntity<List<TipoRecursoListDTO>> listar() {
@@ -51,7 +52,8 @@ public class TipoRecursoController {
   @Operation(summary = "Lista um tipo de recurso existente por id")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Tipo de recurso encontrado",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoRecursoListDTO.class))),
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoRecursoListDTO.class),
+            examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Eletrônico\" }"))),
       @ApiResponse(responseCode = "404", description = "Não encontrado")
   })
   @GetMapping("{idTipoRecurso}")
@@ -63,7 +65,8 @@ public class TipoRecursoController {
   @Operation(summary = "Cria uma novo tipo de recurso")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Criado com sucesso",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoRecursoListDTO.class)))
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoRecursoListDTO.class),
+            examples = @ExampleObject(value = "{ \"id\": 3, \"nome\": \"Aparelho Audiovisual\" }")))
   })
   @PostMapping
   //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
@@ -72,7 +75,8 @@ public class TipoRecursoController {
         description = "Nome do tipo de recurso",
         required = true,
         content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TipoRecursoCreateAndUpdateDTO.class)))
+          schema = @Schema(implementation = TipoRecursoCreateAndUpdateDTO.class),
+          examples = @ExampleObject(value = "{ \"nome\": \"Eletrônico\" }")))
     @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
     TipoRecursoListDTO novoTipoRecurso = tipoRecursoService.criar(nomeTipoRecurso);
 

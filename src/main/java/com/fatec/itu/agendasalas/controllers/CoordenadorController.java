@@ -47,7 +47,8 @@ public class CoordenadorController {
         @ApiResponse(responseCode = "201",
             description = "Coordenador criado com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CoordenadorResponseDTO.class))),
+                schema = @Schema(implementation = CoordenadorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"coordenadorUsuarioId\": 18, \"coordenadorNome\": \"Paulo Ramos\", \"coordenadorEmail\": \"paulo.ramos@fatec.edu.br\", \"registroCoordenacao\": 2026, \"cargoId\": 4 }"))),
         @ApiResponse(responseCode = "409", description = "Conflito: registro de coordenação já existe")
     })
     @PostMapping
@@ -57,7 +58,8 @@ public class CoordenadorController {
                 description = "Dados para criação de um coordenador",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CoordenadorCreationDTO.class)))
+                    schema = @Schema(implementation = CoordenadorCreationDTO.class),
+                    examples = @ExampleObject(value = "{ \"coordenadorUsuarioId\": 18, \"registroCoordenacao\": 2026 }")))
             @RequestBody @Validated CoordenadorCreationDTO dto) {
         if (coordenadorRepository.existsByRegistroCoordenacao(dto.registroCoordenacao())) {
             throw new RegistroCoordenacaoDuplicadoException("Registro de coordenação já existe");
@@ -81,7 +83,8 @@ public class CoordenadorController {
         @ApiResponse(responseCode = "200",
             description = "Coordenador encontrado",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CoordenadorResponseDTO.class))),
+                schema = @Schema(implementation = CoordenadorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"coordenadorUsuarioId\": 18, \"coordenadorNome\": \"Paulo Ramos\", \"coordenadorEmail\": \"paulo.ramos@fatec.edu.br\", \"registroCoordenacao\": 2026, \"cargoId\": 4 }"))),
         @ApiResponse(responseCode = "404", description = "Coordenador não encontrado")
     })
     @GetMapping("/{coordenadorId}")
@@ -100,7 +103,8 @@ public class CoordenadorController {
         @ApiResponse(responseCode = "200",
             description = "Coordenador encontrado",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CoordenadorResponseDTO.class))),
+                schema = @Schema(implementation = CoordenadorResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"coordenadorUsuarioId\": 18, \"coordenadorNome\": \"Paulo Ramos\", \"coordenadorEmail\": \"paulo.ramos@fatec.edu.br\", \"registroCoordenacao\": 2026, \"cargoId\": 4 }"))),
         @ApiResponse(responseCode = "404", description = "Coordenador não encontrado")
     })
     @GetMapping("/registro/{registro}")

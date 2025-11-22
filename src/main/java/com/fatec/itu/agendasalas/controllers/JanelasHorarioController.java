@@ -47,7 +47,8 @@ public class JanelasHorarioController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class)))
+                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }, { \"janelasHorarioId\": 2, \"horaInicio\": \"09:30:00\", \"horaFim\": \"11:10:00\" } ]")))
     })
     @GetMapping
     public ResponseEntity<List<JanelasHorarioResponseDTO>> listarTodasJanelasHorario() {
@@ -58,7 +59,8 @@ public class JanelasHorarioController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Janela criada com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = JanelasHorarioResponseDTO.class)))
+                schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 3, \"horaInicio\": \"13:30:00\", \"horaFim\": \"15:10:00\" }")))
     })
     @PostMapping
     public ResponseEntity<JanelasHorarioResponseDTO> criarJanelaHorario(
@@ -66,7 +68,8 @@ public class JanelasHorarioController {
                 description = "Dados da nova janela de horário",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = JanelasHorarioCreationDTO.class)))
+                    schema = @Schema(implementation = JanelasHorarioCreationDTO.class),
+                    examples = @ExampleObject(value = "{ \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }")))
             @RequestBody JanelasHorarioCreationDTO janelasHorarioCreationDTO) {
         JanelasHorarioResponseDTO janelasHorarioResponseDTO =
                 janelasHorarioService.criarJanelaHorario(janelasHorarioCreationDTO);
@@ -79,7 +82,8 @@ public class JanelasHorarioController {
     @Operation(summary = "Busca uma janela de horário pelo ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Janela encontrada",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }"))),
         @ApiResponse(responseCode = "404", description = "Janela não encontrada")
     })
     @GetMapping("/{janelaHorarioId}")
@@ -91,7 +95,8 @@ public class JanelasHorarioController {
     @Operation(summary = "Atualiza uma janela de horário existente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Janela atualizada com sucesso",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }"))),
         @ApiResponse(responseCode = "404", description = "Janela não encontrada")
     })
     @PutMapping("/{janelaHorarioId}")
@@ -101,7 +106,8 @@ public class JanelasHorarioController {
                 description = "Novos dados da janela",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = JanelasHorarioUpdateDTO.class)))
+                    schema = @Schema(implementation = JanelasHorarioUpdateDTO.class),
+                    examples = @ExampleObject(value = "{ \"horaInicio\": \"09:30:00\", \"horaFim\": \"11:10:00\" }")))
             @RequestBody JanelasHorarioUpdateDTO janelasHorarioUpdateDTO) {
         return ResponseEntity.ok(janelasHorarioService.atualizarJanelasHorario(janelaHorarioId,
                 janelasHorarioUpdateDTO));
@@ -111,7 +117,8 @@ public class JanelasHorarioController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de horários disponíveis",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class)))
+                schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" } ]")))
     })
     @GetMapping("/disponiveis/{data}")
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveis(

@@ -57,7 +57,9 @@ public class CargoController {
         @ApiResponse(responseCode = "200",
             description = "Lista de cargos encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = Cargo.class)))
+                schema = @Schema(type = "array", implementation = Cargo.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"id\": 1, \"nome\": \"Professor\" }, { \"id\": 2, \"nome\": \"Coordenador\" } ]")))
     })
     @GetMapping
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
@@ -71,7 +73,9 @@ public class CargoController {
         @ApiResponse(responseCode = "201",
             description = "Cargo criado com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = Cargo.class))),
+                schema = @Schema(implementation = Cargo.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"id\": 3, \"nome\": \"Auxiliar Docente\" }"))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida (ex: nome duplicado)")
     })
     @PostMapping
@@ -80,7 +84,9 @@ public class CargoController {
                     description = "Dados para criação de um novo cargo",
                     required = true,
                     content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = Cargo.class)))
+                        schema = @Schema(implementation = Cargo.class),
+                        examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                            value = "{ \"nome\": \"Auxiliar Docente\" }")))
             @RequestBody Cargo cargo) {
         Cargo cargoResponse = cargoService.cadastrarCargo(cargo);
         return ResponseEntity.created(null).body(cargoResponse);

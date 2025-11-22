@@ -33,7 +33,9 @@ public class NotificacaoController {
     @Operation(summary = "Lista todas as notificações")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Sucesso",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = NotificacaoResponseDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = NotificacaoResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"notificacaoId\": 301, \"notificacaoTitulo\": \"Alteração de horário\", \"notificacaoMensagem\": \"A aula de Banco de Dados foi remarcada para 2025-12-01 às 07:40\", \"dataEnvio\": \"2025-11-22\", \"usuarioRemetente\": { \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\" }, \"destinatarios\": [ { \"usuarioId\": 15, \"usuarioNome\": \"Marcia Oliveira\" } ], \"agendamento\": { \"agendamentoId\": 201, \"sala\": { \"salaId\": 5, \"salaNome\": \"Lab 301\" }, \"data\": \"2025-12-01\", \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" } } ]")))
     })
     @GetMapping
     public List<NotificacaoResponseDTO> listarNotificacoes() {
@@ -45,7 +47,15 @@ public class NotificacaoController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Notificações enviadas")
     })
-    public void enviarNotificacoes(@RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
+    public void enviarNotificacoes(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Lista de notificações a serem enviadas",
+            required = true,
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = NotificacaoCreationDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"agendamento\": 201, \"notificacaoTitulo\": \"Lembrete de Sala\", \"notificacaoMensagem\": \"Aula amanhã às 07:40\", \"usuarioRemetente\": 12, \"destinatarios\": [15, 16] } ]")))
+        @RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
         notificacaoService.enviarNotificacoes(notificacoesDTO);
     }
 }

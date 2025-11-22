@@ -41,8 +41,9 @@ public class TipoSalaController {
   @Operation(summary = "Lista todos os tipos de sala existentes")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Lista retornada",
-        content = @Content(mediaType = "application/json",
-            schema = @Schema(type = "array", implementation = TipoSalaListDTO.class)))
+      content = @Content(mediaType = "application/json",
+        schema = @Schema(type = "array", implementation = TipoSalaListDTO.class),
+        examples = @ExampleObject(value = "[ { \"tipoSalaId\": 1, \"tipoSalaNome\": \"Laboratório de Informática\" }, { \"tipoSalaId\": 2, \"tipoSalaNome\": \"Auditório\" } ]")))
   })
   @GetMapping
   public ResponseEntity<List<TipoSalaListDTO>> listar() {
@@ -52,7 +53,8 @@ public class TipoSalaController {
   @Operation(summary = "Lista um tipo sala existente por id")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Encontrado com sucesso",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoSalaListDTO.class))),
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoSalaListDTO.class),
+            examples = @ExampleObject(value = "{ \"tipoSalaId\": 1, \"tipoSalaNome\": \"Laboratório de Informática\" }"))),
       @ApiResponse(responseCode = "404", description = "Não encontrado")
   })
   @GetMapping("{idTipoSala}")
@@ -64,7 +66,8 @@ public class TipoSalaController {
   @Operation(summary = "Cria uma novo tipo de sala")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Criado com sucesso",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoSalaListDTO.class)))
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoSalaListDTO.class),
+            examples = @ExampleObject(value = "{ \"tipoSalaId\": 3, \"tipoSalaNome\": \"Sala de Aula Padrão\" }")))
   })
   @PostMapping
   //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
@@ -73,7 +76,8 @@ public class TipoSalaController {
         description = "Nome do tipo de sala",
         required = true,
         content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = TipoSalaCreateAndUpdateDTO.class)))
+          schema = @Schema(implementation = TipoSalaCreateAndUpdateDTO.class),
+          examples = @ExampleObject(value = "{ \"tipoSalaNome\": \"Laboratório de Informática\" }")))
       @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
     TipoSalaListDTO novoTipoSala = tipoSalaService.criar(nomeTipoSala);
 

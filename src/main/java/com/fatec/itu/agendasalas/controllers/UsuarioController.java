@@ -39,7 +39,8 @@ public class UsuarioController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de usuários encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = UsuarioResponseDTO.class)))
+                schema = @Schema(type = "array", implementation = UsuarioResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 } ]")))
     })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios() {
@@ -50,7 +51,8 @@ public class UsuarioController {
     @Operation(summary = "Busca um usuário específico pelo ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Usuário encontrado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 }"))),
         @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
     @GetMapping("{usuarioId}")
@@ -72,7 +74,8 @@ public class UsuarioController {
                 description = "Dados para atualização administrativa",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioUpdateAdminDTO.class)))
+                    schema = @Schema(implementation = UsuarioUpdateAdminDTO.class),
+                    examples = @ExampleObject(value = "{ \"usuarioNome\": \"Lucas Silva\", \"usuarioEmail\": \"lucas.silva@fatec.edu.br\", \"cargoId\": 3 }")))
             @RequestBody UsuarioUpdateAdminDTO usuarioUpdateAdminDTO) {
         usuarioService.atualizarUsuario(usuarioUpdateAdminDTO, usuarioId);
         return ResponseEntity.noContent().build();
@@ -87,7 +90,8 @@ public class UsuarioController {
                 description = "Dados para troca de senha",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioAlterarSenhaDTO.class)))
+                    schema = @Schema(implementation = UsuarioAlterarSenhaDTO.class),
+                    examples = @ExampleObject(value = "{ \"senhaAtual\": \"SenhaAntiga123!\", \"novaSenha\": \"NovaSenhaSegura2025!\", \"repetirNovaSenha\": \"NovaSenhaSegura2025!\" }")))
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();    }

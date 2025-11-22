@@ -55,7 +55,8 @@ public class AgendamentoAulaController {
             description = "Dados para criação de um agendamento de aula",
             required = true,
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = AgendamentoAulaCreationDTO.class)))
+                schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
+                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
         try {
             agendamentoAulaService.criar(dto);
@@ -102,7 +103,8 @@ public class AgendamentoAulaController {
     @Operation(summary = "Apresenta um agendamento de aula pelo seu id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Agendamento encontrado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgendamentoAulaResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgendamentoAulaResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"agendamentoAulaId\": 101, \"usuarioNome\": \"Mariana Costa\", \"salaNome\": \"Lab 301\", \"disciplinaId\": 5, \"disciplinaNome\": \"Banco de Dados\", \"semestre\": \"2025.2\", \"cursoNome\": \"Ciência da Computação\", \"professorNome\": \"Prof. João Pedro\", \"data\": \"2025-12-01\", \"diaDaSemana\": \"Segunda-feira\", \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\", \"isEvento\": false }"))),
         @ApiResponse(responseCode = "404", description = "Agendamento não encontrado")
     })
     @GetMapping("/{agendamentoAulaId}")
@@ -120,7 +122,8 @@ public class AgendamentoAulaController {
     @Operation(summary = "Lista todos os agendamentos de aula por disciplina")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Agendamentos por disciplina encontrados",
-            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = AgendamentoAulaResponseDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = AgendamentoAulaResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"agendamentoAulaId\": 102, \"usuarioNome\": \"Carlos Menezes\", \"salaNome\": \"Sala 204\", \"disciplinaId\": 7, \"disciplinaNome\": \"Redes de Computadores\", \"semestre\": \"2025.2\", \"cursoNome\": \"Sistemas de Informação\", \"professorNome\": \"Prof. Maria Clara\", \"data\": \"2025-11-30\", \"diaDaSemana\": \"Sábado\", \"horaInicio\": \"13:30:00\", \"horaFim\": \"15:10:00\", \"isEvento\": false } ]")))
     })
     @GetMapping("/disciplina/{disciplinaId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorDisciplina(
@@ -133,7 +136,8 @@ public class AgendamentoAulaController {
     @Operation(summary = "Lista todos os agendamentos de aula por professor")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Agendamentos por professor encontrados",
-            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = AgendamentoAulaResponseDTO.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = AgendamentoAulaResponseDTO.class),
+                examples = @ExampleObject(value = "[ { \"agendamentoAulaId\": 103, \"usuarioNome\": \"Beatriz Souza\", \"salaNome\": \"Lab 102\", \"disciplinaId\": 4, \"disciplinaNome\": \"Programação Orientada a Objetos\", \"semestre\": \"2025.2\", \"cursoNome\": \"Engenharia de Software\", \"professorNome\": \"Prof. Roberto Lima\", \"data\": \"2025-12-02\", \"diaDaSemana\": \"Terça-feira\", \"horaInicio\": \"09:30:00\", \"horaFim\": \"11:10:00\", \"isEvento\": false } ]")))
     })
     @GetMapping("/professor/{professorId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorProfessor(
@@ -146,7 +150,8 @@ public class AgendamentoAulaController {
     @Operation(summary = "Atualiza um agendamento de aula pelo seu id")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Agendamento atualizado",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgendamentoAulaResponseDTO.class))),
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgendamentoAulaResponseDTO.class),
+                examples = @ExampleObject(value = "{ \"agendamentoAulaId\": 101, \"usuarioNome\": \"Mariana Costa\", \"salaNome\": \"Lab 301\", \"disciplinaId\": 5, \"disciplinaNome\": \"Banco de Dados\", \"semestre\": \"2025.2\", \"cursoNome\": \"Ciência da Computação\", \"professorNome\": \"Prof. João Pedro\", \"data\": \"2025-12-01\", \"diaDaSemana\": \"Segunda-feira\", \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\", \"isEvento\": false }"))),
         @ApiResponse(responseCode = "404", description = "Agendamento não encontrado")
     })
     @PutMapping("/{agendamentoAulaId}")
@@ -156,7 +161,8 @@ public class AgendamentoAulaController {
                 description = "Novos dados para o agendamento de aula",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AgendamentoAulaCreationDTO.class)))
+                    schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
+                    examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody AgendamentoAulaCreationDTO dto) {
         try {
             AgendamentoAulaResponseDTO response =

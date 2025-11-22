@@ -38,7 +38,9 @@ public class AuxiliarDocenteController {
         @ApiResponse(responseCode = "200",
             description = "Lista de auxiliares docentes encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = PageableResponseDTO.class)))
+                schema = @Schema(implementation = PageableResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"conteudo\": [ { \"id\": 7, \"nome\": \"Marcia Oliveira\", \"email\": \"marcia.oliveira@fatec.edu.br\", \"area\": \"Laboratórios\" } ], \"numeroDaPagina\": 0, \"tamanhoDaPagina\": 10, \"totalDeElementos\": 1, \"totalDePaginas\": 1, \"ultimaPagina\": true }")))
     })
     @GetMapping
     //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
@@ -57,7 +59,9 @@ public class AuxiliarDocenteController {
         @ApiResponse(responseCode = "201",
             description = "Auxiliar docente cadastrado com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = AuxiliarDocenteResponseDTO.class))),
+                schema = @Schema(implementation = AuxiliarDocenteResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"id\": 7, \"nome\": \"Marcia Oliveira\", \"email\": \"marcia.oliveira@fatec.edu.br\", \"area\": \"Laboratórios\" }"))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
     })
     @PostMapping
@@ -67,7 +71,9 @@ public class AuxiliarDocenteController {
                 description = "Dados para criação de um auxiliar docente",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = AuxiliarDocenteCreationDTO.class)))
+                    schema = @Schema(implementation = AuxiliarDocenteCreationDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"login\": \"marcia.oliveira\", \"nome\": \"Marcia Oliveira\", \"email\": \"marcia.oliveira@fatec.edu.br\", \"senha\": \"SenhaSegura2025!\", \"area\": \"Laboratórios\" }")))
             @RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
         return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarUsuario(auxiliarDocenteCreationDTO));
 

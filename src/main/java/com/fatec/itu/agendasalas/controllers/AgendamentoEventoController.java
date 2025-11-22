@@ -48,7 +48,9 @@ public class AgendamentoEventoController {
         description = "Dados para criação de um agendamento de evento",
         required = true,
         content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = AgendamentoEventoCreationDTO.class)))
+            schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
+            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00:00\", \"horaFim\": \"17:00:00\" } ] }")))
         @RequestBody @Valid AgendamentoEventoCreationDTO dto) {
       try {
         agendamentoEventoService.criar(dto);
@@ -62,8 +64,10 @@ public class AgendamentoEventoController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
             description = "Lista de agendamentos de evento encontrada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = AgendamentoEventoResponseDTO.class)))
+        content = @Content(mediaType = "application/json",
+          schema = @Schema(type = "array", implementation = AgendamentoEventoResponseDTO.class),
+          examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+            value = "[ { \"agendamentoEventoId\": 55, \"usuarioNome\": \"Fernanda Lima\", \"salaNome\": \"Auditório Principal\", \"eventoNome\": \"Fórum de Tecnologia\", \"data\": \"2025-12-10\", \"diaDaSemana\": \"Quarta-feira\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\", \"isEvento\": true, \"recorrenciaId\": null, \"status\": \"CONFIRMADO\", \"solicitante\": \"Coordenação de Cursos\" } ]")))
     })
     @GetMapping
     public ResponseEntity<List<AgendamentoEventoResponseDTO>> listar(){

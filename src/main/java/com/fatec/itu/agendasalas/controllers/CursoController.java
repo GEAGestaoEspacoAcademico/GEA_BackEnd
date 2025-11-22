@@ -40,14 +40,18 @@ public class CursoController {
         @ApiResponse(responseCode = "200", // Alterado de 201 para 200 para manter a consistência da sua implementação (retorna DTO no corpo)
             description = "Curso criado com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CursoListDTO.class)))
+                schema = @Schema(implementation = CursoListDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" }")))
     })
     @PostMapping
     public CursoListDTO criarCurso(@io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Dados para criação de um novo curso",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CursoCreateDTO.class)))
+                    schema = @Schema(implementation = CursoCreateDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": 18, \"cursoSigla\": \"ADS\" }")))
             @RequestBody CursoCreateDTO curso) {
         return cursoService.criar(curso);
     }
@@ -57,7 +61,9 @@ public class CursoController {
         @ApiResponse(responseCode = "200",
             description = "Lista de cursos encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = CursoListDTO.class)))
+                schema = @Schema(type = "array", implementation = CursoListDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "[ { \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" } ]")))
     })
     @GetMapping
     public List<CursoListDTO> listarCursos() {
@@ -69,7 +75,9 @@ public class CursoController {
         @ApiResponse(responseCode = "200",
             description = "Curso encontrado",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CursoListDTO.class))),
+                schema = @Schema(implementation = CursoListDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" }"))),
         @ApiResponse(responseCode = "404", description = "Curso não encontrado")
     })
     @GetMapping("{cursoId}")
@@ -83,7 +91,9 @@ public class CursoController {
         @ApiResponse(responseCode = "200",
             description = "Curso atualizado",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = CursoListDTO.class))),
+                schema = @Schema(implementation = CursoListDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" }"))),
         @ApiResponse(responseCode = "404", description = "Curso não encontrado")
     })
     @PutMapping("{cursoId}")
@@ -92,7 +102,9 @@ public class CursoController {
                 description = "Novos dados para o curso",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = CursoCreateDTO.class)))
+                    schema = @Schema(implementation = CursoCreateDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": 18, \"cursoSigla\": \"ADS\" }")))
             @RequestBody CursoCreateDTO novoCurso) {
         return cursoService.atualizar(cursoId, novoCurso);
     }

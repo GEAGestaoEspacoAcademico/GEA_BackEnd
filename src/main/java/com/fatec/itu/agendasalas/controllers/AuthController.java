@@ -39,7 +39,9 @@ public class AuthController {
         @ApiResponse(responseCode = "200",
             description = "Usuário registrado com sucesso",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = UsuarioResponseDTO.class))),
+                schema = @Schema(implementation = UsuarioResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"usuarioId\": 45, \"usuarioNome\": \"Ana Maria\", \"usuarioEmail\": \"ana.maria@fatec.edu.br\", \"cargoId\": 2 }"))),
         @ApiResponse(responseCode = "400", description = "Requisição inválida (ex: email duplicado)")
     })
     @PostMapping("register")
@@ -48,7 +50,9 @@ public class AuthController {
                 description = "Dados para criação de um novo usuário",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioCreationDTO.class)))
+                    schema = @Schema(implementation = UsuarioCreationDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"usuarioLogin\": \"ana.maria\", \"usuarioNome\": \"Ana Maria\", \"usuarioEmail\": \"ana.maria@fatec.edu.br\", \"usuarioSenha\": \"SenhaForte2025!\" }")))
             @RequestBody UsuarioCreationDTO usuarioDTO) {
         UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.ok(responseDTO);
@@ -59,7 +63,9 @@ public class AuthController {
         @ApiResponse(responseCode = "200",
             description = "Login bem-sucedido",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = UsuarioAuthenticationResponseDTO.class))),
+                schema = @Schema(implementation = UsuarioAuthenticationResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"usuarioId\": 12, \"usuarioNome\": \"Lucas Silva\", \"usuarioCargo\": \"Professor\" }"))),
         @ApiResponse(responseCode = "403", description = "Credenciais inválidas")
     })
     @PostMapping("login")
@@ -68,7 +74,9 @@ public class AuthController {
                 description = "Credenciais do usuário",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioAuthenticationDTO.class)))
+                    schema = @Schema(implementation = UsuarioAuthenticationDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"usuarioLogin\": \"lucas.silva\", \"usuarioSenha\": \"SenhaForte123!\" }")))
             @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
 
          try {
