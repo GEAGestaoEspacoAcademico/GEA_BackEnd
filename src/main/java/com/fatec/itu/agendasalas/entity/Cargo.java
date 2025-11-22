@@ -1,4 +1,4 @@
-package com.fatec.itu.agendasalas.entity;
+package com.fatec.itu.agendasalas.entity; 
 
 import java.io.Serializable;
 
@@ -8,16 +8,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@NoArgsConstructor
 @Table(name="CARGOS")
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cargo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-  
-
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
@@ -25,23 +32,4 @@ public class Cargo implements Serializable {
 
     @Column(name="nome", nullable = false)
     private String nome;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    
-    
 }

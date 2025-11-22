@@ -15,11 +15,20 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Notificacao")
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Notificacao implements Serializable {
     
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idNotificacao;
@@ -49,100 +58,12 @@ public class Notificacao implements Serializable {
     )
     private List<Usuario> destinatarios = new ArrayList<>();
 
-
-    public Notificacao() {
-
-        destinatarios = new ArrayList<Usuario>();
-    }
-
     public Notificacao(LocalDate dataEnvio) {
         this.destinatarios = new ArrayList<Usuario>();
         this.dataEnvio = dataEnvio == null ? LocalDate.now() : dataEnvio;
     }
 
-    public void setIdNotificacao(Long idNotificacao) {
-        this.idNotificacao = idNotificacao;
-    }
-
-    public void setAgendamento(Agendamento agendamento) {
-        this.agendamento = agendamento;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public void setDataEnvio(LocalDate dataEnvio) {
-        this.dataEnvio = dataEnvio;
-    }
-
-    public void setUsuarioRemetente(Usuario usuarioRemetente) {
-        this.usuarioRemetente = usuarioRemetente;
-    }
-
-    public void setDestinatario(List<Usuario> destinatarios) {
-        this.destinatarios = destinatarios;
-    }
-
-    public Long getIdNotificacao() {
-        return idNotificacao;
-    }
-
-    public Agendamento getAgendamento() {
-        return agendamento;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public LocalDate getDataEnvio() {
-        return dataEnvio;
-    }
-
-    public Usuario getUsuarioRemetente() {
-        return usuarioRemetente;
-    }
-
-    public List<Usuario> getDestinatario() {
-        return destinatarios;
-    }
-
     public void addDestinatario(Usuario usuario) {
         this.destinatarios.add(usuario);
     }
-
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((idNotificacao == null) ? 0 : idNotificacao.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Notificacao other = (Notificacao) obj;
-        if (idNotificacao == null) {
-            if (other.idNotificacao != null)
-                return false;
-        } else if (!idNotificacao.equals(other.idNotificacao))
-            return false;
-        return true;
-    }   
 }
