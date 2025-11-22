@@ -17,6 +17,7 @@ import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.exceptions.CursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.ProfessorNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.RegistroProfessorDuplicadoException;
@@ -161,15 +162,16 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
             professor.setRegistroProfessor(dto.registroProfessor());
         }  
 
-        if (dto.siglaCurso() != null) {
-            Curso curso = cursoRepository.findBySigla(dto.siglaCurso())
-                .orElseThrow(()-> new CursoNaoEncontradoException(dto.siglaCurso()));
+        if (dto.cursoParaVirarCoordenador() != null) {
+            Curso curso = cursoRepository.findBySigla(dto.cursoParaVirarCoordenador())
+                .orElseThrow(()-> new CursoNaoEncontradoException(dto.cursoParaVirarCoordenador()));
             Coordenador coordenador = coordenadorRepository.findByProfessorId(professor.getId())
             .orElseGet(() -> {
                 Coordenador c = new Coordenador(professor.getId(), professor.getLogin(), professor.getEmail(), professor.getNome(), professor.getRegistroProfessor());
                 return c;
             });
            
+            //Pode ser que dê erro aqui
             curso.setCoordenador(coordenador);
             Cargo cargo = cargoService.findByNome("COORDENADOR");
             coordenador.setCargo(cargo);
