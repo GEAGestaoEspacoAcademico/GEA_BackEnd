@@ -9,6 +9,7 @@ import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.exceptions.CursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 
@@ -78,4 +79,9 @@ public class DisciplinaService {
             .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
     }
 
+    public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long idCurso){
+        cursoRepository.findById(idCurso)
+            .orElseThrow(() -> new CursoNaoEncontradoException("Curso não encontrado"));
+        return converterParaDTO(disciplinaRepository.findByCursoId(idCurso));
+    }
 }

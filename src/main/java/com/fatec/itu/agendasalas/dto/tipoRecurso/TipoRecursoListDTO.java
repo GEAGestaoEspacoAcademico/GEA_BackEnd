@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.dto.tipoRecurso;
 
 public record TipoRecursoListDTO( 
-    Long id,
-    String nome) { }
+    Long tipoRecursoId,
+    String tipoRecursoNome
+){}
