@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +27,7 @@ import lombok.Setter;
 @Table(name="USUARIOS")
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded=true)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario implements UserDetails{
 
@@ -38,6 +40,7 @@ public class Usuario implements UserDetails{
     }
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private Long id;
@@ -58,18 +61,24 @@ public class Usuario implements UserDetails{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-   @EqualsAndHashCode.Include
+   
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (cargo == null || cargo.getNome() == null) {
-            return java.util.Collections.emptyList();
-        }
-        String nome = cargo.getNome().trim().toUpperCase();
-       
         
-        return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
+        String cargoNome = this.cargo.getNome();
+
+        return switch(cargoNome){
+            case "USER" ->  List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            case "SECRETARIA" -> List.of(new SimpleGrantedAuthority("ROLE_SECRETARIA"));
+            case "AUXILIAR_DOCENTE" -> List.of(new SimpleGrantedAuthority("ROLE_AUXILIAR_DOCENTE"), new SimpleGrantedAuthority("ROLE_USER"));
+            case "COORDENADOR" -> List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));
+            case "PROFESSOR" -> List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"), new SimpleGrantedAuthority("ROLE_USER"));
+            default -> java.util.Collections.emptyList();
+
+        };
+       
     }
 
     @Override

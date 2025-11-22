@@ -1,4 +1,3 @@
-/* 
 package com.fatec.itu.agendasalas.config;
 
 import java.io.IOException;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fatec.itu.agendasalas.exceptions.JWTNaoEValidoException;
 import com.fatec.itu.agendasalas.services.JwtService;
 import com.fatec.itu.agendasalas.services.UserDetailsServiceImpl;
 
@@ -37,10 +35,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                var username = jwtService.extractUsername(token);
                UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
                
-               if(!jwtService.isTokenValid(token, userDetails)){
-                    throw new JWTNaoEValidoException("O JWT enviado não é válido");
-               }
-
                if(jwtService.isTokenValid(token, userDetails)){
                     UsernamePasswordAuthenticationToken auth = 
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -64,4 +58,3 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
     
 }
-*/
