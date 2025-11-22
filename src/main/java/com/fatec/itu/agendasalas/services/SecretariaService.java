@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaCreationDTO;
 import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaResponseDTO;
+import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaUpdateDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Secretaria;
 import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
@@ -15,6 +16,7 @@ import com.fatec.itu.agendasalas.exceptions.MatriculaDuplicadaSecretariaExceptio
 import com.fatec.itu.agendasalas.exceptions.SecretariaNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.SecretariaRepository;
+import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
 public class SecretariaService {
@@ -41,7 +43,7 @@ public class SecretariaService {
     }
 
     public SecretariaResponseDTO cadastrarSecretaria(SecretariaCreationDTO dto) {
-        // Aqui você pode validar se já existe secretaria com a mesma matricula
+        
         if(secretariaRepository.existsByMatricula(dto.matricula())) {
             throw new MatriculaDuplicadaSecretariaException(dto.matricula());
         }
@@ -69,14 +71,18 @@ public class SecretariaService {
         );
     }
 
-    public SecretariaResponseDTO atualizarSecretaria(Long id, SecretariaCreationDTO dto) {
+    public SecretariaResponseDTO atualizarSecretaria(Long id, SecretariaUpdateDTO dto) {
         Secretaria secretaria = secretariaRepository.findById(id)
             .orElseThrow(() -> new SecretariaNaoEncontradoException(id));
 
-        secretaria.setNome(dto.nome());
-        secretaria.setEmail(dto.email());
-        secretaria.setMatricula(dto.matricula());
-
+        if(dto.nome()!=null && !dto.nome().isEmpty()) secretaria.setNome(dto.nome());
+        if(dto.email()!=null && !dto.nome().isEmpty()) secretaria.setEmail(dto.email());
+        if(dto.matricula()!=null){
+            if(secretariaRepository.existsByMatricula(dto.matricula())) {
+                throw new MatriculaDuplicadaSecretariaException(dto.matricula());
+            }
+            secretaria.setMatricula(dto.matricula());
+        }
         secretariaRepository.save(secretaria);
 
         return new SecretariaResponseDTO(
