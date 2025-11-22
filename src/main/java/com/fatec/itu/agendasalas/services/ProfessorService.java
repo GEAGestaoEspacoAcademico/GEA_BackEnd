@@ -165,7 +165,7 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
         if (dto.cursoParaVirarCoordenador() != null) {
             Curso curso = cursoRepository.findBySigla(dto.cursoParaVirarCoordenador())
                 .orElseThrow(()-> new CursoNaoEncontradoException(dto.cursoParaVirarCoordenador()));
-            Coordenador coordenador = coordenadorRepository.findByProfessorId(professor.getId())
+            Coordenador coordenador = coordenadorRepository.findById(professor.getId())
             .orElseGet(() -> {
                 Coordenador c = new Coordenador(professor.getId(), professor.getLogin(), professor.getEmail(), professor.getNome(), professor.getRegistroProfessor());
                 return c;

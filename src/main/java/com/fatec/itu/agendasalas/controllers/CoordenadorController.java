@@ -110,7 +110,7 @@ public class CoordenadorController {
     @GetMapping("/registro/{registro}")
     // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoordenadorResponseDTO> buscarPorRegistro(
-        @Parameter(description = "Registro do coordenador") @PathVariable int registro) {
+        @Parameter(description = "Registro do coordenador") @PathVariable Long registro) {
         Coordenador coordenador =
                 coordenadorRepository.findByRegistroCoordenacao(registro).orElseThrow(
                         () -> new CoordenadorNaoEncontradoException("Coordenador não encontrado"));
