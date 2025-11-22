@@ -59,6 +59,7 @@ public class SecretariaService {
         Secretaria secretaria = new Secretaria();
         secretaria.setLogin(login);
         secretaria.setNome(dto.nome());
+        secretaria.setSenha(passwordEncryptService.criptografarSenha(senha));
         secretaria.setEmail(dto.email());
         secretaria.setMatricula(dto.matricula());
 

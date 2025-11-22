@@ -49,6 +49,7 @@ public class SecretariaController {
                     "  {\n" +
                     "    \"usuarioId\": 1,\n" +
                     "    \"secretarioNome\": \"Maria Silva\",\n" +
+                    "    \"secretarioLogin\": \"maria.silva\",\n" +
                     "    \"secretarioEmail\": \"maria.silva@email.com\",\n" +
                     "    \"matricula\": 12345,\n" +
                     "    \"cargoId\": 5\n" +
@@ -56,6 +57,7 @@ public class SecretariaController {
                     "  {\n" +
                     "    \"usuarioId\": 2,\n" +
                     "    \"secretarioNome\": \"João Souza\",\n" +
+                    "    \"secretarioLogin\": \"joão.souza\",\n" +
                     "    \"secretarioEmail\": \"joao.souza@email.com\",\n" +
                     "    \"matricula\": 12346,\n" +
                     "    \"cargoId\": 5\n" +
