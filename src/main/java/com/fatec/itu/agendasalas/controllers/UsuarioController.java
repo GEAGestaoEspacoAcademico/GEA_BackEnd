@@ -101,8 +101,9 @@ public class UsuarioController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de funcionários encontrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = UsuarioFuncionarioDTO.class)))
-    })
+                schema = @Schema(type = "array", implementation = UsuarioFuncionarioDTO.class),
+                examples = @ExampleObject(value = "[{ \"usuarioId\": 9, \"usuarioNome\": \"Prof. Luis dos Santos\", \"usuarioEmail\": \"luis.santos@fatec.sp.gov.br\", \"registro\": 1014, \"cargoId\": 3, \"cargoNome\": \"PROFESSOR\" }, { \"usuarioId\": 10, \"usuarioNome\": \"Coord. Lucimar de Santi\", \"usuarioEmail\": \"lucimar.desanti@fatec.sp.gov.br\", \"registro\": 2001, \"cargoId\": 4, \"cargoNome\": \"COORDENADOR\" }]")))})
+
     @GetMapping("funcionarios")
     public ResponseEntity<List<UsuarioFuncionarioDTO>> listarFuncionarios() {
         List<UsuarioFuncionarioDTO> lista = usuarioService.listarFuncionarios();
