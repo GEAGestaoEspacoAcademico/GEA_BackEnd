@@ -267,18 +267,18 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Andares
 -- -----------------------------------------------------------------------------
-INSERT INTO ANDARES (nome)
+INSERT INTO PISOS (nome)
 VALUES 
+    ('Térreo'),
     ('1º Andar'),
-    ('2º Andar'),
-    ('3º Andar');
+    ('2º Andar');
 
     
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Salas
 -- -----------------------------------------------------------------------------
 -- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
-INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, andar_id, observacoes)
+INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, piso_id, observacoes)
 VALUES 
     ('Lab 301', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
     ('Lab 302', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),

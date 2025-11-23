@@ -3,9 +3,9 @@ package com.fatec.itu.agendasalas.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fatec.itu.agendasalas.entity.Andar;
+import com.fatec.itu.agendasalas.entity.Piso;
 
 @Repository
-public interface AndarRepository extends JpaRepository<Andar, Long> {
+public interface PisoRepository extends JpaRepository<Piso, Long> {
     boolean existsByNome(String nome);
 }

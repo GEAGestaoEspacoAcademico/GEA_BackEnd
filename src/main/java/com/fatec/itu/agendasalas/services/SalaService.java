@@ -20,14 +20,14 @@ import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
-import com.fatec.itu.agendasalas.entity.Andar;
+import com.fatec.itu.agendasalas.entity.Piso;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
 import com.fatec.itu.agendasalas.entity.RecursoSalaId;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.TipoSala;
 import com.fatec.itu.agendasalas.exceptions.RecursoJaAdicionadoNaSalaException;
-import com.fatec.itu.agendasalas.repositories.AndarRepository;
+import com.fatec.itu.agendasalas.repositories.PisoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
@@ -48,7 +48,7 @@ public class SalaService {
     private TipoSalaService tipoSalaService;
 
     @Autowired
-    private AndarRepository andarRepository;
+    private PisoRepository pisoRepository;
 
     public SalaDetailDTO buscarPorId(Long id) {
       Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
@@ -64,8 +64,8 @@ public class SalaService {
           sala.isDisponibilidade(),
           sala.getTipoSala() != null ? sala.getTipoSala().getId() : null,
           sala.getTipoSala() != null ? sala.getTipoSala().getNome() : null,
-          sala.getAndar() != null ? sala.getAndar().getId() : null,
-          sala.getAndar() != null ? sala.getAndar().getNome() : null,
+          sala.getPiso() != null ? sala.getPiso().getId() : null,
+          sala.getPiso() != null ? sala.getPiso().getNome() : null,
           sala.getObservacoes()
       );
     }
@@ -132,14 +132,14 @@ public class SalaService {
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
     TipoSala tipoSala = tipoSalaService.buscarPorId(salaDTO.tipoSalaId());
     
-    Andar andar = andarRepository.findById(salaDTO.andarId())
+    Piso piso = pisoRepository.findById(salaDTO.pisoId())
             .orElseThrow(() -> new RuntimeException("Andar não encontrado"));
 
     Sala novaSala = new Sala(
             salaDTO.salaNome(),
             salaDTO.salaCapacidade(),
             tipoSala,
-            andar
+            piso
     );
 
     novaSala.setDisponibilidade(salaDTO.disponibilidade());
@@ -163,10 +163,10 @@ public class SalaService {
       salaExistente.setCapacidade(salaDTO.salaCapacidade());
     }
 
-    if (salaDTO.andarId() != null) {
-      Andar andar = andarRepository.findById(salaDTO.andarId())
+    if (salaDTO.pisoId() != null) {
+      Piso piso = pisoRepository.findById(salaDTO.pisoId())
             .orElseThrow(() -> new RuntimeException("Andar não encontrado"));
-      salaExistente.setAndar(andar);
+      salaExistente.setPiso(piso);
     }
 
     if (salaDTO.disponibilidade() != null) {

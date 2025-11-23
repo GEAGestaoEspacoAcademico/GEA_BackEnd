@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.itu.agendasalas.dto.andaresDTO.AndarResponseDTO;
-import com.fatec.itu.agendasalas.entity.Andar;
-import com.fatec.itu.agendasalas.services.AndarService;
+import com.fatec.itu.agendasalas.dto.andaresDTO.PisoResponseDTO;
+import com.fatec.itu.agendasalas.entity.Piso;
+import com.fatec.itu.agendasalas.services.PisoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,54 +23,52 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/andares")
+@RequestMapping("/pisos")
 @RequiredArgsConstructor
-@Tag(name = "Andares", description = "Operações relacionadas aos andares do prédio")
-public class AndarController {
+@Tag(name = "Pisos", description = "Operações relacionadas aos pisos do prédio")
+public class PisoController {
 
-    private final AndarService andarService;
+    private final PisoService pisoService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca um andar pelo seu ID")
+    @Operation(summary = "Busca um piso pelo seu ID")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Andar encontrado",
+            description = "Piso encontrado",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = AndarResponseDTO.class),
+                schema = @Schema(implementation = PisoResponseDTO.class),
                 examples = @ExampleObject(
                     value = "{ \"id\": 1, \"nome\": \"1º Andar\" }"
                 )
             )
         ),
-        @ApiResponse(responseCode = "404", description = "Andar não encontrado")
+        @ApiResponse(responseCode = "404", description = "Piso não encontrado")
     })
-    public ResponseEntity<AndarResponseDTO> buscarPorId(
-            @Parameter(description = "ID do andar a ser buscado") @PathVariable Long id) {
+    public ResponseEntity<PisoResponseDTO> buscarPorId(
+            @Parameter(description = "ID do piso a ser buscado") @PathVariable Long pisoId) {
 
-        Andar andar = andarService.buscarPorId(id);
-        return ResponseEntity.ok(new AndarResponseDTO(andar.getId(), andar.getNome()));
+        Piso piso = pisoService.buscarPorId(pisoId);
+        return ResponseEntity.ok(new PisoResponseDTO(piso.getId(), piso.getNome()));
     }
 
     @GetMapping
-    @Operation(summary = "Lista todos os andares")
+    @Operation(summary = "Lista todos os pisos")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "Lista de andares encontrada",
+            description = "Lista de pisos encontrada",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = AndarResponseDTO.class),
+                schema = @Schema(type = "array", implementation = PisoResponseDTO.class),
                 examples = @ExampleObject(
                     value = "[ { \"id\": 1, \"nome\": \"1º Andar\" }, { \"id\": 2, \"nome\": \"2º Andar\" } ]"
                 )
             )
         )
     })
-    public ResponseEntity<List<AndarResponseDTO>> listar() {
-        return ResponseEntity.ok(andarService.listar());
+    public ResponseEntity<List<PisoResponseDTO>> listar() {
+        return ResponseEntity.ok(pisoService.listar());
     }
 }
-
-

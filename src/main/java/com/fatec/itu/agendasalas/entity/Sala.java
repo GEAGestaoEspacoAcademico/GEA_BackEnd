@@ -32,10 +32,10 @@ import lombok.Setter;
 public class Sala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Sala(String nome, int capacidade, TipoSala tipoSala, Andar andar) {
+  public Sala(String nome, int capacidade, TipoSala tipoSala, com.fatec.itu.agendasalas.entity.Piso piso) {
     this.nome = nome;
     this.capacidade = capacidade;
-    this.andar = andar;
+    this.piso = piso;
     this.tipoSala = tipoSala;
     recursos = new ArrayList<>();
   }
@@ -53,8 +53,8 @@ public class Sala implements Serializable {
   private int capacidade;
 
   @ManyToOne
-  @JoinColumn(name = "andar_id")
-  private Andar andar;
+  @JoinColumn(name = "piso_id")
+  private com.fatec.itu.agendasalas.entity.Piso piso;
 
   @Column(name = "disponibilidade", nullable = false)
   private boolean disponibilidade;
