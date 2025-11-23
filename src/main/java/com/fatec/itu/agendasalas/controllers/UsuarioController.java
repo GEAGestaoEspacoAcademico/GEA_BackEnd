@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
@@ -21,6 +22,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -127,6 +129,32 @@ public class UsuarioController {
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
 
+        return ResponseEntity.noContent().build();    }
+    
+    @Operation(summary = "Lista funcionários (Auxiliar Docente, Professor, Coordenador, Secretaria)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de funcionários encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = UsuarioFuncionarioDTO.class),
+                examples = @ExampleObject(value = "[{ \"usuarioId\": 9, \"usuarioNome\": \"Prof. Luis dos Santos\", \"usuarioEmail\": \"luis.santos@fatec.sp.gov.br\", \"registro\": 1014, \"cargoId\": 3, \"cargoNome\": \"PROFESSOR\" }, { \"usuarioId\": 10, \"usuarioNome\": \"Coord. Lucimar de Santi\", \"usuarioEmail\": \"lucimar.desanti@fatec.sp.gov.br\", \"registro\": 2001, \"cargoId\": 4, \"cargoNome\": \"COORDENADOR\" }]")))})
+
+    @GetMapping("funcionarios")
+    public ResponseEntity<List<UsuarioFuncionarioDTO>> listarFuncionarios() {
+        List<UsuarioFuncionarioDTO> lista = usuarioService.listarFuncionarios();
+        return ResponseEntity.ok(lista);
+    }
+ 
+    @Operation(summary = "Deleta um usuário desfazendo relações que violam integridade")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    @DeleteMapping("{usuarioId}")
+    public ResponseEntity<Void> deletarUsuario(
+        @Parameter(description = "ID do usuário a ser deletado") @PathVariable Long usuarioId){
+        usuarioService.deletarUsuario(usuarioId);
+        return ResponseEntity.noContent().build();
+    }
 
 
     @Operation(summary = "Redefine a senha do usuário usando o token recebido por e-mail")

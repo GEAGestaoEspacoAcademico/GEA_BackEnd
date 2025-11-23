@@ -17,4 +17,6 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 
   Optional<Curso> findBySigla(String sigla);
 
+  List<Curso> findByCoordenadorId(Long coordenadorId);
+
 }

@@ -6,6 +6,6 @@ public record SalaListDTO(
     int capacidade,
     boolean disponibilidade,
     String tipoSala,
-    Long andarId,
-    String andarNome
+    Long pisoId,
+    String piso
 ){}

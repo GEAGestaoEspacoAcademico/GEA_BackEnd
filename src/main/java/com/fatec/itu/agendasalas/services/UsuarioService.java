@@ -10,16 +10,28 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.entity.Coordenador;
+import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.entity.Secretaria;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.SenhasNaoConferemException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
+import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
+import com.fatec.itu.agendasalas.repositories.CursoRepository;
+import jakarta.transaction.Transactional;
+import com.fatec.itu.agendasalas.exceptions.usuarios.UsuarioNaoEncontradoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplinaException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularCursoException;
 
 @Service
 public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, UsuarioResponseDTO> {
@@ -36,6 +48,15 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+  
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
+
+    @Autowired
+    private CursoRepository cursoRepository;
 
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
@@ -50,6 +71,53 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuarioRepository.save(usuario);
         return conversaoUsuarioParaResponseDTO(usuario);
 
+    }
+    
+    public List<UsuarioFuncionarioDTO> listarFuncionarios(){
+        List<Usuario> listaUsuarios = usuarioRepository.findAll();
+        List<UsuarioFuncionarioDTO> lista = new ArrayList<>();
+
+        for(Usuario usuario : listaUsuarios){
+            if(usuario.getCargo()==null || usuario.getCargo().getNome()==null) continue;
+            String nomeCargo = usuario.getCargo().getNome().trim().toUpperCase();
+            boolean isFuncionario = nomeCargo.equals("AUXILIAR_DOCENTE") || nomeCargo.equals("PROFESSOR")
+                    || nomeCargo.equals("COORDENADOR") || nomeCargo.equals("SECRETARIA");
+            if(!isFuncionario) continue;
+
+            Long registroCoordenacao = null;
+            Long registroProfessor = null;
+            Long matricula = null;
+
+            if(usuario instanceof Coordenador){
+                registroCoordenacao = ((Coordenador) usuario).getRegistroCoordenacao();
+            } else if(usuario instanceof Professor){
+                registroProfessor = ((Professor) usuario).getRegistroProfessor();
+            } else if(usuario instanceof Secretaria){
+                matricula = ((Secretaria) usuario).getMatricula();
+            }
+
+            Long registro = null;
+            if (registroCoordenacao != null) {
+                registro = registroCoordenacao;
+            } else if (registroProfessor != null) {
+                registro = registroProfessor;
+            } else if (matricula != null) {
+                registro = matricula;
+            }
+
+            UsuarioFuncionarioDTO dto = new UsuarioFuncionarioDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                registro,
+                usuario.getCargo() != null ? usuario.getCargo().getId() : null,
+                usuario.getCargo() != null ? usuario.getCargo().getNome() : null
+            );
+
+            lista.add(dto);
+        }
+
+        return lista;
     }
     
 
@@ -149,4 +217,48 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
        passwordResetTokenRepository.delete(passToken); 
     }
 
+    @Transactional
+    public void deletarUsuario(Long usuarioId){
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+
+        List<com.fatec.itu.agendasalas.entity.Agendamento> agendamentos = agendamentoRepository.findByUsuarioId(usuarioId);
+        if(agendamentos != null && !agendamentos.isEmpty()){
+            try{
+                agendamentoRepository.deleteAll(agendamentos);
+            }catch(Exception e){
+                throw new FalhaAoDeletarAgendamentoException(usuarioId, e);
+            }
+        }
+
+        List<com.fatec.itu.agendasalas.entity.Disciplina> disciplinas = disciplinaRepository.findByProfessorId(usuarioId);
+        if(disciplinas != null && !disciplinas.isEmpty()){
+            try{
+                for(com.fatec.itu.agendasalas.entity.Disciplina d : disciplinas){
+                    d.setProfessor(null);
+                }
+                disciplinaRepository.saveAll(disciplinas);
+            }catch(Exception e){
+                throw new FalhaAoDesvincularDisciplinaException(usuarioId, e);
+            }
+        }
+
+        List<com.fatec.itu.agendasalas.entity.Curso> cursos = cursoRepository.findByCoordenadorId(usuarioId);
+        if(cursos != null && !cursos.isEmpty()){
+            try{
+                for(com.fatec.itu.agendasalas.entity.Curso c : cursos){
+                    c.setCoordenador(null);
+                }
+                cursoRepository.saveAll(cursos);
+            }catch(Exception e){
+                throw new FalhaAoDesvincularCursoException(usuarioId, e);
+            }
+        }
+
+        try{
+            usuarioRepository.delete(usuario);
+        }catch(Exception e){
+            throw new RuntimeException("Falha ao deletar usuário id=" + usuarioId, e);
+        }
+    }
 }
