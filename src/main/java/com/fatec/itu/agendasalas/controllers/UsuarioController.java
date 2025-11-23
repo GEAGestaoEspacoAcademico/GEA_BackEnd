@@ -16,6 +16,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -95,5 +96,17 @@ public class UsuarioController {
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();    }
-
+    
+    @Operation(summary = "Lista funcionários (Auxiliar Docente, Professor, Coordenador, Secretaria)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de funcionários encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = UsuarioFuncionarioDTO.class)))
+    })
+    @GetMapping("funcionarios")
+    public ResponseEntity<List<UsuarioFuncionarioDTO>> listarFuncionarios() {
+        List<UsuarioFuncionarioDTO> lista = usuarioService.listarFuncionarios();
+        return ResponseEntity.ok(lista);
+    }
+ 
 }
