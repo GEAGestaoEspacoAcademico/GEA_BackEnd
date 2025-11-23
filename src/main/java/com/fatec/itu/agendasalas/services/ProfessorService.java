@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -127,18 +126,18 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
 
     @Transactional
     public void excluirProfessor(Long registroProfessor) {
-
-        Optional<Professor> professorOptional =
-                professorRepository.deleteByRegistroProfessor(registroProfessor);
-
-        if (professorOptional.isPresent()) {
-            Professor professorParaDeletar = professorOptional.get();
-            professorRepository.deleteById(professorParaDeletar.getId());
-        } else {
-            throw new EntityNotFoundException(
-                    "Professor com Registro " + registroProfessor + " não encontrado.");
+        Professor professor = professorRepository.findByRegistroProfessor(registroProfessor)
+                .orElseThrow(() ->
+                    new EntityNotFoundException("Professor com Registro " + registroProfessor + " não encontrado.")
+                );
+        List<Disciplina> disciplinas = disciplinaRepository.findByProfessorId(professor.getId());
+        for (Disciplina d : disciplinas) {
+            d.setProfessor(null);
         }
+        disciplinaRepository.saveAll(disciplinas);
+        professorRepository.delete(professor);
     }
+
 
     private ProfessorResponseDTO toResponseDTO(Professor p) {
         return new ProfessorResponseDTO(p.getId(), p.getNome(), p.getEmail(),
