@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +36,27 @@ public class PasswordResetEmailService {
     public ResetSenhaResponseDTO solicitarResetDeSenha(String email, HttpServletRequest request) {
         
         Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
-        String token = gerarTokenRedefinicaoPorEmail(usuario);
-        String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-        String link = appUrl + "/resetPassword?token=" + token;
-        emailSenderService.enviarEmailResetSenha(usuario, link);    
+        if(usuario!=null){
+            String token = gerarTokenRedefinicaoPorEmail(usuario);
+            String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+            String link = appUrl + "/changePassword?token=" + token;
+            emailSenderService.enviarEmailResetSenha(usuario, link);    
+        }
+       
         return new ResetSenhaResponseDTO("Se o seu e-mail existir, enviaremos um link de confirmação");
     }
 
+    public String validarPasswordResetToken(String token){
+        final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+
+        return !isTokenExistente()
+    } 
+
+    private boolean isTokenExistente(PasswordResetToken passToken){
+        return passToken!=null;
+    }
+    
+    private boolean isTokenExpirado(PasswordResetToken passToken){
+        return passToken.getDataExpiracao().toInstant().isBefore(Instant.now());
+    }
 }

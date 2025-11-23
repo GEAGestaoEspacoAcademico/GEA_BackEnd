@@ -13,7 +13,6 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
-import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
@@ -125,7 +124,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
 
     public Usuario buscarUsuarioPeloEmail(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(()-> new UsuarioNaoEncontradoException(email));
+        Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
         return usuario;  
     }
 
