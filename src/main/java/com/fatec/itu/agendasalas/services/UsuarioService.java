@@ -11,6 +11,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
@@ -197,7 +198,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuarioRepository.save(usuario);
     }
 
-   public void redefinirSenhaByAD(Long usuarioId, UsuarioRedefinirSenhaDTO dto) {
+   public void redefinirSenhaByAD(Long usuarioId, UsuarioRedefinirSenhaByAdDTO dto) {
 
     Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
