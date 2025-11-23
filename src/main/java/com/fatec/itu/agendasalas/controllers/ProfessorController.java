@@ -1,6 +1,5 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoListByProfessorDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
@@ -32,7 +30,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -86,10 +83,10 @@ public class ProfessorController {
                 examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 }"))),
         @ApiResponse(responseCode = "404", description = "Professor não encontrado")
     })
-    @GetMapping("/{professorId}")
+    @GetMapping("/{usuarioId}")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(
-        @Parameter(description = "ID do professor") @PathVariable Long professorId) {
-        ProfessorResponseDTO professor = professorService.buscarPorId(professorId);
+        @Parameter(description = "ID de usuário do professor") @PathVariable Long usuarioId) {
+        ProfessorResponseDTO professor = professorService.buscarPorId(usuarioId);
         return ResponseEntity.ok(professor);
     }
 
@@ -99,10 +96,10 @@ public class ProfessorController {
             content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = CursoListByProfessorDTO.class),
                 examples = @ExampleObject(value = "[ { \"cursoId\": 12, \"cursoNome\": \"Engenharia de Software\", \"cursoSigla\": \"ES\" } ]")))
     })
-    @GetMapping("/{professorId}/cursos")
+    @GetMapping("/{usuarioId}/cursos")
     public List<CursoListByProfessorDTO> listarCursosPorProfessor(
-        @Parameter(description = "ID do professor") @PathVariable Long professorId) {
-        return professorService.listarCursosPorProfessor(professorId);
+        @Parameter(description = "ID de usuário do professor") @PathVariable Long usuarioId) {
+        return professorService.listarCursosPorProfessor(usuarioId);
     }
 
     @Operation(summary = "Lista as disciplinas do professor")
@@ -111,10 +108,10 @@ public class ProfessorController {
             content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
                 examples = @ExampleObject(value = "[ { \"disciplinaId\": 4, \"disciplinaNome\": \"Engenharia de Software III\", \"disciplinaSemestre\": \"2025.2\", \"cursoNome\": \"Engenharia de Software\" } ]")))
     })
-    @GetMapping("/{professorId}/disciplinas")
+    @GetMapping("/{usuarioId}/disciplinas")
     public List<DisciplinaListDTO> listarDisciplinasPorProfessor(
-        @Parameter(description = "ID do professor") @PathVariable Long professorId) {
-        return disciplinaService.listarDisciplinasPorProfessor(professorId);
+        @Parameter(description = "ID de usuário do professor") @PathVariable Long usuarioId) {
+        return disciplinaService.listarDisciplinasPorProfessor(usuarioId);
     }
 
     @Operation(summary = "Deleta professor existente pelo registro do professor")
@@ -132,19 +129,19 @@ public class ProfessorController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfessorResponseDTO.class),
                 examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"professorNome\": \"Sergio Salgado\", \"professorEmail\": \"sergio.salgado@fatec.edu.br\", \"registroProfessor\": 12345, \"cargoId\": 3 }")))
     })
-    @PutMapping("/{professorId}")
+    @PutMapping("/{usuarioId}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
-        @Parameter(description = "ID do professor") @PathVariable Long professorId,
+        @Parameter(description = "ID de usuário do professor") @PathVariable Long usuarioId,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Dados atualizados do professor",
             required = true,
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = ProfessorUpdateDTO.class),
-                examples = @ExampleObject(value = "{ \"usuarioId\": 21, \"nome\": \"Sergio Salgado\", \"email\": \"sergio.salgado@fatec.edu.br\", \"cargoId\": 3, \"disciplinasIds\": [4,5] }")))
+                examples = @ExampleObject(value = "{ \"nome\": \"Sergio Salgado\", \"email\": \"sergio.salgado@fatec.edu.br\", \"cargoId\": 3, \"disciplinasIds\": [4,5] }")))
         @RequestBody ProfessorUpdateDTO dto) {
             
             return ResponseEntity.ok(
-                professorService.atualizarProfessor(professorId, dto)
+                professorService.atualizarProfessor(usuarioId, dto)
     );
     }
 
