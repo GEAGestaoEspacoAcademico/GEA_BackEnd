@@ -8,14 +8,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
+import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 
@@ -27,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -36,6 +42,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private PasswordResetEmailService passwordResetEmailService;
 
     @Operation(summary = "Lista todos os usuários do sistema")
     @ApiResponses(value = {
@@ -96,6 +105,30 @@ public class UsuarioController {
                     examples = @ExampleObject(value = "{ \"senhaAtual\": \"SenhaAntiga123!\", \"novaSenha\": \"NovaSenhaSegura2025!\", \"repetirNovaSenha\": \"NovaSenhaSegura2025!\" }")))
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
+        return ResponseEntity.noContent().build();   
+     }
+
+    
+    @Operation(summary = "Realiza um pedido de redefinição de senha que será enviada para o e-mail do usuário")
+        @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Se o seu e-mail existir, enviaremos um link de confirmação",
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResetSenhaResponseDTO.class))
+    )
+    })
+    @PostMapping("resetPassword")
+    public ResponseEntity<ResetSenhaResponseDTO> resetPassword (
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description="E-mail para receber solicitação de senha",
+            required=true,
+            content=@Content(mediaType="application/json",
+                schema=@Schema(implementation=UsuarioResetSenhaEmailDTO.class)
+            )
+        )
+        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+    
+        return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
+    }
+
         return ResponseEntity.noContent().build();    }
     
     @Operation(summary = "Lista funcionários (Auxiliar Docente, Professor, Coordenador, Secretaria)")
@@ -123,4 +156,28 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @Operation(summary = "Redefine a senha do usuário usando o token recebido por e-mail")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Senha redefinida com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Token inválido"),
+        @ApiResponse(responseCode = "400", description = "Token expirado")
+    })
+    @PatchMapping("alterarSenha")
+    public ResponseEntity<String> alterarSenha(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Token de redefinição de senha e nova senha",
+            required = true,
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioRedefinirSenhaDTO.class)
+            )
+            )
+        @RequestBody UsuarioRedefinirSenhaDTO dto){
+        String result = passwordResetEmailService.validarPasswordResetToken(dto.token());
+        if(result!=null){
+            return ResponseEntity.badRequest().body(result);
+        }
+        usuarioService.redefinirSenha(dto);
+        return ResponseEntity.ok("Senha redefinida com sucesso");
+    }
 }

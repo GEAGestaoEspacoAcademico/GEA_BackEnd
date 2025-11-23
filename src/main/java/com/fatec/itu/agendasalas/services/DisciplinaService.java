@@ -50,7 +50,7 @@ public class DisciplinaService {
     public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long cursoId){
         Curso curso = cursoRepository.findById(cursoId)
             .orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
-        return converterParaDTO(disciplinaRepository.findByCursoId(cursoId));
+        return converterParaDTO(disciplinaRepository.findByCursoId(curso.getId()));
     }
 
     public DisciplinaListDTO buscarPorId(Long id) {
