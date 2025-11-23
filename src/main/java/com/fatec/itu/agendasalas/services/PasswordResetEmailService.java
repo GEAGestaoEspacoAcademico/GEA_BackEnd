@@ -2,17 +2,41 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class PasswordResetEmailService {
  
-    public PasswordResetToken gerarTokenRedefinicaoPorEmail(Usuario usuario) {
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    //@Autowired
+    //private EmailSenderService emailSenderService;
+
+    public String gerarTokenRedefinicaoPorEmail(Usuario usuario) {
         String token = UUID.randomUUID().toString();
-        return new PasswordResetToken(usuario, token);
+        PasswordResetToken reset = new PasswordResetToken(usuario, token);
+        passwordResetTokenRepository.save(reset);
+        return token;
+    }
+
+    public void solicitarResetDeSenha(String email, HttpServletRequest request) {
+        
+        Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
+        String token = gerarTokenRedefinicaoPorEmail(usuario);
+        String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        String link = appUrl + "/resetPassword?token=" + token;
+       // emailSenderService.enviarEmailResetSenha(usuario, link);    
     }
 
 }

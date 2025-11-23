@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Curso", description = "Operações relacionadas a curso")
 public class CursoController {
 
+
     @Autowired
     private CursoService cursoService;
 

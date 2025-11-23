@@ -32,7 +32,7 @@ import lombok.Setter;
 public class Sala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Sala(String nome, int capacidade, TipoSala tipoSala, Piso piso) {
+  public Sala(String nome, int capacidade,  TipoSala tipoSala, Piso piso) {
     this.nome = nome;
     this.capacidade = capacidade;
     this.piso = piso;
@@ -53,8 +53,8 @@ public class Sala implements Serializable {
   private int capacidade;
 
   @ManyToOne
-  @JoinColumn(name = "piso_id")
-  private Piso piso;
+  @JoinColumn(name="piso_id", nullable=false)
+  private Piso piso; 
 
   @Column(name = "disponibilidade", nullable = false)
   private boolean disponibilidade;

@@ -1,7 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
-import java.time.DayOfWeek;
 import java.text.Normalizer;
+import java.time.DayOfWeek;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
