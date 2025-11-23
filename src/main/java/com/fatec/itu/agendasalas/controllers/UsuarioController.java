@@ -17,6 +17,8 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
+import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -101,6 +105,9 @@ public class UsuarioController {
      }
 
      @PostMapping("resetPassword")
-     public ResponseEntity resetPassword (@Valid @RequestBody UsuarioResetSenhaEmailDTO email)
+     public ResponseEntity resetPassword (HttpServletRequest request, @Valid @RequestBody UsuarioResetSenhaEmailDTO email){
+        Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
+        String token = passwordResetEmailService.gerarTokenRedefinicaoPorEmail(usuario);
+     }
 
 }
