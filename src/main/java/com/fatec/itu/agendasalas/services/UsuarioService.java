@@ -12,10 +12,13 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
+import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
+import com.fatec.itu.agendasalas.exceptions.SenhasNaoConferemException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
+import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
@@ -30,6 +33,9 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
     @Autowired
     private CargoRepository cargoRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
@@ -134,6 +140,13 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
        if(!dto.senha().equals(dto.repetirSenha())){
             throw new SenhasNaoConferemException();
        }
+       passwordEncryptService.validarSenha(dto.senha());
+       
+       PasswordResetToken passToken = passwordResetTokenRepository.findByToken(dto.token());
+       Usuario usuario = passToken.getUsuario();
+       usuario.setSenha(passwordEncryptService.criptografarSenha(dto.senha()));
+       usuarioRepository.save(usuario);
+       passwordResetTokenRepository.delete(passToken); 
     }
 
 }

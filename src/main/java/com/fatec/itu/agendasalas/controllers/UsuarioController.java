@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
@@ -106,21 +106,50 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();   
      }
 
-     
+    
+    @Operation(summary = "Realiza um pedido de redefinição de senha que será enviada para o e-mail do usuário")
+        @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Se o seu e-mail existir, enviaremos um link de confirmação",
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ResetSenhaResponseDTO.class))
+    )
+    })
     @PostMapping("resetPassword")
-    public ResponseEntity<ResetSenhaResponseDTO> resetPassword (@Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+    public ResponseEntity<ResetSenhaResponseDTO> resetPassword (
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(description="E-mail para receber solicitação de senha",
+            required=true,
+            content=@Content(mediaType="application/json",
+                schema=@Schema(implementation=UsuarioResetSenhaEmailDTO.class)
+            )
+        )
+        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
     
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
 
-    @GetMapping("validarTokenResetSenha")
-    public ResponseEntity<String> validarTokenResetSenha(@RequestParam String token){
-        String result = passwordResetEmailService.validarPasswordResetToken(token);
+
+
+    @Operation(summary = "Redefine a senha do usuário usando o token recebido por e-mail")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Senha redefinida com sucesso"),
+        @ApiResponse(responseCode = "400", description = "Token inválido"),
+        @ApiResponse(responseCode = "400", description = "Token expirado")
+    })
+    @PatchMapping("alterarSenha")
+    public ResponseEntity<String> alterarSenha(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Token de redefinição de senha e nova senha",
+            required = true,
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioRedefinirSenhaDTO.class)
+            )
+            )
+        @RequestBody UsuarioRedefinirSenhaDTO dto){
+        String result = passwordResetEmailService.validarPasswordResetToken(dto.token());
         if(result!=null){
             return ResponseEntity.badRequest().body(result);
         }
-        return ResponseEntity.ok("Token válido");
+        usuarioService.redefinirSenha(dto);
+        return ResponseEntity.ok("Senha redefinida com sucesso");
     }
-
-    @PatchMapping("alterarSenha")
 }

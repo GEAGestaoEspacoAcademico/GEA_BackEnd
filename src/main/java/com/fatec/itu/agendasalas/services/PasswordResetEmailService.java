@@ -26,6 +26,7 @@ public class PasswordResetEmailService {
     public String gerarTokenRedefinicaoPorEmail(Usuario usuario) {
         String token = UUID.randomUUID().toString();
         PasswordResetToken reset = new PasswordResetToken(usuario, token);
+        
         passwordResetTokenRepository.save(reset);
         return token;
     }
@@ -37,7 +38,7 @@ public class PasswordResetEmailService {
             String token = gerarTokenRedefinicaoPorEmail(usuario);
          
 
-            String link = "localhost:4200/changePassword?token=" + token;
+            String link = "http://localhost:4200/esqueci-senha?token=" + token;
             emailSenderService.enviarEmailResetSenha(usuario, link);    
         }
        
