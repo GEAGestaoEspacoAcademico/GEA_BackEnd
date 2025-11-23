@@ -1,7 +1,6 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class PasswordResetEmailService {
@@ -33,13 +30,14 @@ public class PasswordResetEmailService {
         return token;
     }
 
-    public ResetSenhaResponseDTO solicitarResetDeSenha(String email, HttpServletRequest request) {
+    public ResetSenhaResponseDTO solicitarResetDeSenha(String email) {
         
         Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
         if(usuario!=null){
             String token = gerarTokenRedefinicaoPorEmail(usuario);
-            String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
-            String link = appUrl + "/changePassword?token=" + token;
+         
+
+            String link = "localhost:4200/changePassword?token=" + token;
             emailSenderService.enviarEmailResetSenha(usuario, link);    
         }
        
@@ -48,8 +46,14 @@ public class PasswordResetEmailService {
 
     public String validarPasswordResetToken(String token){
         final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+        if(!isTokenExistente(passToken)){
+            return "Token inválido";
+        }
 
-        return !isTokenExistente()
+        if(isTokenExpirado(passToken)){
+            return "Token expirado";
+        }
+        return null;
     } 
 
     private boolean isTokenExistente(PasswordResetToken passToken){

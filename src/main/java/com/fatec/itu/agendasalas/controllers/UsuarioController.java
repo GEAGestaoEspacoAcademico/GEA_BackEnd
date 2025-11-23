@@ -108,11 +108,11 @@ public class UsuarioController {
 
      
      @PostMapping("resetPassword")
-     public ResponseEntity<ResetSenhaResponseDTO> resetPassword (HttpServletRequest request, @Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+     public ResponseEntity<ResetSenhaResponseDTO> resetPassword (@Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
        
-        return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email(), request));
-    
+        return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
+    }
 
-     }
+    @PostMapping
 
 }
