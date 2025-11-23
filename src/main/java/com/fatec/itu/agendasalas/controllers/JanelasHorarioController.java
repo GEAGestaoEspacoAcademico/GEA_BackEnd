@@ -140,7 +140,6 @@ public class JanelasHorarioController {
                     value = "[{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }]")))
     })
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveisEmVariasDatas(
-        @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Lista de datas a serem checadas",
                 required = true,
