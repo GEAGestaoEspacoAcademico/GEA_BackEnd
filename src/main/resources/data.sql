@@ -10,7 +10,7 @@ VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETA
 -- Usuarios
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'a', 1);
+    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucas.silva@exemplo.com', 1);
 -- senha: ls123
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
@@ -160,6 +160,22 @@ INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
     ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1);
 -- senha: ar123
+
+-- Adição de secretários(as)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Maria Oliveira', 'maria.oliveira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'maria.oliveira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Beatriz Pereira', 'beatriz.pereira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'beatriz.pereira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5);
+-- senha: ls123
 
 
 
