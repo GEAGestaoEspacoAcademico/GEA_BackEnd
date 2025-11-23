@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
@@ -126,6 +127,13 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     public Usuario buscarUsuarioPeloEmail(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
         return usuario;  
+    }
+
+
+    public void redefinirSenha(UsuarioRedefinirSenhaDTO dto) {
+       if(!dto.senha().equals(dto.repetirSenha())){
+            throw new SenhasNaoConferemException();
+       }
     }
 
 }

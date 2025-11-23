@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.entity;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -18,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class PasswordResetToken {
-    private static final int EXPIRATION = 60 * 24;
+    private static final int EXPIRATION = 15;
  
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,6 +37,7 @@ public class PasswordResetToken {
     public PasswordResetToken(Usuario usuario, String token){
         this.token = token;
         this.usuario = usuario;
+        this.dataExpiracao = Date.from(Instant.now().plus(EXPIRATION, ChronoUnit.MINUTES));
     }
 
 }

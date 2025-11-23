@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
@@ -29,7 +30,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -107,12 +107,20 @@ public class UsuarioController {
      }
 
      
-     @PostMapping("resetPassword")
-     public ResponseEntity<ResetSenhaResponseDTO> resetPassword (@Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
-       
+    @PostMapping("resetPassword")
+    public ResponseEntity<ResetSenhaResponseDTO> resetPassword (@Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+    
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
 
-    @PostMapping
+    @GetMapping("validarTokenResetSenha")
+    public ResponseEntity<String> validarTokenResetSenha(@RequestParam String token){
+        String result = passwordResetEmailService.validarPasswordResetToken(token);
+        if(result!=null){
+            return ResponseEntity.badRequest().body(result);
+        }
+        return ResponseEntity.ok("Token válido");
+    }
 
+    @PatchMapping("alterarSenha")
 }
