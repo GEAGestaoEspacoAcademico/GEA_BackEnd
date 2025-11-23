@@ -13,11 +13,15 @@ import com.fatec.itu.agendasalas.entity.Agendamento;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    boolean existsBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
-    @Query("SELECT a.id FROM Agendamento a "
-            + "WHERE a.data = :data AND a.janelasHorario.id IN (:janelas)"
-            + " AND a.sala.id = :sala_id")
-    List<Long> findByDataAndJanelaHorario(@Param("data") LocalDate data,
-            @Param("janelas") List<Long> janelas, @Param("sala_id") Long salaId);
-    List<Agendamento> findAllByData(LocalDate data);
-}   
+        boolean existsBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
+
+        @Query("SELECT a.id FROM Agendamento a "
+                        + "WHERE a.data = :data AND a.janelasHorario.id IN (:janelas)"
+                        + " AND a.sala.id = :sala_id")
+        List<Long> findByDataAndJanelaHorario(@Param("data") LocalDate data,
+                        @Param("janelas") List<Long> janelas, @Param("sala_id") Long salaId);
+
+        List<Agendamento> findAllByData(LocalDate data);
+
+        List<Agendamento> findByUsuarioId(Long usuarioId);
+}

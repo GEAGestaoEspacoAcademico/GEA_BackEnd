@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
@@ -95,5 +96,17 @@ public class UsuarioController {
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();    }
+
+    @Operation(summary = "Deleta um usuário desfazendo relações que violam integridade")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    })
+    @DeleteMapping("{usuarioId}")
+    public ResponseEntity<Void> deletarUsuario(
+        @Parameter(description = "ID do usuário a ser deletado") @PathVariable Long usuarioId){
+        usuarioService.deletarUsuario(usuarioId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
