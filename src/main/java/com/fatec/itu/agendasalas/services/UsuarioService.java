@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
+import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
@@ -120,5 +122,11 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuario.setSenha(passwordEncryptService.criptografarSenha(dto.novaSenha()));
 
         usuarioRepository.save(usuario);
+    }
+
+
+    public Usuario buscarUsuarioPeloEmail(UsuarioResetSenhaEmailDTO requestReset) {
+        Usuario usuario = usuarioRepository.findByEmail(requestReset.email()).orElseThrow(()-> new UsuarioNaoEncontradoException(requestReset.email()));
+        return usuario;  
     }
 }
