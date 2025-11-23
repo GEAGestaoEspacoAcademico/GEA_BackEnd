@@ -10,7 +10,7 @@ VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETA
 -- Usuarios
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucasmorais@1022.com', 1);
+    ('Henrique Andrade', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'h.andrade.rodri@gmail.com', 1);
 -- senha: ls123
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 

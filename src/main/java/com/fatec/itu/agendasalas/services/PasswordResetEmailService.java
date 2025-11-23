@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
@@ -20,8 +21,8 @@ public class PasswordResetEmailService {
     @Autowired
     private UsuarioService usuarioService;
 
-    //@Autowired
-    //private EmailSenderService emailSenderService;
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     public String gerarTokenRedefinicaoPorEmail(Usuario usuario) {
         String token = UUID.randomUUID().toString();
@@ -30,13 +31,14 @@ public class PasswordResetEmailService {
         return token;
     }
 
-    public void solicitarResetDeSenha(String email, HttpServletRequest request) {
+    public ResetSenhaResponseDTO solicitarResetDeSenha(String email, HttpServletRequest request) {
         
         Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
         String token = gerarTokenRedefinicaoPorEmail(usuario);
         String appUrl = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         String link = appUrl + "/resetPassword?token=" + token;
-       // emailSenderService.enviarEmailResetSenha(usuario, link);    
+        emailSenderService.enviarEmailResetSenha(usuario, link);    
+        return new ResetSenhaResponseDTO("Se o seu e-mail existir, enviaremos um link de confirmação");
     }
 
 }
