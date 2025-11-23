@@ -7,7 +7,7 @@ public record SalaDetailDTO(
     boolean disponibilidade,
     Long tipoSalaId,
     String tipoSala,
-    Long andarId,
-    String andarNome,
+    Long pisoId,
+    String piso,
     String salaObservacoes
 ){ }
