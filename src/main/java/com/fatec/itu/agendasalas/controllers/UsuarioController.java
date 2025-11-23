@@ -17,6 +17,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.UsuarioService;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -96,7 +97,20 @@ public class UsuarioController {
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();    }
+    
+    @Operation(summary = "Lista funcionários (Auxiliar Docente, Professor, Coordenador, Secretaria)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de funcionários encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = UsuarioFuncionarioDTO.class),
+                examples = @ExampleObject(value = "[{ \"usuarioId\": 9, \"usuarioNome\": \"Prof. Luis dos Santos\", \"usuarioEmail\": \"luis.santos@fatec.sp.gov.br\", \"registro\": 1014, \"cargoId\": 3, \"cargoNome\": \"PROFESSOR\" }, { \"usuarioId\": 10, \"usuarioNome\": \"Coord. Lucimar de Santi\", \"usuarioEmail\": \"lucimar.desanti@fatec.sp.gov.br\", \"registro\": 2001, \"cargoId\": 4, \"cargoNome\": \"COORDENADOR\" }]")))})
 
+    @GetMapping("funcionarios")
+    public ResponseEntity<List<UsuarioFuncionarioDTO>> listarFuncionarios() {
+        List<UsuarioFuncionarioDTO> lista = usuarioService.listarFuncionarios();
+        return ResponseEntity.ok(lista);
+    }
+ 
     @Operation(summary = "Deleta um usuário desfazendo relações que violam integridade")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),

@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.entity.Coordenador;
+import com.fatec.itu.agendasalas.entity.Professor;
+import com.fatec.itu.agendasalas.entity.Secretaria;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
@@ -60,6 +64,53 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuarioRepository.save(usuario);
         return conversaoUsuarioParaResponseDTO(usuario);
 
+    }
+    
+    public List<UsuarioFuncionarioDTO> listarFuncionarios(){
+        List<Usuario> listaUsuarios = usuarioRepository.findAll();
+        List<UsuarioFuncionarioDTO> lista = new ArrayList<>();
+
+        for(Usuario usuario : listaUsuarios){
+            if(usuario.getCargo()==null || usuario.getCargo().getNome()==null) continue;
+            String nomeCargo = usuario.getCargo().getNome().trim().toUpperCase();
+            boolean isFuncionario = nomeCargo.equals("AUXILIAR_DOCENTE") || nomeCargo.equals("PROFESSOR")
+                    || nomeCargo.equals("COORDENADOR") || nomeCargo.equals("SECRETARIA");
+            if(!isFuncionario) continue;
+
+            Long registroCoordenacao = null;
+            Long registroProfessor = null;
+            Long matricula = null;
+
+            if(usuario instanceof Coordenador){
+                registroCoordenacao = ((Coordenador) usuario).getRegistroCoordenacao();
+            } else if(usuario instanceof Professor){
+                registroProfessor = ((Professor) usuario).getRegistroProfessor();
+            } else if(usuario instanceof Secretaria){
+                matricula = ((Secretaria) usuario).getMatricula();
+            }
+
+            Long registro = null;
+            if (registroCoordenacao != null) {
+                registro = registroCoordenacao;
+            } else if (registroProfessor != null) {
+                registro = registroProfessor;
+            } else if (matricula != null) {
+                registro = matricula;
+            }
+
+            UsuarioFuncionarioDTO dto = new UsuarioFuncionarioDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                registro,
+                usuario.getCargo() != null ? usuario.getCargo().getId() : null,
+                usuario.getCargo() != null ? usuario.getCargo().getNome() : null
+            );
+
+            lista.add(dto);
+        }
+
+        return lista;
     }
     
 
