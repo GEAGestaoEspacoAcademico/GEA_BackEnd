@@ -74,7 +74,9 @@ public class AgendamentoAulaController {
     @PostMapping("/auxiliar-docente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Agendamento(s) criado(s) com sucesso",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AgendamentoAulaResponseDTO.class)))
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = AgendamentoAulaResponseDTO.class),
+                examples = @ExampleObject(value = "[{ \"agendamentoAulaId\": 16, \"usuarioNome\": \"Auxiliar Docente\", \"salaNome\": \"Lab 305\", \"disciplinaId\": 3, \"disciplinaNome\": \"Programação Orientada à objetos\", \"semestre\": \"2025.1\", \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"professorNome\": \"Prof. Dimas Cardoso\", \"data\": \"2026-11-23\", \"diaDaSemana\": \"Segunda-feira\", \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\", \"isEvento\": false }]")))
     })
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaByAD(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -83,7 +85,7 @@ public class AgendamentoAulaController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = AgendamentoAulaCreationByAuxiliarDocenteDTO.class),
                     examples = @ExampleObject(
-                        value = "{ \"auxiliarDocenteId\": 1, \"salaId\": 2, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioIds\": [1, 2] }")))
+                        value = "{ \"usuarioId\": 4, \"salaId\": 5, \"disciplinaId\": 3, \"data\": \"2026-11-23\", \"horaInicio\": \"07:20\", \"horaFim\": \"09:30\", \"solicitante\": \"Sergio Salgado\" }")))
             @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
         return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
     }
