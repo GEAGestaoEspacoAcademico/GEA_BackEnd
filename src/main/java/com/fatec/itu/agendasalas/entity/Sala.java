@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ import lombok.Setter;
 public class Sala implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  public Sala(String nome, int capacidade, int piso, TipoSala tipoSala) {
+  public Sala(String nome, int capacidade,  TipoSala tipoSala, Piso piso) {
     this.nome = nome;
     this.capacidade = capacidade;
     this.piso = piso;
@@ -51,8 +52,9 @@ public class Sala implements Serializable {
   @Column(name = "capacidade", nullable = false)
   private int capacidade;
 
-  @Column(name = "piso", nullable = false)
-  private int piso;
+  @ManyToOne
+  @JoinColumn(name="piso_id", nullable=false)
+  private Piso piso; 
 
   @Column(name = "disponibilidade", nullable = false)
   private boolean disponibilidade;

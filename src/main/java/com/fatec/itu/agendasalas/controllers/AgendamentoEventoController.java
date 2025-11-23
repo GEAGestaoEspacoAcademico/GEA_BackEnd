@@ -17,11 +17,17 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDT
 import com.fatec.itu.agendasalas.services.AgendamentoEventoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("agendamentos/eventos")
 @CrossOrigin
+@Tag(name = "Agendamento de Evento", description = "Operações relacionadas a agendamento de eventos")
 public class AgendamentoEventoController {
    
       @Autowired
@@ -38,6 +44,13 @@ public class AgendamentoEventoController {
     @Operation(summary = "Cria um novo agendamento de evento")
     @PostMapping
     public ResponseEntity<Void> criar(
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Dados para criação de um agendamento de evento",
+        required = true,
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
+            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00:00\", \"horaFim\": \"17:00:00\" } ] }")))
         @RequestBody @Valid AgendamentoEventoCreationDTO dto) {
       try {
         agendamentoEventoService.criar(dto);
@@ -48,6 +61,14 @@ public class AgendamentoEventoController {
     }
 
     @Operation(summary="Lista todos os agendamentos de evento")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Lista de agendamentos de evento encontrada",
+        content = @Content(mediaType = "application/json",
+          schema = @Schema(type = "array", implementation = AgendamentoEventoResponseDTO.class),
+          examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+            value = "[ { \"agendamentoEventoId\": 55, \"usuarioNome\": \"Fernanda Lima\", \"salaNome\": \"Auditório Principal\", \"eventoNome\": \"Fórum de Tecnologia\", \"data\": \"2025-12-10\", \"diaDaSemana\": \"Quarta-feira\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\", \"isEvento\": true, \"recorrenciaId\": null, \"status\": \"CONFIRMADO\", \"solicitante\": \"Coordenação de Cursos\" } ]")))
+    })
     @GetMapping
     public ResponseEntity<List<AgendamentoEventoResponseDTO>> listar(){
         return ResponseEntity.ok().body(agendamentoEventoService.listarAgendamentosEvento());

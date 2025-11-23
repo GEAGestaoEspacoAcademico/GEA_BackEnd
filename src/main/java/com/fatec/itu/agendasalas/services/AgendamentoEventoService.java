@@ -72,7 +72,8 @@ public class AgendamentoEventoService {
                                 .orElseThrow(() -> new RuntimeException(
                                                 "Sala não encontrada com ID: " + dto.salaId()));
 
-                Evento evento = eventoRepository.findByNome(dto.eventoNome()).orElseThrow(()->new RuntimeException("Aaoao"));
+                Evento evento = eventoRepository.findByNome(dto.eventoNome())
+                                .orElseGet(() -> eventoRepository.save(new Evento(dto.eventoNome(), "", null)));
 
                  
 

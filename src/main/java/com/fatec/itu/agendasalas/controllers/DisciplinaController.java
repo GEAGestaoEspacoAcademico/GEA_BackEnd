@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,12 @@ import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.services.DisciplinaService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @CrossOrigin
@@ -30,33 +37,83 @@ public class DisciplinaController {
     private DisciplinaService disciplinaService;
 
     @Operation(summary = "Cria uma nova disciplina")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Disciplina criada com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(value = "{ \"id\": 10, \"nome\": \"Estrutura de Dados\" }")))
+    })
     @PostMapping
-    public DisciplinaListDTO criarDisciplina(@RequestBody DisciplinaCreateDTO novaDisciplina) {
+    public DisciplinaListDTO criarDisciplina(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados para criação de uma nova disciplina",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DisciplinaCreateDTO.class),
+                    examples = @ExampleObject(value = "{ \"nome\": \"Estrutura de Dados\" }")))
+            @RequestBody DisciplinaCreateDTO novaDisciplina) {
         return disciplinaService.criar(novaDisciplina);
     }
 
     @Operation(summary = "Lista todas as disciplinas existentes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Lista de disciplinas encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
+    })
     @GetMapping
-    public List<DisciplinaListDTO> listarDisciplinas() {
-        return disciplinaService.listar();
+    public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {
+        return ResponseEntity.ok(disciplinaService.listar());
     }
 
-    @Operation(summary = "Apresenta uma disciplina existente por id")
+    @Operation(summary = "Apresenta uma disciplina existente pelo ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Disciplina encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos\" }"))),
+        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+    })
     @GetMapping("{disciplinaId}")
-    public DisciplinaListDTO buscarPorId(@PathVariable Long disciplinaId) {
+    public DisciplinaListDTO buscarPorId(
+        @Parameter(description = "ID da disciplina a ser buscada") @PathVariable Long disciplinaId) {
         return disciplinaService.buscarPorId(disciplinaId);
     }
 
-    @Operation(summary = "Atualiza uma disciplina pelo id")
+    @Operation(summary = "Atualiza uma disciplina pelo ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Disciplina atualizada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = DisciplinaListDTO.class),
+                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos e Estruturas\" }"))),
+        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+    })
     @PutMapping("{disciplinaId}")
-    public DisciplinaListDTO editarDisciplina(@PathVariable Long disciplinaId,
+    public ResponseEntity<DisciplinaListDTO> editarDisciplina(@Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Novos dados para a disciplina",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = DisciplinaCreateDTO.class),
+                    examples = @ExampleObject(value = "{ \"nome\": \"Algoritmos e Estruturas\" }")))
             @RequestBody DisciplinaCreateDTO novaDisciplina) {
-        return disciplinaService.atualizar(disciplinaId, novaDisciplina);
+        return ResponseEntity.ok(disciplinaService.atualizar(disciplinaId, novaDisciplina));
     }
 
-    @Operation(summary = "Deleta uma disciplina pelo id")
+    @Operation(summary = "Deleta uma disciplina pelo ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Disciplina excluída com sucesso"), // Retorna 200 ou 204
+        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+    })
     @DeleteMapping("{disciplinaId}")
-    public void excluirDisciplina(@PathVariable Long disciplinaId) {
+    public ResponseEntity<Void> excluirDisciplina(
+        @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
         disciplinaService.excluir(disciplinaId);
+        return ResponseEntity.noContent().build();
     }
 }

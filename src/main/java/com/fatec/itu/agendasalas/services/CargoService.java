@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.Cargo;
+import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
 @Service
@@ -32,6 +33,11 @@ public class CargoService {
 
     public Cargo findById(Long id) {
         return cargoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cargo não encontrado"));
+            .orElseThrow(() -> new CargoNaoEncontradoException(id));
+    }
+
+    public Cargo findByNome(String nome){
+        return cargoRepository.findByNome(nome)
+            .orElseThrow(() -> new CargoNaoEncontradoException(nome));
     }
 }
