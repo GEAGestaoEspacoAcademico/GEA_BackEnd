@@ -25,6 +25,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -130,8 +131,6 @@ public class UsuarioController {
     
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
-
-        return ResponseEntity.noContent().build();    }
     
     @Operation(summary = "Lista funcionários (Auxiliar Docente, Professor, Coordenador, Secretaria)")
     @ApiResponses(value = {
@@ -163,7 +162,7 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void redefinirSenhaByAD(
             @PathVariable Long usuarioId,
-            @RequestBody @Valid UsuarioRedefinirSenhaDTO dto) {
+            @RequestBody @Valid UsuarioRedefinirSenhaByAdDTO dto) {
         usuarioService.redefinirSenhaByAD(usuarioId, dto);
     }
 
