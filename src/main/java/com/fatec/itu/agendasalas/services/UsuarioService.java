@@ -29,6 +29,7 @@ import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import jakarta.transaction.Transactional;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRegisterDTO;
 import com.fatec.itu.agendasalas.exceptions.usuarios.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
 import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplinaException;
@@ -72,6 +73,31 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuarioRepository.save(usuario);
         return conversaoUsuarioParaResponseDTO(usuario);
 
+    }
+
+    public UsuarioResponseDTO cadastrarUsuarioPeloNomeEmail(UsuarioRegisterDTO dto){
+
+        String email = dto.usuarioEmail();
+
+        String login;
+        login = dto.usuarioNome().toLowerCase().replaceAll("\\s+", ".");
+        login = java.text.Normalizer.normalize(login, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        
+        String baseLogin = login;
+        int suffix = 1;
+        while (usuarioRepository.findByLogin(login).isPresent()) {
+            suffix++;
+            login = baseLogin + suffix;
+        }
+
+        Usuario usuario = new Usuario(login, email, dto.usuarioNome());
+        usuario.setSenha(passwordEncryptService.criptografarSenha("Senha123@"));
+
+        Cargo cargo = cargoRepository.findById(1L).orElseThrow(()-> new RuntimeException("CARGO id=1 NÃO ENCONTRADO"));
+        usuario.setCargo(cargo);
+
+        usuarioRepository.save(usuario);
+        return conversaoUsuarioParaResponseDTO(usuario);
     }
     
     public List<UsuarioFuncionarioDTO> listarFuncionarios(){
