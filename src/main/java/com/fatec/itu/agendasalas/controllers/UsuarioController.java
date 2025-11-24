@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.RedefinirSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
@@ -174,7 +175,7 @@ public class UsuarioController {
         @ApiResponse(responseCode = "400", description = "Token expirado")
     })
     @PatchMapping("alterarSenha")
-    public ResponseEntity<String> alterarSenha(
+    public ResponseEntity<RedefinirSenhaResponseDTO> alterarSenha(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Token de redefinição de senha e nova senha",
             required = true,
@@ -183,11 +184,11 @@ public class UsuarioController {
             )
             )
         @RequestBody UsuarioRedefinirSenhaDTO dto){
-        String result = passwordResetEmailService.validarPasswordResetToken(dto.token());
-        if(result!=null){
-            return ResponseEntity.badRequest().body(result);
+        boolean result = passwordResetEmailService.validarPasswordResetToken(dto.token());
+        if(!result){
+            return ResponseEntity.badRequest().body(new RedefinirSenhaResponseDTO("Token inválido"));
         }
         usuarioService.redefinirSenha(dto);
-        return ResponseEntity.ok("Senha redefinida com sucesso");
+        return ResponseEntity.ok(new RedefinirSenhaResponseDTO("Senha redefinida com sucesso"));
     }
 }

@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.RedefinirSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
@@ -45,16 +46,12 @@ public class PasswordResetEmailService {
         return new ResetSenhaResponseDTO("Se o seu e-mail existir, enviaremos um link de confirmação");
     }
 
-    public String validarPasswordResetToken(String token){
+    public boolean validarPasswordResetToken(String token){
         final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
-        if(!isTokenExistente(passToken)){
-            return "Token inválido";
+        if(!isTokenExistente(passToken) || isTokenExpirado(passToken)){
+            return false;
         }
-
-        if(isTokenExpirado(passToken)){
-            return "Token expirado";
-        }
-        return null;
+        return true;
     } 
 
     private boolean isTokenExistente(PasswordResetToken passToken){
