@@ -38,31 +38,36 @@ public class DisciplinaController {
 
     @Operation(summary = "Cria uma nova disciplina")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Disciplina criada com sucesso",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 10, \"nome\": \"Estrutura de Dados\" }")))
+            @ApiResponse(responseCode = "200", description = "Disciplina criada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "{\n"
+                    +
+                    "  \"disciplinaId\": 10,\n" +
+                    "  \"disciplinaNome\": \"Computação em Nuvem\",\n" +
+                    "  \"disciplinaSemestre\": \"2025.1\",\n" +
+                    "  \"cursoNome\": \"Gestão da Tecnologia da Informação\"\n" +
+                    "}")))
     })
     @PostMapping
     public DisciplinaListDTO criarDisciplina(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Dados para criação de uma nova disciplina",
-                required = true,
-                content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = DisciplinaCreateDTO.class),
-                    examples = @ExampleObject(value = "{ \"nome\": \"Estrutura de Dados\" }")))
-            @RequestBody DisciplinaCreateDTO novaDisciplina) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados para criação de uma nova disciplina", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = DisciplinaCreateDTO.class), examples = @ExampleObject(value = "{\n"
+                    +
+                    "  \"cursoId\": 1,\n" +
+                    "  \"disciplinaNome\": \"Computação em Nuvem\",\n" +
+                    "  \"disciplinaSemestre\": \"2025.1\"\n" +
+                    "}"))) @RequestBody DisciplinaCreateDTO novaDisciplina) {
         return disciplinaService.criar(novaDisciplina);
     }
 
     @Operation(summary = "Lista todas as disciplinas existentes")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Lista de disciplinas encontrada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
+            @ApiResponse(responseCode = "200", description = "Lista de disciplinas encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "[\n"
+                    +
+                    "  {\n" +
+                    "    \"disciplinaId\": 1,\n" +
+                    "    \"disciplinaNome\": \"Computação em Nuvem\",\n" +
+                    "    \"disciplinaSemestre\": \"2025.1\",\n" +
+                    "    \"cursoNome\": \"Gestão da Tecnologia da Informação\"\n" +
+                    "  }\n" +
+                    "]")))
     })
     @GetMapping
     public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {
@@ -71,48 +76,69 @@ public class DisciplinaController {
 
     @Operation(summary = "Apresenta uma disciplina existente pelo ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Disciplina encontrada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos\" }"))),
-        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+            @ApiResponse(responseCode = "200", description = "Disciplina encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "{\n"
+                    +
+                    "  \"disciplinaId\": 1,\n" +
+                    "  \"disciplinaNome\": \"Computação em Nuvem\",\n" +
+                    "  \"disciplinaSemestre\": \"2025.1\",\n" +
+                    "  \"cursoNome\": \"Gestão da Tecnologia da Informação\"\n" +
+                    "}"))),
+            @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @GetMapping("{disciplinaId}")
     public DisciplinaListDTO buscarPorId(
-        @Parameter(description = "ID da disciplina a ser buscada") @PathVariable Long disciplinaId) {
+            @Parameter(description = "ID da disciplina a ser buscada") @PathVariable Long disciplinaId) {
         return disciplinaService.buscarPorId(disciplinaId);
     }
 
     @Operation(summary = "Atualiza uma disciplina pelo ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Disciplina atualizada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos e Estruturas\" }"))),
-        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+            @ApiResponse(responseCode = "200",
+                description = "Disciplina atualizada",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = DisciplinaListDTO.class),
+                    examples = @ExampleObject(value =
+                        "{\n" +
+                        "  \"disciplinaId\": 1,\n" +
+                        "  \"disciplinaNome\": \"Algoritmos Avançados\",\n" +
+                        "  \"disciplinaSemestre\": \"2025.2\",\n" +
+                        "  \"cursoNome\": \"Gestão da Tecnologia da Informação\"\n" +
+                        "}"
+                    )
+                )
+            ),
+            @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @PutMapping("{disciplinaId}")
-    public ResponseEntity<DisciplinaListDTO> editarDisciplina(@Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
+    public ResponseEntity<DisciplinaListDTO> editarDisciplina(
+            @Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Novos dados para a disciplina",
-                required = true,
-                content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = DisciplinaCreateDTO.class),
-                    examples = @ExampleObject(value = "{ \"nome\": \"Algoritmos e Estruturas\" }")))
+                    description = "Novos dados para a disciplina",
+                    required = true,
+                    content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = DisciplinaCreateDTO.class),
+                        examples = @ExampleObject(value =
+                            "{\n" +
+                            "  \"cursoId\": 1,\n" +
+                            "  \"disciplinaNome\": \"Algoritmos Avançados\",\n" +
+                            "  \"disciplinaSemestre\": \"2025.2\"\n" +
+                            "}"
+                        )
+                    )
+            )
             @RequestBody DisciplinaCreateDTO novaDisciplina) {
         return ResponseEntity.ok(disciplinaService.atualizar(disciplinaId, novaDisciplina));
     }
-
-    @Operation(summary = "Deleta uma disciplina pelo ID")
+     @Operation(summary = "Deleta uma disciplina pelo ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Disciplina excluída com sucesso"), // Retorna 200 ou 204
-        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+            @ApiResponse(responseCode = "200", description = "Disciplina excluída com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @DeleteMapping("{disciplinaId}")
     public ResponseEntity<Void> excluirDisciplina(
-        @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
+            @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
         disciplinaService.excluir(disciplinaId);
         return ResponseEntity.noContent().build();
     }
