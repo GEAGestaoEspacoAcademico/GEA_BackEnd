@@ -19,6 +19,7 @@ import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Secretaria;
+import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.SenhasNaoConferemException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
@@ -93,7 +94,8 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         Usuario usuario = new Usuario(login, email, dto.usuarioNome());
         usuario.setSenha(passwordEncryptService.criptografarSenha("Senha123@"));
 
-        Cargo cargo = cargoRepository.findById(1L).orElseThrow(()-> new RuntimeException("CARGO id=1 NÃO ENCONTRADO"));
+        Cargo cargo = cargoRepository.findById(1L)
+            .orElseThrow(() -> new CargoNaoEncontradoException(1L));
         usuario.setCargo(cargo);
 
         usuarioRepository.save(usuario);
