@@ -165,7 +165,9 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
             usuario.getId(),
             usuario.getNome(),
             usuario.getEmail(),
-            usuario.getCargo() != null ? usuario.getCargo().getId() : null
+            usuario.getCargo() != null ? usuario.getCargo().getId() : null,
+            usuario.getCargo() != null ? usuario.getCargo().getNome() : null
+        
         );
     }
 
