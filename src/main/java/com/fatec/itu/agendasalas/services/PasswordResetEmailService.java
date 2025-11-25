@@ -45,16 +45,12 @@ public class PasswordResetEmailService {
         return new ResetSenhaResponseDTO("Se o seu e-mail existir, enviaremos um link de confirmação");
     }
 
-    public String validarPasswordResetToken(String token){
+    public boolean validarPasswordResetToken(String token){
         final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
-        if(!isTokenExistente(passToken)){
-            return "Token inválido";
+        if(!isTokenExistente(passToken) || isTokenExpirado(passToken)){
+            return false;
         }
-
-        if(isTokenExpirado(passToken)){
-            return "Token expirado";
-        }
-        return null;
+        return true;
     } 
 
     private boolean isTokenExistente(PasswordResetToken passToken){
