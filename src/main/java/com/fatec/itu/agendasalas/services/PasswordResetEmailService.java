@@ -11,6 +11,8 @@ import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class PasswordResetEmailService {
  
@@ -31,7 +33,7 @@ public class PasswordResetEmailService {
         return token;
     }
 
-    public ResetSenhaResponseDTO solicitarResetDeSenha(String email) {
+    public ResetSenhaResponseDTO solicitarResetDeSenha(String email) throws MessagingException {
         
         Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
         if(usuario!=null){

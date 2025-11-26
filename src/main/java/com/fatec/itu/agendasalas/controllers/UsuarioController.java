@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,19 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -127,7 +128,7 @@ public class UsuarioController {
                 schema=@Schema(implementation=UsuarioResetSenhaEmailDTO.class)
             )
         )
-        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto) throws MessagingException{
     
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
