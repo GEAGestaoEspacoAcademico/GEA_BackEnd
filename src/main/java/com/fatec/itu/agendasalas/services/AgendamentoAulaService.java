@@ -304,6 +304,7 @@ public class AgendamentoAulaService {
                  agendamento.getDisciplina().getProfessor().getNome(),
                  agendamento.getData(),
                  agendamento.getDiaDaSemana(),
+                 agendamento.getJanelasHorario().getId(),
                  agendamento.getJanelasHorario().getHoraInicio(),
                  agendamento.getJanelasHorario().getHoraFim(),
                  agendamento.getIsEvento());

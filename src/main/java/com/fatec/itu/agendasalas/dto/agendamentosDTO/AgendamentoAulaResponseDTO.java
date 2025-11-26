@@ -15,6 +15,7 @@ public record AgendamentoAulaResponseDTO(
     String professorNome,
     LocalDate data,
     String diaDaSemana,
+    Long janelaHorarioId,
     LocalTime horaInicio,
     LocalTime horaFim,
     boolean isEvento
