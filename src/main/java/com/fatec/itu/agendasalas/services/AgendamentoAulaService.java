@@ -173,7 +173,7 @@ public class AgendamentoAulaService {
                                                                 + dto.disciplinaId()));
 
                 List<JanelasHorario> horariosDisponiveis =
-                                janelasHorarioRepository.findDisponiveisPorData(dto.data());
+                                janelasHorarioRepository.findDisponiveisPorData(dto.data(), dto.salaId());
 
                 Set<Long> idsDesejados = LongStream
                                 .range(dto.janelasHorarioId(),
