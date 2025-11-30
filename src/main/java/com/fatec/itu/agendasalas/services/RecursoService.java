@@ -64,7 +64,7 @@ public class RecursoService {
 
     
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-          .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
 
       recursoExistente.setNome(recursoDTO.recursoNome());
       recursoExistente.setTipoRecurso(tipo);

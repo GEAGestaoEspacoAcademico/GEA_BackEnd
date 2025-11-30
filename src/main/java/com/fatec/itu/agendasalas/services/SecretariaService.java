@@ -10,13 +10,14 @@ import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaResponseDTO;
 import com.fatec.itu.agendasalas.dto.secretariaDTO.SecretariaUpdateDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Secretaria;
-import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.MatriculaDuplicadaSecretariaException;
 import com.fatec.itu.agendasalas.exceptions.SecretariaNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.SecretariaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class SecretariaService {
@@ -41,7 +42,7 @@ public class SecretariaService {
 
     public SecretariaResponseDTO buscarSecretarioPorId(Long id){
         Secretaria secretaria = secretariaRepository.findById(id)
-            .orElseThrow(() -> new SecretariaNaoEncontradoException(id));
+            .orElseThrow(() -> new EntityNotFoundException("Secretaria com id " + id + " não encontrado"));
         return converterParaResponseDTO(secretaria);
     }
 
@@ -64,7 +65,7 @@ public class SecretariaService {
         secretaria.setMatricula(dto.matricula());
 
         Cargo cargo = cargoRepository.findByNome("SECRETARIA")
-            .orElseThrow(() -> new CargoNaoEncontradoException("SECRETARIA"));
+            .orElseThrow(() -> new EntityNotFoundException("Cargo de nome: SECRETARIA não encontrado"));
         secretaria.setCargo(cargo);
 
         secretariaRepository.save(secretaria);
@@ -95,7 +96,7 @@ public class SecretariaService {
 
     public void deletarSecretaria(Long id) {
         Secretaria secretaria = secretariaRepository.findById(id)
-            .orElseThrow(() -> new SecretariaNaoEncontradoException(id));
+            .orElseThrow(() -> new EntityNotFoundException("Secretaria com id " + id + " não encontrado"));
 
         secretariaRepository.delete(secretaria);
     }

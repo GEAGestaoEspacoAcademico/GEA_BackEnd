@@ -34,7 +34,7 @@ public class CoordenadorService {
     private EntityManager entityManager;
 
 	@Transactional
-	public Coordenador promoverParaCoordenador(CoordenadorCreationDTO dto) {
+	public CoordenadorResponseDTO promoverParaCoordenador(CoordenadorCreationDTO dto) {
 		Usuario usuario = usuarioRepository.findById(dto.coordenadorUsuarioId())
 				.orElseThrow(() -> new EntityNotFoundException("Usuário de id: " + dto.coordenadorUsuarioId() + " não encontrado"));
 		if (coordenadorRepository.existsById(usuario.getId())) {
@@ -51,8 +51,10 @@ public class CoordenadorService {
         .setParameter("registro", dto.registroCoordenacao())
         .executeUpdate();
 
-        return coordenadorRepository.findById(usuario.getId())
+		Coordenador coordenador = coordenadorRepository.findById(usuario.getId())
                 .orElseThrow(() -> new RuntimeException("Falha ao promover coordenador"));
+
+        return toResponseDTO(coordenador);
 	}
 
 	@Transactional(readOnly = true)

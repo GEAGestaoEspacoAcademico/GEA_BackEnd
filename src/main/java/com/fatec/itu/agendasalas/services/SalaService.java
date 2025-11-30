@@ -241,11 +241,11 @@ public class SalaService {
   public void atualizarQuantidade(Long salaId, Long recursoId,
       RecursoSalaUpdateQuantidadeDTO dto) {
     Sala sala = salaRepository.findById(salaId)
-        .orElseThrow(() -> new RuntimeException("Sala não encontrada!"));
+        .orElseThrow(() -> new EntityNotFoundException("Sala de id: " + salaId + " não encontrada"));
 
     RecursoSala linkParaAtualizar = sala.getRecursos().stream()
         .filter(rs -> rs.getRecurso().getId().equals(recursoId)).findFirst()
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado nesta sala!"));
+        .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + recursoId +  " não encontrado na sala " + sala.getNome()));
 
     linkParaAtualizar.setQuantidade(dto.quantidade());
 
@@ -254,7 +254,7 @@ public class SalaService {
   }
 
   public List<RecursoSalaListagemRecursosDTO> listarRecursosPorSala(Long id) {
-    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sala de id: " + id + " não encontrada"));
     List<RecursoSala> recursoNaSala = recursoSalaRepository.findBySalaId(salaExistente.getId());
     return recursoNaSala.stream()
         .map(recurso -> new RecursoSalaListagemRecursosDTO(

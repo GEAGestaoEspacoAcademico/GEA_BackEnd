@@ -23,6 +23,8 @@ import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class JanelasHorarioService {
 
@@ -56,14 +58,14 @@ public class JanelasHorarioService {
 
     public JanelasHorarioResponseDTO filtrarJanelaHorarioPeloID(Long id) {
         JanelasHorario janelasHorario = janelasHorarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Janela de Horário com esse id não foi encontrada"));
+                .orElseThrow(() ->  new EntityNotFoundException("Janela de Horário com id " + id + " não foi encontrada"));
         return transformarEmJanelasHorarioResponseDTO(janelasHorario);
     }
 
     @Transactional
     public JanelasHorarioResponseDTO atualizarJanelasHorario(Long id, JanelasHorarioUpdateDTO janelasHorarioUpdateDTO) {
         JanelasHorario janelasHorarioAntiga = janelasHorarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Janela de Horário com esse id não foi encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Janela de Horário com id " + id + " não foi encontrada"));
         janelasHorarioAntiga.setHoraInicio(janelasHorarioUpdateDTO.horaInicio());
         janelasHorarioAntiga.setHoraFim(janelasHorarioUpdateDTO.horaFim());
         JanelasHorario janelasHorarioAtualizada = janelasHorarioRepository.save(janelasHorarioAntiga);

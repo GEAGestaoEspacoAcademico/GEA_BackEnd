@@ -73,7 +73,21 @@ public class RestExceptionHandler {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(RegistroCoordenacaoDuplicadoException.class)
+    public ResponseEntity<ApiError> handleRegistroCoordenacaoDuplicado(RegistroCoordenacaoDuplicadoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
 
+    @ExceptionHandler(RegistroProfessorDuplicadoException.class)
+    public ResponseEntity<ApiError> handleRegistroProfessorDuplicado(RegistroProfessorDuplicadoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    //Erros de Não autorizado (401)
+    @ExceptionHandler(JWTNaoEValidoException.class)
+    public ResponseEntity<ApiError> handleJWTNaoEValido(JWTNaoEValidoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    }
 
 
     //Erros de bad request (400)
@@ -126,15 +140,18 @@ public class RestExceptionHandler {
          return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleAll(Exception ex, HttpServletRequest request) {
-         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
-    }
-
+   
     //Erros de recursos não encontrados (404)
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiError> handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest request) {
        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
+
+    //Erros de servidor (500)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleAll(Exception ex, HttpServletRequest request) {
+         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+    }
+
 
 }
