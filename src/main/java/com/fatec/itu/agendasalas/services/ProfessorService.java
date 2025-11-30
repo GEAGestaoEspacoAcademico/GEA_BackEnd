@@ -149,8 +149,8 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
         Long professorId,
         ProfessorUpdateDTO dto) {
 
-        Professor professor = professorRepository.findById(professorId)
-                .orElseThrow(() -> new ProfessorNaoEncontradoException(professorId));
+        Professor professor = professorRepository.findById(professorId) 
+                .orElseThrow(() -> new EntityNotFoundException("Professor de id: " + professorId + " não encontrado"));
         
         if (dto.nome() != null) professor.setNome(dto.nome());
         if (dto.email() != null) professor.setEmail(dto.email());
@@ -163,7 +163,7 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
 
         if (dto.cursoParaVirarCoordenador() != null) {
             Curso curso = cursoRepository.findBySigla(dto.cursoParaVirarCoordenador())
-                .orElseThrow(()-> new CursoNaoEncontradoException(dto.cursoParaVirarCoordenador()));
+                .orElseThrow(()-> new EntityNotFoundException("Curso de id: " + dto.cursoParaVirarCoordenador() + " não encontrado"));
             Coordenador coordenador = coordenadorRepository.findById(professor.getId())
             .orElseGet(() -> {
                 Coordenador c = new Coordenador(professor.getId(), professor.getLogin(), professor.getEmail(), professor.getNome(), professor.getRegistroProfessor());

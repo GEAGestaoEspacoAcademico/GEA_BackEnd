@@ -22,9 +22,6 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
-import com.fatec.itu.agendasalas.exceptions.JanelasHorarioNaoEncontradaException;
-import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
-import com.fatec.itu.agendasalas.exceptions.usuarios.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
@@ -67,11 +64,11 @@ public class AgendamentoEventoService {
         @Transactional
         public void criar(AgendamentoEventoCreationDTO dto) {
                 Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
-                                () -> new RuntimeException("Usuário não encontrado com ID: "
+                                () -> new EntityNotFoundException("Usuário não encontrado com ID: "
                                                 + dto.usuarioId()));
 
                 Sala sala = salaRepository.findById(dto.salaId())
-                                .orElseThrow(() -> new RuntimeException(
+                                .orElseThrow(() -> new EntityNotFoundException(
                                                 "Sala não encontrada com ID: " + dto.salaId()));
 
                 Evento evento = eventoRepository.findByNome(dto.eventoNome())
@@ -160,7 +157,7 @@ public class AgendamentoEventoService {
         Recorrencia recorrenciaSalva = recorrenciaRepository.save(recorrencia);
 
         Usuario usuario = usuarioRepository.findById(agendamentoEventoCreationDTO.usuario())
-            .orElseThrow(()-> new UsuarioNaoEncontradoException(agendamentoEventoCreationDTO.usuario()));
+            .orElseThrow(()-> new EntityNotFoundException("Usuário de id: " + agendamentoEventoCreationDTO.usuario() + " não encontrado"));
        
         Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento())
             .orElseThrow(()-> new EntityNotFoundException("Evento de nome: " + agendamentoEventoCreationDTO.nomeEvento() + " não encontrado"));
@@ -171,7 +168,7 @@ public class AgendamentoEventoService {
         for(DEVAgendamentoEventoDiasAgendadosDTO agendamentoDia :  agendamentoEventoCreationDTO.diasAgendados()){
 
             for(Long janelaId : agendamentoDia.janelasHorarioId()){
-                JanelasHorario janela = janelasHorarioRepository.findById(janelaId).orElseThrow(()-> new JanelasHorarioNaoEncontradaException(janelaId));
+                JanelasHorario janela = janelasHorarioRepository.findById(janelaId).orElseThrow(()-> new EntityNotFoundException("Janela de horário de id: " + janelaId + " não encontrada"));
                 AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), agendamentoDia.dia(), janelaId);
                 if(agendamentoAulaConflitante!=null){
                     //aqui preciso cancelar a aula, por enquanto vou deixar para excluir

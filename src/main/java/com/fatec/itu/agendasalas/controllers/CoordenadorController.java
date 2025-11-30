@@ -1,9 +1,8 @@
 package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,13 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorCreationDTO;
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorResponseDTO;
-import com.fatec.itu.agendasalas.entity.Coordenador;
-import com.fatec.itu.agendasalas.exceptions.CoordenadorNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.RegistroCoordenacaoDuplicadoException;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.services.CoordenadorService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,17 +63,18 @@ public class CoordenadorController {
         if (coordenadorRepository.existsByRegistroCoordenacao(dto.registroCoordenacao())) {
             throw new RegistroCoordenacaoDuplicadoException("Registro de coordenação já existe");
         }
-        Coordenador coordenador = coordenadorService.promoverParaCoordenador(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDTO(coordenador));
+        
+        return ResponseEntity.created(null).body(coordenadorService.promoverParaCoordenador(dto));
+       
     }
 
 
     @Operation(summary = "Lista todos os coordenadores existentes")
     @GetMapping
     // @PreAuthorize("hasRole('ADMIN')")
-    public List<CoordenadorResponseDTO> listar() {
-        return coordenadorService.listarCoordenadores().stream().map(this::toResponseDTO)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<CoordenadorResponseDTO>> listar() {
+        return ResponseEntity.ok(coordenadorService.listarCoordenadores());
+        
     }
 
 
@@ -91,10 +91,8 @@ public class CoordenadorController {
     // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoordenadorResponseDTO> buscarPorId(
         @Parameter(description = "ID do coordenador") @PathVariable Long coordenadorId) {
-        Coordenador coordenador = coordenadorService.buscarPorId(
-                coordenadorId).orElseThrow(
-                () -> new CoordenadorNaoEncontradoException("Coordenador não encontrado"));
-        return ResponseEntity.ok(toResponseDTO(coordenador));
+       
+        return ResponseEntity.ok(coordenadorService.buscarPorId(coordenadorId));
     }
 
 
@@ -111,10 +109,7 @@ public class CoordenadorController {
     // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CoordenadorResponseDTO> buscarPorRegistro(
         @Parameter(description = "Registro do coordenador") @PathVariable Long registro) {
-        Coordenador coordenador =
-                coordenadorRepository.findByRegistroCoordenacao(registro).orElseThrow(
-                        () -> new CoordenadorNaoEncontradoException("Coordenador não encontrado"));
-        return ResponseEntity.ok(toResponseDTO(coordenador));
+            return ResponseEntity.ok(coordenadorService.buscarPorRegistro(registro));
     }
 
 
@@ -132,8 +127,4 @@ public class CoordenadorController {
     }
 
 
-    private CoordenadorResponseDTO toResponseDTO(Coordenador c) {
-        return new CoordenadorResponseDTO(c.getId(), c.getNome(), c.getEmail(),
-                c.getRegistroCoordenacao(), c.getCargo() != null ? c.getCargo().getId() : null);
-    }
 }
