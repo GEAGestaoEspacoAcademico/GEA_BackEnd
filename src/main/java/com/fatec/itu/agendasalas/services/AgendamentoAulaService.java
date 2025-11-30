@@ -25,7 +25,9 @@ import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
+import com.fatec.itu.agendasalas.exceptions.DataNoPassadoException;
 import com.fatec.itu.agendasalas.exceptions.DisciplinaNaoEncontradaException;
+import com.fatec.itu.agendasalas.exceptions.JanelaHorarioPassouException;
 import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
@@ -38,20 +40,20 @@ import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 @Service
 public class AgendamentoAulaService {
 
-        @Autowired
-        private AgendamentoAulaRepository agendamentoAulaRepository;
+    @Autowired
+    private AgendamentoAulaRepository agendamentoAulaRepository;
 
-        @Autowired
-        private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-        @Autowired
-        private SalaRepository salaRepository;
+    @Autowired
+    private SalaRepository salaRepository;
 
-        @Autowired
-        private DisciplinaRepository disciplinaRepository;
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
 
-        @Autowired
-        private JanelasHorarioRepository janelasHorarioRepository;
+    @Autowired
+    private JanelasHorarioRepository janelasHorarioRepository;
 
     @Autowired
     private RecorrenciaRepository recorrenciaRepository;
@@ -105,6 +107,8 @@ public class AgendamentoAulaService {
         .map(this::converterParaResponseDTO)
         .toList();
     }
+
+    
 
     @Transactional
     //Esse método se refere ao Agendar Aula pelo AD
@@ -323,6 +327,14 @@ public class AgendamentoAulaService {
                 .orElseThrow(() -> new RuntimeException("Disciplina não encontrada com ID: " + dto.disciplinaId()));
 
         JanelasHorario janelasHorario = janelasHorarioRepository.findById(dto.janelasHorarioId()).orElseThrow(()-> new RuntimeException("Janela de horários inválida"));
+
+        if(agendamentoConflitoService.dataNoPassado(dto.data())){
+            throw new DataNoPassadoException(usuario.getNome(), dto.data());
+        }
+
+        if(agendamentoConflitoService.janelaHorarioPassou(dto.data(), janelasHorario.getHoraInicio(), janelasHorario.getHoraInicio())){
+            throw new JanelaHorarioPassouException(dto.data(), janelasHorario.getHoraInicio(), janelasHorario.getHoraFim()); 
+        }
 
 
         AgendamentoAula agendamento = new AgendamentoAula();

@@ -19,7 +19,6 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAu
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComRecorrenciaDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
-import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
@@ -60,14 +59,10 @@ public class AgendamentoAulaController {
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
                 examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
-        try {
+        
             agendamentoAulaService.criar(dto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (AgendamentoComHorarioIndisponivelException a) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+     
     }
 
     @Operation(summary="Cria um novo agendamento de aula em um dia específico")
