@@ -6,6 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fatec.itu.agendasalas.exceptions.janelasHorario.FormatoDataInvalidoException;
+import com.fatec.itu.agendasalas.exceptions.janelasHorario.ListaDatasInvalidaException;
+import com.fatec.itu.agendasalas.exceptions.janelasHorario.SalaIdObrigatorioException;
+
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,11 +28,20 @@ public class RestExceptionHandler {
     }
 
 
+
+    //Erros de conflito (409)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<ApiError> handleEmailJaCadastrado(EmailJaCadastradoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+
+    //Erros de bad request (400)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
@@ -43,8 +56,38 @@ public class RestExceptionHandler {
          return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(FormatoDataInvalidoException.class)
+    public ResponseEntity<ApiError> handleFormatoDataInvalido(FormatoDataInvalidoException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ListaDatasInvalidaException.class)
+    public ResponseEntity<ApiError> handleListaDatasInvalida(ListaDatasInvalidaException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(SalaIdObrigatorioException.class)
+    public ResponseEntity<ApiError> handleSalaIdObrigatorio(SalaIdObrigatorioException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(AgendamentoComHorarioIndisponivelException.class)
+    public ResponseEntity<ApiError> handleAgendamentoComHorarioIndisponivel(AgendamentoComHorarioIndisponivelException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(AgendamentoRecorrenteComDataInicialAposADataFinalException.class)
+    public ResponseEntity<ApiError> handleAgendamentoRecorrenteComDataInicialAposADataFinal(AgendamentoRecorrenteComDataInicialAposADataFinalException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(SenhasNaoConferemException.class)
+    public ResponseEntity<ApiError> handleSenhasNaoConfere(SenhasNaoConferemException ex, HttpServletRequest request){
+         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(JanelaHorarioPassouException.class)
-    public ResponseEntity<ApiError> handleJanelaHorario(JanelaHorarioPassouException ex, HttpServletRequest request){
+    public ResponseEntity<ApiError> handleJanelaHorarioPassou(JanelaHorarioPassouException ex, HttpServletRequest request){
          return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
