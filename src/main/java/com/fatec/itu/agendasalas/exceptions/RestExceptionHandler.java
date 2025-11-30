@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.fatec.itu.agendasalas.exceptions.janelasHorario.FormatoDataInvalidoException;
 import com.fatec.itu.agendasalas.exceptions.janelasHorario.ListaDatasInvalidaException;
 import com.fatec.itu.agendasalas.exceptions.janelasHorario.SalaIdObrigatorioException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularCursoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplinaException;
 
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +42,38 @@ public class RestExceptionHandler {
     public ResponseEntity<ApiError> handleEmailJaCadastrado(EmailJaCadastradoException ex, HttpServletRequest request) {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
+
+    @ExceptionHandler(MatriculaDuplicadaSecretariaException.class)
+    public ResponseEntity<ApiError> handleMatriculaDuplicadaSecretaria(MatriculaDuplicadaSecretariaException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(RecursoJaAdicionadoNaSalaException.class)
+    public ResponseEntity<ApiError> handleRecursoJaAdicionadoNaSala(RecursoJaAdicionadoNaSalaException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(FalhaAoDeletarAgendamentoException.class)
+    public ResponseEntity<ApiError> handleFalhaAoDeletarAgendamento(FalhaAoDeletarAgendamentoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(FalhaAoDesvincularCursoException.class)
+    public ResponseEntity<ApiError> handleFalhaAoDesvincularCurso(FalhaAoDesvincularCursoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(FalhaAoDesvincularDisciplinaException.class)
+    public ResponseEntity<ApiError> handleFalhaAoDesvincularDisciplina(FalhaAoDesvincularDisciplinaException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ConflitoAoAgendarException.class)
+    public ResponseEntity<ApiError> handleConflitoAoAgendar(ConflitoAoAgendarException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+
 
 
     //Erros de bad request (400)
