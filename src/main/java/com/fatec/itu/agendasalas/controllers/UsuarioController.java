@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,19 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.ResetSenhaResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResetSenhaEmailDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.services.PasswordResetEmailService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -109,7 +110,7 @@ public class UsuarioController {
             @RequestBody UsuarioAlterarSenhaDTO dto) {
         usuarioService.alterarSenha(usuarioId, dto);
         return ResponseEntity.noContent().build();   
-     }
+    }
 
     
     @Operation(summary = "Realiza um pedido de redefinição de senha que será enviada para o e-mail do usuário")
@@ -127,7 +128,7 @@ public class UsuarioController {
                 schema=@Schema(implementation=UsuarioResetSenhaEmailDTO.class)
             )
         )
-        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto){
+        @Valid @RequestBody UsuarioResetSenhaEmailDTO dto) throws MessagingException{
     
         return ResponseEntity.ok(passwordResetEmailService.solicitarResetDeSenha(dto.email()));
     }
@@ -169,12 +170,16 @@ public class UsuarioController {
 
     @Operation(summary = "Redefine a senha do usuário usando o token recebido por e-mail")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Senha redefinida com sucesso"),
-        @ApiResponse(responseCode = "400", description = "Token inválido"),
-        @ApiResponse(responseCode = "400", description = "Token expirado")
-    })
+        @ApiResponse(responseCode = "200", description = "Senha redefinida com sucesso", content = @Content(mediaType = "application/json",
+        schema=@Schema(implementation = ResetSenhaResponseDTO.class))),
+          
+        @ApiResponse(responseCode = "400", description = "Token inválido", content = @Content(mediaType = "application/json",
+        schema=@Schema(implementation = ResetSenhaResponseDTO.class)))
+        }
+        
+    )
     @PatchMapping("alterarSenha")
-    public ResponseEntity<String> alterarSenha(
+    public ResponseEntity<ResetSenhaResponseDTO> alterarSenha(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Token de redefinição de senha e nova senha",
             required = true,
@@ -183,11 +188,11 @@ public class UsuarioController {
             )
             )
         @RequestBody UsuarioRedefinirSenhaDTO dto){
-        String result = passwordResetEmailService.validarPasswordResetToken(dto.token());
-        if(result!=null){
-            return ResponseEntity.badRequest().body(result);
+        boolean result = passwordResetEmailService.validarPasswordResetToken(dto.token());
+        if(!result){
+            return ResponseEntity.badRequest().body(new ResetSenhaResponseDTO("Token inválido"));
         }
         usuarioService.redefinirSenha(dto);
-        return ResponseEntity.ok("Senha redefinida com sucesso");
+        return ResponseEntity.ok(new ResetSenhaResponseDTO("Senha redefinida com sucesso"));
     }
 }

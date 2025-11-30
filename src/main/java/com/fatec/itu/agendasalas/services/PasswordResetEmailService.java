@@ -11,6 +11,8 @@ import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class PasswordResetEmailService {
  
@@ -31,7 +33,7 @@ public class PasswordResetEmailService {
         return token;
     }
 
-    public ResetSenhaResponseDTO solicitarResetDeSenha(String email) {
+    public ResetSenhaResponseDTO solicitarResetDeSenha(String email) throws MessagingException {
         
         Usuario usuario = usuarioService.buscarUsuarioPeloEmail(email);
         if(usuario!=null){
@@ -45,16 +47,12 @@ public class PasswordResetEmailService {
         return new ResetSenhaResponseDTO("Se o seu e-mail existir, enviaremos um link de confirmação");
     }
 
-    public String validarPasswordResetToken(String token){
+    public boolean validarPasswordResetToken(String token){
         final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
-        if(!isTokenExistente(passToken)){
-            return "Token inválido";
+        if(!isTokenExistente(passToken) || isTokenExpirado(passToken)){
+            return false;
         }
-
-        if(isTokenExpirado(passToken)){
-            return "Token expirado";
-        }
-        return null;
+        return true;
     } 
 
     private boolean isTokenExistente(PasswordResetToken passToken){
