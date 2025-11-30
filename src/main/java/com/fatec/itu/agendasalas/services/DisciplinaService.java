@@ -13,6 +13,8 @@ import com.fatec.itu.agendasalas.exceptions.CursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class DisciplinaService {
 
@@ -55,14 +57,14 @@ public class DisciplinaService {
 
     public DisciplinaListDTO buscarPorId(Long id) {
         Disciplina disciplina = disciplinaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
         return new DisciplinaListDTO(disciplina.getId(), disciplina.getNome(),
                 disciplina.getSemestre(), disciplina.getCurso().getNomeCurso());
     }
 
     public DisciplinaListDTO atualizar(Long id, DisciplinaCreateDTO novaDisciplina) {
         Disciplina atual = disciplinaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
         atual.setNome(novaDisciplina.disciplinaNome());
         atual.setSemestre(novaDisciplina.disciplinaSemestre());
         atual.setCurso(cursoRepository.findById(novaDisciplina.cursoId()).orElseThrow());
@@ -75,14 +77,14 @@ public class DisciplinaService {
 
     public void excluir(Long id) {
         if (!disciplinaRepository.existsById(id)) {
-            throw new RuntimeException("Disciplina não encontrada");
+            throw new EntityNotFoundException("Disciplina de id: " + id + " não encontrada");
         }
         disciplinaRepository.deleteById(id);
     }
 
     public Disciplina findById(Long id) {
         return disciplinaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
+            .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
     }
 
    

@@ -16,6 +16,8 @@ import com.fatec.itu.agendasalas.entity.TipoRecurso;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.TipoRecursoRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class RecursoService {
   @Autowired
@@ -33,7 +35,7 @@ public class RecursoService {
   } 
 
   public RecursoResponseDTO buscarPorId(Long id) {
-    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + id + " não encontrado"));
     return transformarRecursoEmRecursoResponseDTO(recurso);
   }
   
@@ -47,7 +49,7 @@ public class RecursoService {
   public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
     
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-          .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
 
       Recurso novoRecurso = new Recurso(recursoDTO.recursoNome(), tipo);
       Recurso recursoSalvo = recursoRepository.save(novoRecurso);
@@ -58,7 +60,7 @@ public class RecursoService {
   @Transactional
   public RecursoCompletoDTO atualizar(Long id, RecursoResumidoDTO recursoDTO) {
       Recurso recursoExistente = recursoRepository.findById(id)
-          .orElseThrow(() -> new RuntimeException("Recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + id + " não encontrado"));
 
     
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())

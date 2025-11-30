@@ -106,7 +106,7 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
     /********* Lista por ID *********/
     public ProfessorResponseDTO buscarPorId(Long id) {
         return toResponseDTO(professorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado")));
+                .orElseThrow(() -> new EntityNotFoundException("Professor de " + id + " não encontrado")));
     }
 
     public List<ProfessorResponseDTO> listarProfessores() {

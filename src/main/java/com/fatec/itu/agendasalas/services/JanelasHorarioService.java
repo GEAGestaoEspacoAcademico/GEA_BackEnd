@@ -151,9 +151,6 @@ public class JanelasHorarioService {
                 .toList();
     }
 
-    public List<JanelasHorarioResponseDTO> buscarDisponiveisPorDataDTO(LocalDate data) {
-        throw new UnsupportedOperationException("Use buscarDisponiveisPorDataDTO(data, salaId) com salaId");
-    }
 
     public List<JanelasHorarioResponseDTO> buscarDisponiveisPorDataDTO(LocalDate data, Long salaId) {
         List<JanelasHorario> lista = buscarDisponiveisPorData(data, salaId);

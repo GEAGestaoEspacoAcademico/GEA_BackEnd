@@ -24,7 +24,7 @@ import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.exceptions.JanelasHorarioNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
-import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.UsuarioNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
@@ -32,6 +32,8 @@ import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AgendamentoEventoService {
@@ -161,10 +163,10 @@ public class AgendamentoEventoService {
             .orElseThrow(()-> new UsuarioNaoEncontradoException(agendamentoEventoCreationDTO.usuario()));
        
         Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento())
-            .orElseThrow(()-> new RuntimeException("EVENTO NAO ENCONTRADO"));
+            .orElseThrow(()-> new EntityNotFoundException("Evento de nome: " + agendamentoEventoCreationDTO.nomeEvento() + " não encontrado"));
         
         Sala sala = salaRepository.findById(agendamentoEventoCreationDTO.localId())
-            .orElseThrow(()-> new SalaNaoEncontradaException(agendamentoEventoCreationDTO.localId()));
+            .orElseThrow(()-> new EntityNotFoundException("Sala de id: " + agendamentoEventoCreationDTO.localId() + " não encontrada"));
 
         for(DEVAgendamentoEventoDiasAgendadosDTO agendamentoDia :  agendamentoEventoCreationDTO.diasAgendados()){
 
