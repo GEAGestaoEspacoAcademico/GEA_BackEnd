@@ -339,6 +339,10 @@ public class AgendamentoAulaService {
         
         return converterParaResponseDTO(saved);
     }
+
+    public List<AgendamentoAula> filtrarAulasDeDeterminadaRecorrencia(Recorrencia recorrencia) {
+        return agendamentoAulaRepository.findByRecorrenciaId(recorrencia.getId());
+    }
 }
 
 

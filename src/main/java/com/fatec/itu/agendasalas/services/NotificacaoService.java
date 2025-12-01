@@ -2,11 +2,15 @@ package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
 import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
@@ -14,7 +18,11 @@ import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Notificacao;
+import com.fatec.itu.agendasalas.entity.NotificacaoEmail;
+import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
@@ -32,10 +40,53 @@ public class NotificacaoService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private DisciplinaService disciplinaService;
+
+    @Autowired
+    private AgendamentoAulaService agendamentoAulaService;
     
     public NotificacaoService(NotificacaoRepository notificacaoRepository) {
         this.notificacaoRepository = notificacaoRepository;
     }
+
+    public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas){
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null && auth.getPrincipal() instanceof Usuario){
+            Usuario remetente = (Usuario) auth.getPrincipal();
+        }
+
+        List<AgendamentoAula> aulas = agendamentoAulaService.filtrarAulasDeDeterminadaRecorrencia(recorrenciaAulas);
+        Optional<LocalDate> diaInicial = aulas.stream()
+            .map(AgendamentoAula::getData)
+            .min(Comparator.naturalOrder());
+
+        Optional<LocalDate> diaFinal = aulas.stream()
+            .map(AgendamentoAula::getData)
+            .max(Comparator.naturalOrder());
+
+        List<JanelasHorario> janelasHorarios = aulas.stream()
+            .map(AgendamentoAula::getJanelasHorario)
+            .toList();
+
+
+        Usuario destinatario = aula.getUsuario();
+        String assunto = "Agendamento de aula";
+        String mensagem = "Foi agendada uma aula de: " +
+        aula.getDisciplina().getNome() + 
+        " no dia " + aula.getData().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + 
+ 
+    }
+
+    public void notificarAoAlterarAgendamentoAula(AgendamentoAula aula){
+        
+        Usuario destinatario = aula.getUsuario();
+        NotificacaoEmail notificacao = new NotificacaoEmail();
+
+    }
+
+    
 
     @Transactional(readOnly = true)
     public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
