@@ -133,6 +133,9 @@ public class AgendamentoAulaService {
             if(agendamentoConflitoService.existeAgendamentoNoHorario(sala.getId(), data, janela.getId())){
                 throw new ConflitoAoAgendarException(sala.getNome(), data, janela.getHoraInicio(), janela.getHoraFim());
             }
+            
+            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(data, janela.getId(), usuario.getId()))
+
             AgendamentoAula agendamento = new AgendamentoAula();
             agendamento.setUsuario(usuario);
             agendamento.setSala(sala);
