@@ -2,7 +2,7 @@ package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -139,7 +139,7 @@ public class EmailSenderService {
 
     }
 
-    public void enviarNotificacaoAgendamento(LocalDate diaInicial, LocalDate diaFinal, List<JanelasHorario> janelas, Disciplina disciplina, Usuario remetente, Usuario destinatario) throws MessagingException{
+    public void enviarNotificacaoAgendamento(LocalDate diaInicial, LocalDate diaFinal, Set<JanelasHorario> janelas, Disciplina disciplina, Usuario remetente, Usuario destinatario, String diaDaSemana) throws MessagingException{
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -154,13 +154,13 @@ public class EmailSenderService {
         String dataInicialFormatada = diaInicial.format(formatter);
         String dataFinalFormatada = diaFinal.format(formatter);
 
-        String mensagem = montarMensagemAgendamento(disciplina, dataInicialFormatada, dataFinalFormatada, horariosFormatados, remetente, destinatario);
+        String mensagem = montarMensagemAgendamento(disciplina, dataInicialFormatada, dataFinalFormatada, horariosFormatados, remetente, destinatario, diaDaSemana);
         helper.setText(mensagem, true);
         mailSender.send(message);
       
     }
 
-    private String formatarHorarios(List<JanelasHorario> janelasHorarios){
+    private String formatarHorarios(Set<JanelasHorario> janelasHorarios){
         StringBuilder horarios = new StringBuilder();
         
 
@@ -168,15 +168,18 @@ public class EmailSenderService {
             horarios.append(j.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")))
             .append("-")
             .append(j.getHoraFim().format(DateTimeFormatter.ofPattern("HH:mm")))
-            .append("\n");
+            .append("<br>");
         });
+        if(horarios.length()>0){
+            horarios.setLength(horarios.length()-4);
+        }
 
         return horarios.toString();
     }
  
     private String montarMensagemAgendamento(Disciplina disciplina, String dataInicial,
                                          String dataFinal, String horariosFormatados,
-                                         Usuario remetente, Usuario destinatario) {
+                                         Usuario remetente, Usuario destinatario, String diaDaSemana) {
     
     // Obter informações da disciplina (ajuste conforme seu modelo)
     String nomeProfessor = disciplina.getProfessor() != null ? 
@@ -211,7 +214,7 @@ public class EmailSenderService {
                     .header {
                         text-align: center;
                         padding-bottom: 20px;
-                        border-bottom: 2px solid #4CAF50;
+                        border-bottom: 2px solid #F21E18;
                         margin-bottom: 25px;
                     }
                     .header h3 {
@@ -222,7 +225,7 @@ public class EmailSenderService {
                         margin-bottom: 25px;
                     }
                     .section-title {
-                        background-color: #4CAF50;
+                        background-color: #F21E18;
                         color: white;
                         padding: 10px 15px;
                         border-radius: 5px;
@@ -294,12 +297,17 @@ public class EmailSenderService {
                         <div class="info-grid">
                             <div class="label">PERÍODO:</div>
                             <div class="value">%s ---- %s</div>
+                            <div class="label">DIA DE AULA:</div>
+                            <div class="value>%s</div>
                         </div>
+
+            
                         
                         <div class="label">HORÁRIOS:</div>
                         <div class="horarios-container">
                             %s
                         </div>
+
                     </div>
                     
                     <div class="assinatura">
@@ -321,6 +329,7 @@ public class EmailSenderService {
                 nomeCurso,
                 dataInicial,
                 dataFinal,
+                diaDaSemana,
                 horariosFormatados,
                 nomeRemetente,
                 LocalDate.now().getYear()

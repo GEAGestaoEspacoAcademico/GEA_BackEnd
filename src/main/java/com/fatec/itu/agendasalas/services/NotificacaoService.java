@@ -3,11 +3,12 @@ package com.fatec.itu.agendasalas.services;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,19 +62,20 @@ public class NotificacaoService {
   
 
     public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas) throws MessagingException{
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        Usuario remetente = null;
-        if(auth != null && auth.getPrincipal() instanceof Usuario){
-            remetente = (Usuario) auth.getPrincipal();
-        }
+        //var auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        //if(auth != null && auth.getPrincipal() instanceof Usuario){
+      //      remetente = (Usuario) auth.getPrincipal();
+      //  }
 
         List<AgendamentoAula> aulas = agendamentoAulaRepository.findByRecorrenciaId(recorrenciaAulas.getId());
         if(aulas.isEmpty()){
             throw new ListaDeAulasVaziaNotificacaoException();
         }
-        Usuario destinatario = aulas.get(0).getUsuario();
+        Usuario destinatario = usuarioRepository.findById(1L).orElse(null);
         Disciplina disciplina = aulas.get(0).getDisciplina();
-
+        String diaDaSemana = aulas.get(0).getDiaDaSemana();
+        Usuario remetente = destinatario;
         LocalDate diaInicial = aulas.stream()
             .map(AgendamentoAula::getData)
             .min(Comparator.naturalOrder())
@@ -84,12 +86,13 @@ public class NotificacaoService {
             .max(Comparator.naturalOrder())
             .orElseThrow(() -> new RuntimeException());
 
-        List<JanelasHorario> janelasHorarios = aulas.stream()
+        Set<JanelasHorario> janelasHorarios = aulas.stream()
             .map(AgendamentoAula::getJanelasHorario)
-            .toList();
+            .sorted(Comparator.comparing(JanelasHorario::getHoraInicio))
+            .collect(Collectors.toCollection(LinkedHashSet::new));
 
         
-        emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario);
+        emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario, diaDaSemana);
         
         
  
