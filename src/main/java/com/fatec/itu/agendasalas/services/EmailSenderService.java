@@ -298,7 +298,7 @@ public class EmailSenderService {
                             <div class="label">PERÍODO:</div>
                             <div class="value">%s ---- %s</div>
                             <div class="label">DIA DE AULA:</div>
-                            <div class="value>%s</div>
+                            <div class="value">%s</div>
                         </div>
 
             
