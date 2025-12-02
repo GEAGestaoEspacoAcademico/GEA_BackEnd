@@ -2,16 +2,15 @@ package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
 import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
 import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
@@ -19,15 +18,19 @@ import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Notificacao;
 import com.fatec.itu.agendasalas.entity.NotificacaoEmail;
 import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.ListaDeAulasVaziaNotificacaoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.NotificacaoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class NotificacaoService {
@@ -45,37 +48,49 @@ public class NotificacaoService {
     private DisciplinaService disciplinaService;
 
     @Autowired
+    private EmailSenderService emailSenderService;
+
+    @Autowired
     private AgendamentoAulaService agendamentoAulaService;
     
     public NotificacaoService(NotificacaoRepository notificacaoRepository) {
         this.notificacaoRepository = notificacaoRepository;
     }
 
-    public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas){
+  
+
+    public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas) throws MessagingException{
         var auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario remetente = null;
         if(auth != null && auth.getPrincipal() instanceof Usuario){
-            Usuario remetente = (Usuario) auth.getPrincipal();
+            remetente = (Usuario) auth.getPrincipal();
         }
 
         List<AgendamentoAula> aulas = agendamentoAulaService.filtrarAulasDeDeterminadaRecorrencia(recorrenciaAulas);
-        Optional<LocalDate> diaInicial = aulas.stream()
-            .map(AgendamentoAula::getData)
-            .min(Comparator.naturalOrder());
+        if(aulas.isEmpty()){
+            throw new ListaDeAulasVaziaNotificacaoException();
+        }
+        Usuario destinatario = aulas.get(0).getUsuario();
+        Disciplina disciplina = aulas.get(0).getDisciplina();
 
-        Optional<LocalDate> diaFinal = aulas.stream()
+        LocalDate diaInicial = aulas.stream()
             .map(AgendamentoAula::getData)
-            .max(Comparator.naturalOrder());
+            .min(Comparator.naturalOrder())
+            .orElseThrow(() -> new RuntimeException());
+
+        LocalDate diaFinal = aulas.stream()
+            .map(AgendamentoAula::getData)
+            .max(Comparator.naturalOrder())
+            .orElseThrow(() -> new RuntimeException());
 
         List<JanelasHorario> janelasHorarios = aulas.stream()
             .map(AgendamentoAula::getJanelasHorario)
             .toList();
 
-
-        Usuario destinatario = aula.getUsuario();
-        String assunto = "Agendamento de aula";
-        String mensagem = "Foi agendada uma aula de: " +
-        aula.getDisciplina().getNome() + 
-        " no dia " + aula.getData().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + 
+        
+        emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario);
+        
+        
  
     }
 

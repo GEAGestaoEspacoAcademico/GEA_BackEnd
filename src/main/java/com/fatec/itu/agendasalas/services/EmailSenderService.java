@@ -1,11 +1,17 @@
 package com.fatec.itu.agendasalas.services;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Usuario;
 
 import jakarta.mail.MessagingException;
@@ -132,5 +138,194 @@ public class EmailSenderService {
         mailSender.send(message);
 
     }
+
+    public void enviarNotificacaoAgendamento(LocalDate diaInicial, LocalDate diaFinal, List<JanelasHorario> janelas, Disciplina disciplina, Usuario remetente, Usuario destinatario) throws MessagingException{
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+        helper.setTo(destinatario.getEmail());
+        helper.setFrom(hostEmail);
+        helper.setSubject("Agendamento de aula");
+
+ 
+        String horariosFormatados = formatarHorarios(janelas);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String dataInicialFormatada = diaInicial.format(formatter);
+        String dataFinalFormatada = diaFinal.format(formatter);
+
+        String mensagem = montarMensagemAgendamento(disciplina, dataInicialFormatada, dataFinalFormatada, horariosFormatados, remetente, destinatario);
+        helper.setText(mensagem, true);
+        mailSender.send(message);
+      
+    }
+
+    private String formatarHorarios(List<JanelasHorario> janelasHorarios){
+        StringBuilder horarios = new StringBuilder();
+        
+
+        janelasHorarios.forEach((j) -> {
+            horarios.append(j.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm")))
+            .append("-")
+            .append(j.getHoraFim().format(DateTimeFormatter.ofPattern("HH:mm")))
+            .append("\n");
+        });
+
+        return horarios.toString();
+    }
+ 
+    private String montarMensagemAgendamento(Disciplina disciplina, String dataInicial,
+                                         String dataFinal, String horariosFormatados,
+                                         Usuario remetente, Usuario destinatario) {
+    
+    // Obter informações da disciplina (ajuste conforme seu modelo)
+    String nomeProfessor = disciplina.getProfessor() != null ? 
+                          disciplina.getProfessor().getNome() : "Não informado";
+    String nomeCurso = disciplina.getCurso() != null ? 
+                      disciplina.getCurso().getNomeCurso() : "Não informado";
+    String nomeRemetente = remetente != null ? remetente.getNome() : "Sistema";
+
+    return """
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #333;
+                        margin: 0;
+                        padding: 20px;
+                        background-color: #f8f9fa;
+                    }
+                    .email-container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background-color: white;
+                        padding: 30px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    }
+                    .header {
+                        text-align: center;
+                        padding-bottom: 20px;
+                        border-bottom: 2px solid #4CAF50;
+                        margin-bottom: 25px;
+                    }
+                    .header h3 {
+                        color: #2c3e50;
+                        margin: 0;
+                    }
+                    .section {
+                        margin-bottom: 25px;
+                    }
+                    .section-title {
+                        background-color: #4CAF50;
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 5px;
+                        margin-bottom: 15px;
+                        font-weight: bold;
+                    }
+                    .info-grid {
+                        display: grid;
+                        grid-template-columns: 150px 1fr;
+                        gap: 10px;
+                        margin-bottom: 10px;
+                    }
+                    .label {
+                        font-weight: bold;
+                        color: #555;
+                    }
+                    .value {
+                        color: #333;
+                    }
+                    .horarios-container {
+                        background-color: #f8f9fa;
+                        padding: 15px;
+                        border-radius: 5px;
+                        border-left: 4px solid #2196F3;
+                        margin-top: 10px;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid #ddd;
+                        font-size: 12px;
+                        color: #777;
+                        text-align: center;
+                    }
+                    .assinatura {
+                        background-color: #e8f5e9;
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                        font-style: italic;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="email-container">
+                    <div class="header">
+                        <h3>Agendamento de Aula - %s</h3>
+                    </div>
+                    
+                    <p><strong>Olá, %s!</strong></p>
+                    <p>Foi realizado um novo agendamento de aula associado a você.</p>
+                    
+                    <div class="section">
+                        <div class="section-title">📚 DADOS DA DISCIPLINA</div>
+                        <div class="info-grid">
+                            <div class="label">Disciplina:</div>
+                            <div class="value">%s</div>
+                            
+                            <div class="label">Professor:</div>
+                            <div class="value">%s</div>
+                            
+                            <div class="label">Curso:</div>
+                            <div class="value">%s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">📅 DADOS DO AGENDAMENTO</div>
+                        <div class="info-grid">
+                            <div class="label">PERÍODO:</div>
+                            <div class="value">%s ---- %s</div>
+                        </div>
+                        
+                        <div class="label">HORÁRIOS:</div>
+                        <div class="horarios-container">
+                            %s
+                        </div>
+                    </div>
+                    
+                    <div class="assinatura">
+                        <strong>Agendamento realizado por:</strong> %s
+                    </div>
+                    
+                    <div class="footer">
+                        <p>Esta é uma mensagem automática, por favor não responder.</p>
+                        <p>Sistema GEA Fatec Itu • %s</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """.formatted(
+                disciplina.getNome(),
+                destinatario.getNome(),
+                disciplina.getNome(),
+                nomeProfessor,
+                nomeCurso,
+                dataInicial,
+                dataFinal,
+                horariosFormatados,
+                nomeRemetente,
+                LocalDate.now().getYear()
+            );
+    }
+
 }
 
