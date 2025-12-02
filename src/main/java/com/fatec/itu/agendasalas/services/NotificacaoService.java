@@ -26,6 +26,7 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ListaDeAulasVaziaNotificacaoException;
+import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.NotificacaoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
@@ -51,7 +52,7 @@ public class NotificacaoService {
     private EmailSenderService emailSenderService;
 
     @Autowired
-    private AgendamentoAulaService agendamentoAulaService;
+    private AgendamentoAulaRepository agendamentoAulaRepository;
     
     public NotificacaoService(NotificacaoRepository notificacaoRepository) {
         this.notificacaoRepository = notificacaoRepository;
@@ -66,7 +67,7 @@ public class NotificacaoService {
             remetente = (Usuario) auth.getPrincipal();
         }
 
-        List<AgendamentoAula> aulas = agendamentoAulaService.filtrarAulasDeDeterminadaRecorrencia(recorrenciaAulas);
+        List<AgendamentoAula> aulas = agendamentoAulaRepository.findByRecorrenciaId(recorrenciaAulas.getId());
         if(aulas.isEmpty()){
             throw new ListaDeAulasVaziaNotificacaoException();
         }

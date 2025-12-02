@@ -35,6 +35,8 @@ import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class AgendamentoAulaService {
 
@@ -59,9 +61,12 @@ public class AgendamentoAulaService {
     @Autowired
     private AgendamentoConflitoService agendamentoConflitoService;
 
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     @Transactional
     //método para a tela Agendar Sala da Matéria dos ADS
-    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO){
+    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO) throws MessagingException{
         List<AgendamentoAula> agendamentoAulasFeitos = new ArrayList<>();
         LocalDate dataInicial = agendamentoAulaCreationComRecorrenciaDTO.dataInicio();
         LocalDate dataFinal = agendamentoAulaCreationComRecorrenciaDTO.dataFim();
@@ -101,6 +106,7 @@ public class AgendamentoAulaService {
             }
             dataInicial = dataInicial.plusDays(1);
         }
+        notificacaoService.notificarAoCriarAgendamentoAula(recorrencia);
         return agendamentoAulasFeitos.stream()
         .map(this::converterParaResponseDTO)
         .toList();
@@ -340,9 +346,7 @@ public class AgendamentoAulaService {
         return converterParaResponseDTO(saved);
     }
 
-    public List<AgendamentoAula> filtrarAulasDeDeterminadaRecorrencia(Recorrencia recorrencia) {
-        return agendamentoAulaRepository.findByRecorrenciaId(recorrencia.getId());
-    }
+   
 }
 
 
