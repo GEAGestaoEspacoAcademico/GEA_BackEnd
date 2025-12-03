@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.Disciplina;
@@ -26,6 +27,7 @@ public class EmailSenderService {
     @Value("{spring.mail.username}")
     private String hostEmail;
     
+    @Async
     public void enviarEmailResetSenha(Usuario usuario, String link) throws MessagingException {
        
         MimeMessage message = mailSender.createMimeMessage();
@@ -139,6 +141,7 @@ public class EmailSenderService {
 
     }
 
+    @Async
     public void enviarNotificacaoAgendamento(LocalDate diaInicial, LocalDate diaFinal, Set<JanelasHorario> janelas, Disciplina disciplina, Usuario remetente, Usuario destinatario, String diaDaSemana) throws MessagingException{
 
         MimeMessage message = mailSender.createMimeMessage();

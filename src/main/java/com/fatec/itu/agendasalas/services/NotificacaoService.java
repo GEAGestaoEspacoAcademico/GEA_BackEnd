@@ -68,14 +68,20 @@ public class NotificacaoService {
       //      remetente = (Usuario) auth.getPrincipal();
       //  }
 
+      //NÃO APAGAR ESSAS LINHAS COMENTADAS, ELA SERÁ UTIL COM A JWT.
+
         List<AgendamentoAula> aulas = agendamentoAulaRepository.findByRecorrenciaId(recorrenciaAulas.getId());
         if(aulas.isEmpty()){
             throw new ListaDeAulasVaziaNotificacaoException();
         }
+        //apenas para teste, deve ser: Usuario destinatario = aulas.get(0).getUsuario();
         Usuario destinatario = usuarioRepository.findById(1L).orElse(null);
+        
         Disciplina disciplina = aulas.get(0).getDisciplina();
         String diaDaSemana = aulas.get(0).getDiaDaSemana();
+        //Usuario remetente = null; isso deverá estar na primeira linha
         Usuario remetente = destinatario;
+
         LocalDate diaInicial = aulas.stream()
             .map(AgendamentoAula::getData)
             .min(Comparator.naturalOrder())
