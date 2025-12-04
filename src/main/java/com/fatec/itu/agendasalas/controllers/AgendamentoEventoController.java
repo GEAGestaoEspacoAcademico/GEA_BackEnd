@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreatedDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDTO;
 import com.fatec.itu.agendasalas.services.AgendamentoEventoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,26 +41,32 @@ public class AgendamentoEventoController {
           return ResponseEntity.noContent().build();
 
       }*/
-    
 
     @Operation(summary = "Cria um novo agendamento de evento")
     @PostMapping
-    public ResponseEntity<Void> criar(
-      @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Dados para criação de um agendamento de evento",
-        required = true,
-        content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
-            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-                value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00\", \"horaFim\": \"12:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00\", \"horaFim\": \"17:00\" } ] }")))
-        @RequestBody @Valid AgendamentoEventoCreationDTO dto) {
-      try {
-        agendamentoEventoService.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-      } catch (RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-      }
+    public ResponseEntity<AgendamentoEventoCreatedDTO> criar(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Dados para criação de um agendamento de evento",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00\", \"horaFim\": \"12:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00\", \"horaFim\": \"17:00\" } ] }"
+                )
+            )
+        )
+        @RequestBody @Valid AgendamentoEventoCreationDTO dto
+    ) {
+        try {
+            Long agendamentoId = agendamentoEventoService.criarAgendamentoEvento(dto); 
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(new AgendamentoEventoCreatedDTO(agendamentoId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
 
     @Operation(summary="Lista todos os agendamentos de evento")
     @ApiResponses(value = {

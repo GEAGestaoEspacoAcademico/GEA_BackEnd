@@ -39,11 +39,12 @@ TipoRecursoRepository tipoRecursoRepository;
     return tiposRecursoDTO;
   }
 
-  public TipoRecursoListDTO criar(TipoRecursoCreateAndUpdateDTO TipoRecurso) {
-    TipoRecurso novoTipoRecurso = new TipoRecurso();
-    novoTipoRecurso.setNome(TipoRecurso.tipoRecursoNome());
+  public long criarTipoRecurso(TipoRecursoCreateAndUpdateDTO dto) {
+      TipoRecurso novoTipoRecurso = new TipoRecurso();
+      novoTipoRecurso.setNome(dto.tipoRecursoNome());
 
-    return converterParaDTO(tipoRecursoRepository.save(novoTipoRecurso));
+      TipoRecurso salvo = tipoRecursoRepository.save(novoTipoRecurso);
+      return salvo.getId(); // retorna apenas o ID
   }
 
   public TipoRecursoListDTO atualizar(Long id, TipoRecursoCreateAndUpdateDTO TipoRecurso) {

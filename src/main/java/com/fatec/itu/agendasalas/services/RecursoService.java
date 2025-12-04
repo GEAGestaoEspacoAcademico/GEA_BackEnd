@@ -44,16 +44,17 @@ public class RecursoService {
   }
 
   @Transactional
-  public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
-    
+  public long criarRecurso(RecursoResumidoDTO recursoDTO) {
+
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
           .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
 
       Recurso novoRecurso = new Recurso(recursoDTO.recursoNome(), tipo);
       Recurso recursoSalvo = recursoRepository.save(novoRecurso);
 
-      return transformarRecursoEmRecursoDTO(recursoSalvo);
+      return recursoSalvo.getId(); // retorna apenas o ID
   }
+
 
   @Transactional
   public RecursoCompletoDTO atualizar(Long id, RecursoResumidoDTO recursoDTO) {

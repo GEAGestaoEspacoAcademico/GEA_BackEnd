@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fatec.itu.agendasalas.dto.eventosDTO.EventoCreationDTO;
+import com.fatec.itu.agendasalas.dto.eventosDTO.EventoCreationPostDTO;
 import com.fatec.itu.agendasalas.dto.eventosDTO.EventoResponseDTO;
 import com.fatec.itu.agendasalas.entity.Evento;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
@@ -22,22 +23,22 @@ public class EventoService {
     private EventoRepository eventoRepository;
 
 
-    @Transactional
-    public EventoResponseDTO criar(EventoCreationDTO dto) {
-        validarCamposObrigatorios(dto);
+   @Transactional
+public long criarEvento(EventoCreationDTO dto) {
+    validarCamposObrigatorios(dto);
 
-        eventoRepository.findByNome(dto.nomeEvento()).ifPresent(e -> {
-            throw new DataIntegrityViolationException("Já existe um evento com esse nome.");
-        });
+    eventoRepository.findByNome(dto.nomeEvento())
+        .ifPresent(e -> { throw new DataIntegrityViolationException("Já existe um evento com esse nome."); });
 
-        Evento evento = new Evento();
-        evento.setNome(dto.nomeEvento());
-        evento.setDescricao(dto.descricaoEvento());
+    Evento evento = new Evento();
+    evento.setNome(dto.nomeEvento());
+    evento.setDescricao(dto.descricaoEvento());
 
-        Evento salvo = eventoRepository.save(evento);
+    Evento salvo = eventoRepository.save(evento);
 
-        return converterParaResponse(salvo);
-    }
+    return salvo.getId(); 
+}
+
 
 
     public List<EventoResponseDTO> listar() {

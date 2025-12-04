@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
+import com.fatec.itu.agendasalas.dto.cursos.CursoCreatePostDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.services.CursoService;
@@ -28,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -41,18 +44,30 @@ public class CursoController {
     @Autowired
     private DisciplinaService disciplinaService;
 
-    @Operation(summary = "Cria um novo curso")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", // Alterado de 201 para 200 para manter a consistência da sua
-                                               // implementação (retorna DTO no corpo)
-                    description = "Curso criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoListDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoId\": 8, \"cursoNome\": \"Ciência da computação\", \"usuarioId\": 16, \"cursoSigla\": \"CDC\", \"coordenadorNome\": \"Coord. Patricia Silva\" }")))
-    })
+     @Operation(summary = "Cria um novo curso")
     @PostMapping
-    public CursoListDTO criarCurso(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados para criação de um novo curso", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoCreateDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoNome\": \"Bacharelado em Ciência da computação\", \"coordenadorId\": 16, \"cursoSigla\": \"BCC\" }"))) @RequestBody CursoCreateDTO curso) {
-        return cursoService.criar(curso);
+    public ResponseEntity<CursoCreatePostDTO> criarCurso(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Dados para criação de um novo curso",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = CursoCreateDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = "{ \"cursoNome\": \"Bacharelado em Ciência da computação\", \"coordenadorId\": 16, \"cursoSigla\": \"BCC\" }"
+                )
+            )
+        )
+        @RequestBody @Valid CursoCreateDTO dto
+    ) {
+        try {
+            long cursoId = cursoService.criarCurso(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                 .body(new CursoCreatePostDTO(cursoId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
-
     @Operation(summary = "Lista todos os cursos existentes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de cursos encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = CursoListDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "[ { \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" } ]")))

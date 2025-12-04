@@ -1,6 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,38 +36,36 @@ public class DisciplinaController {
     @Autowired
     private DisciplinaService disciplinaService;
 
-    @Operation(summary = "Cria uma nova disciplina")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Disciplina criada com sucesso",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 10, \"nome\": \"Estrutura de Dados\" }")))
-    })
-    @PostMapping
-    public DisciplinaListDTO criarDisciplina(
-        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            @Operation(summary = "Cria uma nova disciplina")
+        @ApiResponses(value = {
+            @ApiResponse(
+                responseCode = "201",
+                description = "Disciplina criada com sucesso",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                        example = "{ \"disciplinaId\": 10 }"
+                    )
+                )
+            )
+        })
+        @PostMapping
+        public Map<String, Long> criarDisciplina(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Dados para criação de uma nova disciplina",
                 required = true,
-                content = @Content(mediaType = "application/json",
+                content = @Content(
+                    mediaType = "application/json",
                     schema = @Schema(implementation = DisciplinaCreateDTO.class),
-                    examples = @ExampleObject(value = "{ \"nome\": \"Estrutura de Dados\" }")))
-            @RequestBody DisciplinaCreateDTO novaDisciplina) {
-        return disciplinaService.criar(novaDisciplina);
-    }
+                    examples = @ExampleObject(value = "{ \"nome\": \"Estrutura de Dados\" }")
+                )
+            )
+            @RequestBody DisciplinaCreateDTO novaDisciplina
+        ) {
+            Long disciplinaId = disciplinaService.criar(novaDisciplina);
+            return Map.of("disciplinaId", disciplinaId);
+        }
 
-    @Operation(summary = "Lista todas as disciplinas existentes")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Lista de disciplinas encontrada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
-    })
-    @GetMapping
-    public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {
-        return ResponseEntity.ok(disciplinaService.listar());
-    }
 
     @Operation(summary = "Apresenta uma disciplina existente pelo ID")
     @ApiResponses(value = {

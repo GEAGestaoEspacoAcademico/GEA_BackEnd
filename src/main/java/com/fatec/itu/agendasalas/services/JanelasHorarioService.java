@@ -46,13 +46,16 @@ public class JanelasHorarioService {
     }
 
     @Transactional
-    public JanelasHorarioResponseDTO criarJanelaHorario(JanelasHorarioCreationDTO janelasHorarioCreationDTO) {
-        JanelasHorario janelasHorarioCreation = new JanelasHorario(janelasHorarioCreationDTO.horaInicio(),
-                janelasHorarioCreationDTO.horaFim());
-        JanelasHorario janelasHorarioSalvo = janelasHorarioRepository.save(janelasHorarioCreation);
+    public long criarJanelaHorario(JanelasHorarioCreationDTO dto) {
+        JanelasHorario janela = new JanelasHorario();
+        janela.setHoraInicio(dto.horaInicio());
+        janela.setHoraFim(dto.horaFim());
 
-        return transformarEmJanelasHorarioResponseDTO(janelasHorarioSalvo);
+        JanelasHorario salvo = janelasHorarioRepository.save(janela);
+
+        return salvo.getId(); 
     }
+
 
     public JanelasHorarioResponseDTO filtrarJanelaHorarioPeloID(Long id) {
         JanelasHorario janelasHorario = janelasHorarioRepository.findById(id)

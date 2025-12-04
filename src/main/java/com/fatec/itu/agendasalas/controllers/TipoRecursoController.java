@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.tipoRecurso.TipoRecursoCreateAndUpdateDTO;
+import com.fatec.itu.agendasalas.dto.tipoRecurso.TipoRecursoCreatedDTO;
 import com.fatec.itu.agendasalas.dto.tipoRecurso.TipoRecursoListDTO;
 import com.fatec.itu.agendasalas.services.TipoRecursoService;
 
@@ -62,29 +64,29 @@ public class TipoRecursoController {
     return ResponseEntity.ok(tipoRecursoService.buscarPorIdRetornarDTO(idTipoRecurso));
   }
 
-  @Operation(summary = "Cria uma novo tipo de recurso")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Criado com sucesso",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoRecursoListDTO.class),
-            examples = @ExampleObject(value = "{ \"id\": 3, \"nome\": \"Aparelho Audiovisual\" }")))
-  })
+  @Operation(summary = "Cria um novo tipo de recurso")
   @PostMapping
-  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-  public ResponseEntity<TipoRecursoListDTO> criar(
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Nome do tipo de recurso",
-        required = true,
-        content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = TipoRecursoCreateAndUpdateDTO.class),
-          examples = @ExampleObject(value = "{ \"nome\": \"Eletrônico\" }")))
-    @RequestBody TipoRecursoCreateAndUpdateDTO nomeTipoRecurso) {
-    TipoRecursoListDTO novoTipoRecurso = tipoRecursoService.criar(nomeTipoRecurso);
-
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idTipoRecurso}")
-        .buildAndExpand(novoTipoRecurso.tipoRecursoId()).toUri();
-
-    return ResponseEntity.created(uri).body(novoTipoRecurso);
+  public ResponseEntity<TipoRecursoCreatedDTO> criarTipoRecurso(
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "Nome do tipo de recurso",
+          required = true,
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = TipoRecursoCreateAndUpdateDTO.class),
+              examples = @ExampleObject(value = "{ \"nome\": \"Eletrônico\" }")
+          )
+      )
+      @RequestBody TipoRecursoCreateAndUpdateDTO dto
+  ) {
+      try {
+          long id = tipoRecursoService.criarTipoRecurso(dto);
+          return ResponseEntity.status(HttpStatus.CREATED)
+                              .body(new TipoRecursoCreatedDTO(id));
+      } catch (RuntimeException e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      }
   }
+
 
   @Operation(summary = "Atualiza um tipo de recurso existente")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Atualizado com sucesso") })

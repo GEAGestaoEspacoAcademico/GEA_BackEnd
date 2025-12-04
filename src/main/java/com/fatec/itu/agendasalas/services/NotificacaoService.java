@@ -44,9 +44,8 @@ public class NotificacaoService {
                .collect(Collectors.toList());
     }
 
-    public void enviarNotificacoes(List<NotificacaoCreationDTO> notificacoesDTO) {
-        for (NotificacaoCreationDTO dto : notificacoesDTO) {
-
+    @Transactional
+        public long enviarNotificacao(NotificacaoCreationDTO dto) {
             if (dto.destinatarios() == null || dto.destinatarios().isEmpty()) {
                 throw new IllegalArgumentException("A lista de destinatários não pode ser nula ou vazia.");
             }
@@ -67,9 +66,10 @@ public class NotificacaoService {
             notificacao.setUsuarioRemetente(remetente);
             notificacao.setDestinatario(destinatarios);
 
-            notificacaoRepository.save(notificacao);
+            Notificacao salvo = notificacaoRepository.save(notificacao);
+            return salvo.getIdNotificacao();
         }
-    }
+
 
     private NotificacaoResponseDTO converterParaResponseDTO(Notificacao notificacao) {
 

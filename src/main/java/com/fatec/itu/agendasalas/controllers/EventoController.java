@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.eventosDTO.EventoCreationDTO;
+import com.fatec.itu.agendasalas.dto.eventosDTO.EventoCreationPostDTO;
 import com.fatec.itu.agendasalas.dto.eventosDTO.EventoResponseDTO;
 import com.fatec.itu.agendasalas.services.EventoService;
 
@@ -36,16 +38,29 @@ public class EventoController {
 
     @Operation(summary = "Cria um novo evento")
     @PostMapping
-    public ResponseEntity<EventoResponseDTO> criarEvento(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do evento para criar"
-                                                                ,required = true, content = @Content(mediaType = "application/json"
-                                                                , schema = @Schema(implementation = EventoCreationDTO.class)
-                                                                , examples = @ExampleObject(value = "{ \"nomeEvento\": \"Reunião Geral\", \"descricaoEvento\": \"Reunião mensal\" }"))) 
-                                                                @Valid @RequestBody EventoCreationDTO novoEvento) {
-
-        EventoResponseDTO criado = eventoService.criar(novoEvento);
-        return ResponseEntity.status(201).body(criado);
+    public ResponseEntity<EventoCreationPostDTO> criarEvento(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Dados do evento para criar",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = EventoCreationDTO.class),
+                examples = @ExampleObject(
+                    value = "{ \"nomeEvento\": \"Reunião Geral\", \"descricaoEvento\": \"Reunião mensal\" }"
+                )
+            )
+        )
+        @Valid @RequestBody EventoCreationDTO dto
+    ) {
+        try {
+            long eventoId = eventoService.criarEvento(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(new EventoCreationPostDTO(eventoId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
 
     @Operation(summary = "Lista todos os eventos")
     @GetMapping

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoComQuantidadeDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
+import com.fatec.itu.agendasalas.dto.recursos.RecursoCreatedDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
@@ -55,11 +57,16 @@ public class RecursoController {
 
   @Operation(summary = "Cria um novo recurso")
   @PostMapping
-  public ResponseEntity<RecursoCompletoDTO> criar(@RequestBody RecursoResumidoDTO recurso) {
-    RecursoCompletoDTO recursoCriado = recursoService.criar(recurso);
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-        .buildAndExpand(recursoCriado.recursoId()).toUri();
-    return ResponseEntity.created(uri).body(recursoCriado);
+  public ResponseEntity<RecursoCreatedDTO> criarRecurso(
+      @RequestBody RecursoResumidoDTO recurso
+  ) {
+      try {
+          long id = recursoService.criarRecurso(recurso);
+          return ResponseEntity.status(HttpStatus.CREATED)
+                              .body(new RecursoCreatedDTO(id));
+      } catch (RuntimeException e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      }
   }
 
   @Operation(summary = "Atualiza um recurso existente por id")
