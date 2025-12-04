@@ -84,26 +84,56 @@ public class DisciplinaController {
         return disciplinaService.buscarPorId(disciplinaId);
     }
 
-    @Operation(summary = "Atualiza uma disciplina pelo ID")
+    @Operation(summary = "Atualiza uma disciplina existente")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200",
-            description = "Disciplina atualizada",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos e Estruturas\" }"))),
-        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+    @ApiResponse(
+        responseCode = "200",
+        description = "Disciplina atualizada com sucesso",
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = DisciplinaListDTO.class),
+            examples = @ExampleObject(
+                value = """
+                        {
+                          "disciplinaId": 1,
+                          "disciplinaNome": "Computação em Nuvem",
+                          "disciplinaSemestre": "2025.1",
+                          "cursoNome": "Gestão da Tecnologia da Informação"
+                        }
+                        """
+            )
+        )
+    )
     })
     @PutMapping("{disciplinaId}")
-    public ResponseEntity<DisciplinaListDTO> editarDisciplina(@Parameter(description = "ID da disciplina a ser atualizada") @PathVariable Long disciplinaId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Novos dados para a disciplina",
-                required = true,
-                content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = DisciplinaCreateDTO.class),
-                    examples = @ExampleObject(value = "{ \"nome\": \"Algoritmos e Estruturas\" }")))
-            @RequestBody DisciplinaCreateDTO novaDisciplina) {
+    public ResponseEntity<DisciplinaListDTO> editarDisciplina(
+    @Parameter(
+        description = "ID da disciplina a ser atualizada",
+        required = true
+    )
+    @PathVariable Long disciplinaId,
+
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Novos dados para a disciplina",
+        required = true,
+        content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = DisciplinaCreateDTO.class),
+            examples = @ExampleObject(
+                value = """
+                        {
+                          "cursoId": "2",
+                          "disciplinaNome": "Computação em Nuvem",
+                          "disciplinaSemestre": "2025.1"
+                        }
+                        """
+            )
+        )
+    )
+    @RequestBody DisciplinaCreateDTO novaDisciplina
+    ){
         return ResponseEntity.ok(disciplinaService.atualizar(disciplinaId, novaDisciplina));
-    }
+    }      
 
     @Operation(summary = "Deleta uma disciplina pelo ID")
     @ApiResponses(value = {
