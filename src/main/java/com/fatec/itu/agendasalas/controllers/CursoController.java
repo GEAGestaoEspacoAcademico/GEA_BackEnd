@@ -45,11 +45,11 @@ public class CursoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", // Alterado de 201 para 200 para manter a consistência da sua
                                                // implementação (retorna DTO no corpo)
-                    description = "Curso criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoListDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoId\": 12, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": \"18\", \"cursoSigla\": \"ADS\" }")))
+                    description = "Curso criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoListDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoId\": 8, \"cursoNome\": \"Ciência da computação\", \"usuarioId\": 16, \"cursoSigla\": \"CDC\", \"coordenadorNome\": \"Coord. Patricia Silva\" }")))
     })
     @PostMapping
     public CursoListDTO criarCurso(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados para criação de um novo curso", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoCreateDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": 18, \"cursoSigla\": \"ADS\" }"))) @RequestBody CursoCreateDTO curso) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados para criação de um novo curso", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoCreateDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoNome\": \"Bacharelado em Ciência da computação\", \"coordenadorId\": 16, \"cursoSigla\": \"BCC\" }"))) @RequestBody CursoCreateDTO curso) {
         return cursoService.criar(curso);
     }
 
@@ -77,9 +77,9 @@ public class CursoController {
                     {
                         "status": 500,
                         "error": "Internal Server Error",
-                        "message": "No static resource cursos/1.",
-                        "path": "/cursos/1/",
-                        "timestamp": "2025-12-01T09:10:58-03:00"
+                        "message": "404 NOT_FOUND",
+                        "path": "/cursos/199",
+                        "timestamp": "2025-12-04T12:21:50-03:00"
                     }
                     """)))
     })
@@ -95,7 +95,7 @@ public class CursoController {
     })
     @PutMapping("{cursoId}")
     public CursoListDTO editarCurso(@Parameter(description = "ID do curso a ser atualizado") @PathVariable Long cursoId,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados para o curso", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoCreateDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": 18, \"cursoSigla\": \"ADS\" }"))) @RequestBody CursoCreateDTO novoCurso) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados para o curso", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = CursoCreateDTO.class), examples = @io.swagger.v3.oas.annotations.media.ExampleObject(value = "{ \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\", \"coordenadorId\": 10, \"cursoSigla\": \"ADS\" }"))) @RequestBody CursoCreateDTO novoCurso) {
         return cursoService.atualizar(cursoId, novoCurso);
     }
 
