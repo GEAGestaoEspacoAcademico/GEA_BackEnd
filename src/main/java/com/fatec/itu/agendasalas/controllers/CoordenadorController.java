@@ -70,6 +70,12 @@ public class CoordenadorController {
 
 
     @Operation(summary = "Lista todos os coordenadores existentes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode="200", description="Listagem dos coordenadores", 
+        content=@Content(mediaType="application/json", 
+            schema=@Schema(implementation=CoordenadorResponseDTO.class),
+            examples=@ExampleObject(value = "{ \"coordenadorUsuarioId\":10, \"coordenadorNome\": \"Coord. Lucimar de Santi\", \"coordenadorEmail\": \"lucimar.desanti@fatec.sp.gov.br\", \"registroCoordenacao\": 2001, \"cargoId\": 4 }")))
+    })
     @GetMapping
     // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CoordenadorResponseDTO>> listar() {
