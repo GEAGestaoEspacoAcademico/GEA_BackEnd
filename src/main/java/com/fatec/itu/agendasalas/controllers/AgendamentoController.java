@@ -82,9 +82,36 @@ public class AgendamentoController {
                 return ResponseEntity.ok(agendamentos);
     }
 
+    @Operation(summary = "Cancela um agendamento")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Agendamento cancelado com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = AgendamentoCanceladoResponseDTO.class),
+                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                    value = """
+                    {
+                        "idCancelamento": 3,
+                        "agendamentoOriginalId": 2,
+                        "tipoAgendamento": "AULA",
+                        "motivoCancelamento": "Professor ausente",
+                        "dataHoraCancelamento": "2025-12-04T18:43:46.6149025"
+                    }
+                    """))),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida - dados obrigatórios ausentes"),
+        @ApiResponse(responseCode = "404", description = "Agendamento ou usuário não encontrado"),
+        @ApiResponse(responseCode = "409", description = "Conflito ao cancelar agendamento"),
+        @ApiResponse(responseCode = "500", description = "Erro inesperado no cancelamento")
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Dados para cancelar o agendamento",
+        required = true,
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = AgendamentoCanceladoRequestDTO.class),
+            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                value = "{ \"motivoCancelamento\": \"Professor ausente\", \"usuarioId\": 5 }")))
     @PutMapping("/{id}/cancelar")
     public ResponseEntity<?> cancelarAgendamento(
-        @PathVariable Long id,
+        @Parameter(description = "ID do agendamento a ser cancelado") @PathVariable Long id,
         @RequestBody AgendamentoCanceladoRequestDTO request) {
 
             if (request.motivoCancelamento() == null || request.motivoCancelamento().trim().isEmpty()) {
