@@ -85,14 +85,20 @@ public class SalaService {
       .toList();
   }
 
-
-  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+  public List<SalaDetailDTO> listarSalasCandidatas(RequisicaoDeSalaDTO requisicao){
     List<Long> salasParaExcluir =
         salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
             requisicao.horarios().horaFim(), requisicao.capacidade());
 
     List<SalaDetailDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.salaId())).toList();
+
+    return salasCandidatas;
+  }
+
+  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+
+    List<SalaDetailDTO> salasCandidatas = listarSalasCandidatas(requisicao);
 
     List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.salaId()).toList();
 
