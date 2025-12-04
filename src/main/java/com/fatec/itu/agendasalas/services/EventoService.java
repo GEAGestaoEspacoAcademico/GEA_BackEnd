@@ -50,7 +50,7 @@ public class EventoService {
  
     public EventoResponseDTO buscarPorId(Long id) {
         Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Evento com id: " + id + " não encontrado."));
 
         return converterParaResponse(evento);
     }
@@ -60,7 +60,7 @@ public class EventoService {
         validarCamposObrigatorios(dto);
 
         Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Evento com id: " + id + " não encontrado."));
 
         eventoRepository.findByNome(dto.nomeEvento()).ifPresent(e -> {
             if (!e.getId().equals(id)) {
@@ -80,7 +80,7 @@ public class EventoService {
     @Transactional
     public void excluir(Long id) {
         Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Evento com id: " + id + " não encontrado."));
 
         try {
             eventoRepository.delete(evento);

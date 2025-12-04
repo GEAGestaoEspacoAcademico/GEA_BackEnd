@@ -15,6 +15,8 @@ import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CursoService {
 
@@ -57,16 +59,15 @@ public class CursoService {
 
     public CursoListDTO buscarPorId(Long id) {
         Curso cursoEncontrado = cursoRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id: " + id + " não encontrado"));
         return converteCursoParaDTO(cursoEncontrado);
     }
 
     public CursoListDTO atualizar(Long id, CursoCreateDTO novoCurso) {
         Curso atual = cursoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id: " + id + " não encontrado"));
         atual.setNomeCurso(novoCurso.cursoNome());
-        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow();
+        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow(()-> new EntityNotFoundException("Coordenador de id: " + id + " não encontrado"));
         atual.setCoordenador(coordenadorEncontrado);
         atual.setSigla(novoCurso.cursoSigla());
 
@@ -77,7 +78,7 @@ public class CursoService {
 
     public void excluir(Long id) {
         if (!cursoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Curso não encontrado. Id=" + id);
+            throw new EntityNotFoundException("Curso de id: " + id + " não encontrado");
         }
         cursoRepository.deleteById(id);
     }
