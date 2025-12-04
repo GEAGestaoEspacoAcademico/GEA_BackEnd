@@ -20,9 +20,10 @@ public interface JanelasHorarioRepository extends JpaRepository<JanelasHorario, 
             SELECT a.janelasHorario.id
             FROM Agendamento a
             WHERE a.data = :data
+              AND a.sala.id = :salaId
         ) order by j.id asc
     """)
-    List<JanelasHorario> findDisponiveisPorData(@Param("data") LocalDate data);
+    List<JanelasHorario> findDisponiveisPorData(@Param("data") LocalDate data, @Param("salaId") Long salaId);
 
     
     JanelasHorario findByHoraInicio(LocalTime horaInicio);

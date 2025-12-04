@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecursosDTO;
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.services.SalaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,166 +43,179 @@ public class SalaController {
     @Autowired
     private SalaService salaService;
 
+ 
     @GetMapping
     @Operation(summary = "Lista todas as salas")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200",
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
             description = "Lista de salas encontrada",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(type = "array", implementation = SalaListDTO.class),
-                    examples = @ExampleObject(value = "[ "
-                            + "  { \"id\": 1, \"nome\": \"Sala 101\", \"capacidade\": 30, \"piso\": 1, \"disponibilidade\": true, \"tipoSala\": \"Laboratório de Informática\" }, "
-                            + "  { \"id\": 2, \"nome\": \"Sala 205\", \"capacidade\": 25, \"piso\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala de Aula Comum\" } "
-                            + "]"))})})
-    public ResponseEntity<List<SalaListDTO>> listarTodas() {
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = SalaDetailDTO.class),
+                examples = @ExampleObject(value = "{ \"salaId\": 7, \"salaNome\": \"Sala 101\", \"capacidade\": 40, \"disponibilidade\": false, \"tipoSalaId\": 1, \"tipoSala\": \"Sala de Aula\", \"pisoId\": 1, \"piso\": \"1º Andar\", \"salaObservacoes\": \"Sala com projetor e ar condicionado\" }")))
+    })
+    public ResponseEntity<List<SalaDetailDTO>> listarTodas() {
         return ResponseEntity.ok(salaService.listarTodasAsSalas());
     }
 
     @GetMapping("/{salaId}")
     @Operation(summary = "Apresenta uma sala pelo seu id")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Sala encontrada",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SalaDetailDTO.class),
-                    examples = @ExampleObject(
-                            value = "{ \"id\": 1,\"nome\": \"Sala 101\", \"capacidade\": 10, \"piso\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala\", \"observacoes\": \"Sala com notebooks\"}"))})})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Sala encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = SalaDetailDTO.class),
+                examples = @ExampleObject(
+                    value = "{ \"salaId\": 1, \"salaNome\": \"Sala 101\", \"capacidade\": 10, \"pisoId\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala de Aula\", \"salaObservacoes\": \"Sala com notebooks\" }")))
+    })
     public ResponseEntity<SalaDetailDTO> buscarPorId(
             @Parameter(description = "ID da sala a ser buscada") @PathVariable Long salaId) {
-        SalaDetailDTO dto = salaService.buscarPorId(salaId);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(salaService.buscarPorId(salaId));
     }
 
     @PostMapping
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
     @Operation(summary = "Cria uma nova sala")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201",
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201",
             description = "Sala criada com sucesso",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SalaDetailDTO.class),
-                    examples = @ExampleObject(
-                            value = "{ \"id\": 1,\"nome\": \"Sala 101\", \"capacidade\": 10, \"piso\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala\", \"observacoes\": \"Sala com notebooks\"}"))})})
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = SalaDetailDTO.class),
+                examples = @ExampleObject(
+                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"pisoId\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
+    })
     public ResponseEntity<SalaDetailDTO> criar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Sala para ser criada", required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
-                            examples = @ExampleObject(
-                                    value = "{ \"nome\": \"Nova sala\", \"capacidade\": 10, \"piso\": 1, \"disponibilidade\": true, \"idTipoSala\": 1, \"observacoes\": \"Sala em perfeito estado\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
+                description = "Sala para ser criada",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
+                    examples = @ExampleObject(
+                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"pisoId\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
+            @RequestBody SalaCreateAndUpdateDTO sala) {
+
         SalaDetailDTO salaCriada = salaService.criar(sala);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(salaCriada.salaId()).toUri();
+
         return ResponseEntity.created(uri).body(salaCriada);
     }
 
-    @Operation(summary = "Deleta uma sala existente")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204",
-            description = "Sala deletada com sucesso", content = @Content)})
+   
     @DeleteMapping("/{salaId}")
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<Void> deletar(
-            @Parameter(description = "ID da sala a ser deletada") @PathVariable Long salaId) {
+    @Operation(summary = "Deleta uma sala existente")
+    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Sala deletada com sucesso") })
+    public ResponseEntity<Void> deletar(@PathVariable Long salaId) {
         salaService.deletar(salaId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Adiciona um recurso existente a uma sala existente")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200",
-            description = "Recurso adicionado à sala",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RecursoSalaCompletoDTO.class),
-                    examples = @ExampleObject(
-                            value = "  { \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 10 }"))})})
     @PostMapping("/{salaId}/recursos")
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<RecursoSalaCompletoDTO> adicionarRecurso(
+    @Operation(summary = "Adiciona recursos a uma sala existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204",
+            description = "Recurso(s) adicionados à sala")
+              
+    })
+    public ResponseEntity<Void> adicionarRecurso(
             @Parameter(description = "ID da sala") @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "ID do recurso e quantidade a ser adicionada", required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RecursoSalaResumidoDTO.class),
-                            examples = @ExampleObject(
-                                    value = "{ \"idRecurso\": 1, \"quantidade\": 10 }"))) @RequestBody RecursoSalaResumidoDTO recurso) {
-        return ResponseEntity.ok(salaService.adicionarRecurso(salaId, recurso));
+                description = "Lista de recursos para adicionar",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RecursoSalaListaCreationDTO.class),
+                    examples = @ExampleObject(
+                        value = "{ \"listaDeRecursosParaAdicionar\": [ { \"recursoId\": 1, \"quantidadeRecurso\": 10} ] }")))
+            @RequestBody RecursoSalaListaCreationDTO recurso) {
+
+        salaService.adicionarRecurso(salaId, recurso);
+        return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Lista todos os recursos de uma sala existente")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200",
-            description = "Recursos da sala listados",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(type = "array", implementation = RecursoSalaCompletoDTO.class),
-                    examples = @ExampleObject(value = "[ "
-                            + "  { \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 1 }, "
-                            + "  { \"idRecurso\": 2, \"nome\": \"Cadeiras\", \"tipo\": \"Mobiliário\", \"quantidade\": 30 }, "
-                            + "  { \"idRecurso\": 3, \"nome\": \"Ar Condicionado\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 2 } "
-                            + "]"))})})
     @GetMapping("/{salaId}/recursos")
-    public ResponseEntity<List<RecursoSalaCompletoDTO>> listarRecursos(
-            @Parameter(description = "ID da sala") @PathVariable Long salaId) {
+    @Operation(summary = "Lista todos os recursos de uma sala existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Recursos listados",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(type = "array", implementation = RecursoSalaListagemRecursosDTO.class),
+                examples = @ExampleObject(
+                    value = "[ " +
+                    "{ \"idRecurso\": 1, \"nomeRecurso\": \"Projetor Multimídia\", \"tipoRecurso\": \"Equipamento Eletrônico\", \"quantidadeRecurso\": 1 }, " +
+                    "{ \"idRecurso\": 2, \"nomeRecurso\": \"Cadeiras\", \"tipoRecurso\": \"Mobiliário\", \"quantidadeRecurso\": 30 } " +
+                "]")))
+    })
+    public ResponseEntity<List<RecursoSalaListagemRecursosDTO>> listarRecursos(@PathVariable Long salaId) {
         return ResponseEntity.ok(salaService.listarRecursosPorSala(salaId));
     }
 
-    @Operation(summary = "Remove um recurso de uma sala existente")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204",
-            description = "Recurso removido da sala com sucesso", content = @Content)})
     @DeleteMapping("/{salaId}/recursos/{recursoId}")
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<Void> removerRecurso(
-            @Parameter(description = "ID da sala") @PathVariable Long salaId,
-            @Parameter(description = "ID do recurso a ser removido") @PathVariable Long recursoId) {
+    @Operation(summary = "Remove um recurso de uma sala existente")
+    @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Recurso removido") })
+    public ResponseEntity<Void> removerRecurso(@PathVariable Long salaId, @PathVariable Long recursoId) {
         salaService.removerRecurso(salaId, recursoId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Atualiza a quantidade de um recurso em uma sala")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200",
-            description = "Quantidade do recurso atualizada com sucesso",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RecursoSalaCompletoDTO.class),
-                    examples = @ExampleObject(
-                            value = "{ \"idRecurso\": 1, \"nome\": \"Projetor Multimídia\", \"tipo\": \"Equipamento Eletrônico\", \"quantidade\": 5 }"))})})
+
     @PutMapping("/{salaId}/recursos/{recursoId}")
-    //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-    public ResponseEntity<RecursoSalaCompletoDTO> atualizarQuantidadeRecurso(
-            @Parameter(description = "ID da sala") @PathVariable Long salaId,
-            @Parameter(description = "ID do recurso a ser atualizado") @PathVariable Long recursoId,
+    @Operation(summary = "Atualiza a quantidade de um recurso em uma sala")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204",
+            description = "Quantidade atualizada",
+            content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<Void> atualizarQuantidadeRecurso(
+            @PathVariable Long salaId,
+            @PathVariable Long recursoId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Nova quantidade do recurso", required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RecursoSalaUpdateQuantidadeDTO.class),
-                            examples = @ExampleObject(
-                                    value = "{ \"quantidade\": 5 }"))) @RequestBody RecursoSalaUpdateQuantidadeDTO quantidade) {
-        return ResponseEntity.ok(salaService.atualizarQuantidade(salaId, recursoId, quantidade));
+                description = "Nova quantidade",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RecursoSalaUpdateQuantidadeDTO.class),
+                    examples = @ExampleObject(value = "{ \"quantidade\": 5 }")))
+            @RequestBody RecursoSalaUpdateQuantidadeDTO quantidade) {
+
+        salaService.atualizarQuantidade(salaId, recursoId, quantidade);
+        return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Atualiza uma sala existente")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200",
-            description = "Sala atualizada com sucesso",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SalaDetailDTO.class),
-                    examples = @ExampleObject(
-                            value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))})})
     @PutMapping("/{salaId}")
-   // @PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
+    @Operation(summary = "Atualiza uma sala existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "Sala atualizada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = SalaDetailDTO.class),
+                examples = @ExampleObject(
+                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101\", \"salaCapacidade\": 20, \"pisoId\": 1, \"disponibilidade\": false, \"salaObservacoes\": \"Sala em manutenção\" }")))
+    })
     public ResponseEntity<SalaDetailDTO> atualizarSala(
-            @Parameter(description = "ID da sala a ser atualizada") @PathVariable Long salaId,
+            @PathVariable Long salaId,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Dados da sala para atualizar", required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
-                            examples = @ExampleObject(
-                                    value = "{ \"nome\": \"Sala 101 - Atualizada\", \"capacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"idTipoSala\": 1, \"observacoes\": \"Sala em manutenção\"}"))) @RequestBody SalaCreateAndUpdateDTO sala) {
-        SalaDetailDTO salaAtualizada = salaService.atualizar(salaId, sala);
-        return ResponseEntity.ok(salaAtualizada);
+                description = "Dados da sala",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
+                    examples = @ExampleObject(
+                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101\", \"salaCapacidade\": 20, \"pisoId\": 1, \"salaObservacoes\": \"Sala em manutenção\" }")))
+            @RequestBody SalaCreateAndUpdateDTO sala) {
+
+        return ResponseEntity.ok(salaService.atualizar(salaId, sala));
     }
 
-    @Operation(summary = "Lista todas as recomendações de sala baseado nos parâmetros passados")
     @PostMapping("/recomendacoes")
-    public ResponseEntity<List<SalaListDTO>> recomendacoes(
+    @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "Recomendações retornadas")
+        })
+    @Operation(summary = "Lista recomendações de sala baseado nos parâmetros passados")
+    public ResponseEntity<List<SalaDetailDTO>> recomendacoes(
             @RequestBody @Valid RequisicaoDeSalaDTO requisicao) {
+
         return ResponseEntity.ok(salaService.recomendacaoDeSala(requisicao));
     }
 
-    @Operation(summary = "Lista as salas disponíveis")
     @GetMapping("/disponiveis")
-    public ResponseEntity<List<SalaListDTO>> listarSalasDisponiveis() {
+    @Operation(summary = "Lista as salas disponíveis")
+    public ResponseEntity<List<SalaDetailDTO>> listarSalasDisponiveis() {
         return ResponseEntity.ok(salaService.listarSalasDisponiveis());
     }
 }

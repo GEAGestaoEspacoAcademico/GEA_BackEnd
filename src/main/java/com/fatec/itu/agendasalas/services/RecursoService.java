@@ -6,10 +6,11 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoComQuantidadeDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.TipoRecurso;  
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
@@ -79,7 +80,7 @@ public class RecursoService {
   }
 
   @Transactional(readOnly = true)
-  public List<RecursoSalaCompletoDTO> listarPorTipo(Long tipoId) {
+  public List<RecursoCompletoComQuantidadeDTO> listarPorTipo(Long tipoId) {
     List<Recurso> recursos = recursoRepository.findByTipoRecursoId(tipoId);
 
     if (recursos.isEmpty()) {
@@ -93,7 +94,7 @@ public class RecursoService {
               .mapToInt(rs -> rs.getQuantidade() == null ? 0 : rs.getQuantidade())
               .sum();
 
-          return new RecursoSalaCompletoDTO(
+          return new RecursoCompletoComQuantidadeDTO(
               r.getId(),
               r.getNome(),
               r.getTipoRecurso().getId(),

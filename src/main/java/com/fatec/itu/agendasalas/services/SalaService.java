@@ -7,77 +7,91 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaResumidoDTO;
+
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaIndividualCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecursosDTO;
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaListDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
+import com.fatec.itu.agendasalas.entity.Piso;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
+import com.fatec.itu.agendasalas.entity.RecursoSalaId;
 import com.fatec.itu.agendasalas.entity.Sala;
+import com.fatec.itu.agendasalas.entity.TipoSala;
+import com.fatec.itu.agendasalas.exceptions.RecursoJaAdicionadoNaSalaException;
+import com.fatec.itu.agendasalas.repositories.PisoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 
 @Service
 public class SalaService {
-  @Autowired
-  private SalaRepository salaRepository;
 
-  @Autowired
-  private RecursoRepository recursoRepository;
+    @Autowired
+    private SalaRepository salaRepository;
 
-  @Autowired
-  private RecursoSalaRepository recursoSalaRepository;
+    @Autowired
+    private RecursoRepository recursoRepository;
 
-  @Autowired
-  private TipoSalaService tipoSalaService;
+    @Autowired
+    private RecursoSalaRepository recursoSalaRepository;
 
-  public SalaDetailDTO buscarPorId(Long id) {
-    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    return transformarSalaEmSalaDetailDTO(salaExistente);
+    @Autowired
+    private TipoSalaService tipoSalaService;
+
+    @Autowired
+    private PisoRepository pisoRepository;
+
+    public SalaDetailDTO buscarPorId(Long id) {
+      Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+      return transformarSalaEmSalaDetailDTO(salaExistente);
+    }
+
+    private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
+
+      return new SalaDetailDTO(
+          sala.getId(),
+          sala.getNome(),
+          sala.getCapacidade(),
+          sala.isDisponibilidade(),
+          sala.getTipoSala() != null ? sala.getTipoSala().getId() : null,
+          sala.getTipoSala() != null ? sala.getTipoSala().getNome() : null,
+          sala.getPiso() != null ? sala.getPiso().getId() : null,
+          sala.getPiso() != null ? sala.getPiso().getNome() : null,
+          sala.getObservacoes()
+      );
+    }
+
+    public List<SalaDetailDTO> listarSalasDisponiveis() {
+      return salaRepository.findByDisponibilidade(true)
+      .stream()
+      .map(this::transformarSalaEmSalaDetailDTO)
+      .toList();
+
+    }
+
+  public List<SalaDetailDTO> listarTodasAsSalas() {
+    return salaRepository.findAll()
+      .stream()
+      .map(this::transformarSalaEmSalaDetailDTO)
+      .toList();
   }
 
-  private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
-    return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
-        sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
-  }
-
-  public List<SalaListDTO> listarSalasDisponiveis(boolean disponivel) {
-    return salaRepository.findByDisponibilidade(disponivel).stream()
-        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
-            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
-        .toList();
-  }
-
-  public List<SalaListDTO> listarSalasDisponiveis() {
-    return transformaEmSalaListDTO(salaRepository.findByDisponibilidade(true));
-  }
-
-  public List<SalaListDTO> listarTodasAsSalas() {
-    return transformaEmSalaListDTO(salaRepository.findAll());
-  }
-
-  private List<SalaListDTO> transformaEmSalaListDTO(List<Sala> salas) {
-    return salas.stream()
-        .map(sala -> new SalaListDTO(sala.getId(), sala.getNome(), sala.getCapacidade(),
-            sala.getPiso(), sala.isDisponibilidade(), sala.getTipoSala().getNome()))
-        .toList();
-  }
-
-  public List<SalaListDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
     List<Long> salasParaExcluir =
         salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
             requisicao.horarios().horaFim(), requisicao.capacidade());
 
-    List<SalaListDTO> salasCandidatas = listarTodasAsSalas().stream()
+    List<SalaDetailDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.salaId())).toList();
 
     List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.salaId()).toList();
@@ -86,14 +100,14 @@ public class SalaService {
         salaRepository.findSalasComRecursosByIds(idsDeSalasCandidatas);
 
     Map<Long, Set<Long>> mapaDasSalasESeusRecursos = salasComSeusRecursos.stream()
-        .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
+            .collect(Collectors.toMap(sala -> sala.getId(), sala -> sala.getRecursos().stream()
             .map(recursoSala -> recursoSala.getRecurso().getId()).collect(Collectors.toSet())));
 
     List<SalaPontuadaDTO> rankingSalas = new ArrayList<>();
 
     String nomeDoTipoSala = tipoSalaService.buscarPorId(requisicao.tipoSalaId()).getNome();
 
-    for (SalaListDTO sala : salasCandidatas) {
+    for (SalaDetailDTO sala : salasCandidatas) {
       int pontuacao = 0;
 
       Set<Long> recursosDaSala =
@@ -116,8 +130,19 @@ public class SalaService {
 
   @Transactional
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
-    Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
-        tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    TipoSala tipoSala = tipoSalaService.buscarPorId(salaDTO.tipoSalaId());
+    
+    Piso piso = pisoRepository.findById(salaDTO.pisoId())
+            .orElseThrow(() -> new RuntimeException("Andar não encontrado"));
+
+    Sala novaSala = new Sala(
+            salaDTO.salaNome(),
+            salaDTO.salaCapacidade(),
+            tipoSala,
+            piso
+    );
+
+    novaSala.setDisponibilidade(salaDTO.disponibilidade());
     novaSala.setObservacoes(salaDTO.salaObservacoes());
 
     Sala salaSalva = salaRepository.save(novaSala);
@@ -125,16 +150,36 @@ public class SalaService {
     return transformarSalaEmSalaDetailDTO(salaSalva);
   }
 
+
   @Transactional
   public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
 
-    salaExistente.setNome(salaDTO.salaNome());
-    salaExistente.setCapacidade(salaDTO.salaCapacidade());
-    salaExistente.setPiso(salaDTO.piso());
-    salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
-    salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    if (salaDTO.salaNome() != null) {
+      salaExistente.setNome(salaDTO.salaNome());
+    }
+
+    if (salaDTO.salaCapacidade() != null) {
+      salaExistente.setCapacidade(salaDTO.salaCapacidade());
+    }
+
+    if (salaDTO.pisoId() != null) {
+      Piso piso = pisoRepository.findById(salaDTO.pisoId())
+            .orElseThrow(() -> new RuntimeException("Andar não encontrado"));
+      salaExistente.setPiso(piso);
+    }
+
+    if (salaDTO.disponibilidade() != null) {
+      salaExistente.setDisponibilidade(salaDTO.disponibilidade());
+    }
+
+    if (salaDTO.tipoSalaId() != null) {
+      salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    }
+
+    if (salaDTO.salaObservacoes() != null) {
+      salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    }
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
   }
@@ -148,29 +193,32 @@ public class SalaService {
   }
 
   @Transactional
-  public RecursoSalaCompletoDTO adicionarRecurso(Long salaId, RecursoSalaResumidoDTO dto) {
+  public void adicionarRecurso(Long salaId, RecursoSalaListaCreationDTO dto) {
     Sala salaExistente = salaRepository.findById(salaId).orElseThrow(() -> new RuntimeException());
 
-    Recurso recursoExistente = recursoRepository.findById(dto.recursoId())
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
+    for(RecursoSalaIndividualCreationDTO recurso : dto.listaDeRecursosParaAdicionar()){
+        Recurso recursoExistente = recursoRepository.findById(recurso.recursoId())
+            .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
 
-    boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
-        .anyMatch(rs -> rs.getRecurso().getId().equals(dto.recursoId()));
+        boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
+                .anyMatch(rs -> rs.getRecurso().getId().equals(recurso.recursoId()));
 
-    if (recursoJaAdicionado) {
-      throw new RuntimeException();
+            if (recursoJaAdicionado) {
+                throw new RecursoJaAdicionadoNaSalaException(recurso.recursoId(), salaId);
+            }
+
+        RecursoSala novoLink = new RecursoSala();
+        RecursoSalaId chaveCompostaId = new RecursoSalaId(recursoExistente.getId(), salaId);
+
+        novoLink.setId(chaveCompostaId);
+        novoLink.setQuantidade(recurso.quantidadeRecurso());
+        novoLink.setSala(salaExistente);
+        novoLink.setRecurso(recursoExistente);
+        recursoSalaRepository.save(novoLink);
+
+          
     }
-
-    RecursoSala novoLink = new RecursoSala();
-
-    novoLink.setIdRecurso(recursoExistente.getId());
-    novoLink.setIdSala(salaId);
-    novoLink.setQuantidade(dto.quantidadeRecurso());
-
-    recursoSalaRepository.save(novoLink);
-
-    return new RecursoSalaCompletoDTO(dto.recursoId(), recursoExistente.getNome(),
-        recursoExistente.getTipoRecurso().getId(), dto.quantidadeRecurso());
+    
   }
 
   @Transactional
@@ -188,7 +236,7 @@ public class SalaService {
   }
 
   @Transactional
-  public RecursoSalaCompletoDTO atualizarQuantidade(Long salaId, Long recursoId,
+  public void atualizarQuantidade(Long salaId, Long recursoId,
       RecursoSalaUpdateQuantidadeDTO dto) {
     Sala sala = salaRepository.findById(salaId)
         .orElseThrow(() -> new RuntimeException("Sala não encontrada!"));
@@ -201,17 +249,16 @@ public class SalaService {
 
     salaRepository.save(sala);
 
-    return new RecursoSalaCompletoDTO(linkParaAtualizar.getRecurso().getId(),
-        linkParaAtualizar.getRecurso().getNome(),
-        linkParaAtualizar.getRecurso().getTipoRecurso().getId(), linkParaAtualizar.getQuantidade());
   }
 
-  public List<RecursoSalaCompletoDTO> listarRecursosPorSala(Long id) {
+  public List<RecursoSalaListagemRecursosDTO> listarRecursosPorSala(Long id) {
     Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
-    List<RecursoSala> recursoNaSala = recursoSalaRepository.findByIdSala(salaExistente.getId());
+    List<RecursoSala> recursoNaSala = recursoSalaRepository.findBySalaId(salaExistente.getId());
     return recursoNaSala.stream()
-        .map(recurso -> new RecursoSalaCompletoDTO(recurso.getRecurso().getId(),
-            recurso.getRecurso().getNome(), recurso.getRecurso().getTipoRecurso().getId(),
+        .map(recurso -> new RecursoSalaListagemRecursosDTO(
+            recurso.getRecurso().getId(),
+            recurso.getRecurso().getNome(), 
+            recurso.getRecurso().getTipoRecurso().getNome(),
             recurso.getQuantidade()))
         .toList();
   }

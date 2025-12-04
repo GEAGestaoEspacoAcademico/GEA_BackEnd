@@ -2,7 +2,7 @@
 -- Alimenta o BD com cargos
 -- -----------------------------------------------------------------------------
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
+VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETARIA');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com usuarios
@@ -10,7 +10,7 @@ VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
 -- Usuarios
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucasmorais@1022.com', 1);
+    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'aa', 1);
 -- senha: ls123
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
@@ -35,7 +35,7 @@ VALUES
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'lucasmorais2214@gmail.com', 3);
 -- senha: ss123
     
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
@@ -161,6 +161,22 @@ VALUES
     ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1);
 -- senha: ar123
 
+-- Adição de secretários(as)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Maria Oliveira', 'maria.oliveira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'maria.oliveira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Beatriz Pereira', 'beatriz.pereira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'beatriz.pereira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5);
+-- senha: ls123
+
 
 
 -- -----------------------------------------------------------------------------
@@ -265,24 +281,34 @@ VALUES
 
 
 -- -----------------------------------------------------------------------------
+-- Alimenta o BD com Andares
+-- -----------------------------------------------------------------------------
+INSERT INTO PISOS (nome)
+VALUES 
+    ('Térreo'),
+    ('1º Andar'),
+    ('2º Andar');
+
+    
+-- -----------------------------------------------------------------------------
 -- Alimenta o BD com Salas
 -- -----------------------------------------------------------------------------
 -- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
-INSERT INTO SALAS (nome, capacidade, piso, disponibilidade, id_tipo_sala, observacoes)
+INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, piso_id, observacoes)
 VALUES 
-    ('Lab 301', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 302', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 303', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Lab 304', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 305', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 306', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Sala 101', 40, 1, FALSE, 1, 'Sala com projetor e ar condicionado'),
-    ('Sala 102', 40, 1, FALSE, 1, 'Sala com lousa digital'),
-    ('Sala 201', 50, 2, FALSE, 1, 'Auditório pequeno'),
-    ('Sala 202', 35, 2, FALSE, 2, 'Sala com projetor'),
-    ('Sala 103', 40, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'),
-    ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
-    ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
+    ('Lab 301', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 302', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 303', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Lab 304', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 305', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 306', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Sala 101', 40, FALSE, 1, 1, 'Sala com projetor e ar condicionado'),
+    ('Sala 102', 40, FALSE, 1, 1, 'Sala com lousa digital'),
+    ('Sala 201', 50, FALSE, 1, 2, 'Auditório pequeno'),
+    ('Sala 202', 35, FALSE, 2, 2, 'Sala com projetor'),
+    ('Sala 103', 40, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'),
+    ('Sala 104', 35, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'), 
+    ('Sala 203', 50, TRUE, 1, 2, 'Sala ampla com duas lousas');
 
 
 -- -----------------------------------------------------------------------------
@@ -310,7 +336,7 @@ INSERT INTO RECURSOS (NOME, tipo_recurso_id) VALUES
     ('Quadro Branco', 3);
 
 -- RecursosSalas
-INSERT INTO RECURSOS_SALAS (ID_SALA, ID_RECURSO, QUANTIDADE) VALUES
+INSERT INTO RECURSOS_SALAS (SALA_ID, RECURSO_ID, QUANTIDADE) VALUES
     (1, 1, 1),
     (2, 2, 1),
     (3, 3, 30),

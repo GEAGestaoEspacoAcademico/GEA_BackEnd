@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoComQuantidadeDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
-import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaCompletoDTO;
+import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
 import com.fatec.itu.agendasalas.services.RecursoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,9 +64,10 @@ public class RecursoController {
 
   @Operation(summary = "Atualiza um recurso existente por id")
   @PutMapping("/{recursoId}")
-  public ResponseEntity<RecursoCompletoDTO> atualizar(@PathVariable Long recursoId,
-      @RequestBody RecursoResumidoDTO recursoDTO) {
-    return ResponseEntity.ok(recursoService.atualizar(recursoId, recursoDTO));
+  public ResponseEntity<Void> atualizar(@PathVariable Long recursoId, @RequestBody RecursoResumidoDTO recursoDTO) {
+     recursoService.atualizar(recursoId, recursoDTO);
+
+    return ResponseEntity.noContent().build();
   }
 
   @Operation(summary = "Deleta um recurso existente por id")
@@ -78,15 +80,15 @@ public class RecursoController {
   @Operation(summary = "Apresenta os recursos existentes de um determinado tipo")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Recursos encontrados",
       content = {@Content(mediaType = "application/json",
-        array = @ArraySchema(schema = @Schema(implementation = RecursoSalaCompletoDTO.class)),
+        array = @ArraySchema(schema = @Schema(implementation = RecursoSalaListaCreationDTO.class)),
         examples = @ExampleObject(value = "{ \"recursoId\": 5, \"recursoNome\": \"Licença Microsoft Project\", \"recursoTipoId\": 2, \"quantidadeRecurso\": 40 }") )}),
       @ApiResponse(responseCode = "500", description = "Internal Server Error",
         content = {@Content(mediaType = "application/json",
           examples = @ExampleObject(value = "{ \"message\": \"Nenhum recurso encontrado para o tipo de ID: 8\" }") )})})
   @GetMapping("/tipo/{tipoId}")
-  public ResponseEntity<List<RecursoSalaCompletoDTO>> buscarPorTipo(
+  public ResponseEntity<List<RecursoCompletoComQuantidadeDTO>> buscarPorTipo(
       @Parameter(description = "ID do tipo de recurso a ser usado como filtro") @PathVariable Long tipoId) {
-    List<RecursoSalaCompletoDTO> recursos = recursoService.listarPorTipo(tipoId);
+    List<RecursoCompletoComQuantidadeDTO> recursos = recursoService.listarPorTipo(tipoId);
     return ResponseEntity.ok(recursos);
   }
 }
