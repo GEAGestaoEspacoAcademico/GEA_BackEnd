@@ -86,15 +86,30 @@ public class CoordenadorController {
                 .collect(Collectors.toList());
     }
 
-
     @Operation(summary = "Apresenta um coordenador pelo seu ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
-            description = "Coordenador encontrado",
-            content = @Content(mediaType = "application/json",
+            description = "Coordenador encontrado", content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = CoordenadorResponseDTO.class),
-                examples = @ExampleObject(value = "{ \"coordenadorUsuarioId\": 18, \"coordenadorNome\": \"Paulo Ramos\", \"coordenadorEmail\": \"paulo.ramos@fatec.edu.br\", \"registroCoordenacao\": 2026, \"cargoId\": 4 }"))),
-        @ApiResponse(responseCode = "404", description = "Coordenador não encontrado")
+                examples = @ExampleObject(value = """
+                    { "coordenadorUsuarioId": 18,
+                       "coordenadorNome\": "Paulo Ramos", 
+                       "coordenadorEmail": "paulo.ramos@fatec.edu.br", 
+                       "registroCoordenacao": 2026, "cargoId": 4 
+                    }
+                     """))),
+
+        @ApiResponse(responseCode = "404", description = "Coordenador não encontrado", content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = CoordenadorResponseDTO.class),
+                examples = @ExampleObject(value = """
+                    {
+                        "status": 500,
+                        "error": "Internal Server Error",
+                        "message": "Coordenador não encontrado",
+                        "path": "/coordenadores/100",
+                        "timestamp": "2025-11-23T15:48:22-03:00"
+                    }
+                    """)))
     })
     @GetMapping("/{coordenadorId}")
     // @PreAuthorize("hasRole('ADMIN')")
