@@ -20,4 +20,6 @@ public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula
     List<AgendamentoAula> findByProfessorId(@Param("professorId") Integer professorId);
 
     AgendamentoAula findBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
+
+    List<AgendamentoAula> findByRecorrenciaId(Long recorrenciaId);
 }

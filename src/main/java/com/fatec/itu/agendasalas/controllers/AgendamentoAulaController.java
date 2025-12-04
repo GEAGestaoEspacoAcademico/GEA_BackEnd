@@ -20,7 +20,6 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComR
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
-import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -109,15 +109,11 @@ public class AgendamentoAulaController {
                     examples = @ExampleObject(
                         value = "{ \"usuarioId\": 7, \"dataInicio\": \"2026-02-02\", \"dataFim\": \"2026-06-06\", \"diaDaSemana\": \"SEGUNDA\", \"janelasHorarioId\": [1,2,3,4], \"disciplinaId\": 2, \"salaId\": 6 }")))
     @PostMapping("/recorrencia")
-    public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaComRecorrencia(@Valid @RequestBody AgendamentoAulaCreationComRecorrenciaDTO dto) {
-        try {
-            List<AgendamentoAulaResponseDTO> agendamentosCriados = agendamentoAulaService.criarAgendamentoAulaComRecorrencia(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(agendamentosCriados);
-        } catch (ConflitoAoAgendarException c) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaComRecorrencia(@Valid @RequestBody AgendamentoAulaCreationComRecorrenciaDTO dto) throws MessagingException {
+  
+        List<AgendamentoAulaResponseDTO> agendamentosCriados = agendamentoAulaService.criarAgendamentoAulaComRecorrencia(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(agendamentosCriados);
+       
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")
