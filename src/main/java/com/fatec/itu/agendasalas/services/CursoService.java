@@ -32,17 +32,19 @@ public class CursoService {
         this.cursoRepository = cursoRepository;
     }
 
-    public CursoListDTO criar(CursoCreateDTO curso) {
+    public long criarCurso(CursoCreateDTO dto) {
         Curso novoCurso = new Curso();
-
-        novoCurso.setNomeCurso(curso.cursoNome());
-        novoCurso.setCoordenador(coordenadorRepository.findById(curso.coordenadorId()).orElseThrow());
-        novoCurso.setSigla(curso.cursoSigla());
+        novoCurso.setNomeCurso(dto.cursoNome());
+        novoCurso.setSigla(dto.cursoSigla());
+        novoCurso.setCoordenador(
+            coordenadorRepository.findById(dto.coordenadorId())
+                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"))
+        );
 
         Curso cursoSalvo = cursoRepository.save(novoCurso);
-
-        return converteCursoParaDTO(cursoSalvo);
+        return cursoSalvo.getId(); 
     }
+
 
     public List<CursoListDTO> listar() {
         List<Curso> cursos = cursoRepository.findAll();

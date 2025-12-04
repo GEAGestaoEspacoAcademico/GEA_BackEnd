@@ -3,6 +3,8 @@ package com.fatec.itu.agendasalas.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,16 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreatedDTO;
 import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
 import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
 import com.fatec.itu.agendasalas.services.NotificacaoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -42,20 +47,29 @@ public class NotificacaoController {
         return notificacaoService.listarNotificacoesComoDTO();
     }
     
-    @PostMapping
     @Operation(summary = "Criar uma nova notificação")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Notificações enviadas")
-    })
-    public void enviarNotificacoes(
+    @PostMapping
+    public ResponseEntity<NotificacaoCreatedDTO> enviarNotificacao(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Lista de notificações a serem enviadas",
+            description = "Notificação a ser enviada",
             required = true,
-            content = @Content(mediaType = "application/json",
+            content = @Content(
+                mediaType = "application/json",
                 schema = @Schema(implementation = NotificacaoCreationDTO.class),
-                examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-                    value = "[ { \"agendamento\": 201, \"notificacaoTitulo\": \"Lembrete de Sala\", \"notificacaoMensagem\": \"Aula amanhã às 07:40\", \"usuarioRemetente\": 12, \"destinatarios\": [15, 16] } ]")))
-        @RequestBody List<NotificacaoCreationDTO> notificacoesDTO) {
-        notificacaoService.enviarNotificacoes(notificacoesDTO);
+                examples = @ExampleObject(
+                    value = "{ \"agendamento\": 201, \"notificacaoTitulo\": \"Lembrete de Sala\", \"notificacaoMensagem\": \"Aula amanhã às 07:40\", \"usuarioRemetente\": 12, \"destinatarios\": [15, 16] }"
+                )
+            )
+        )
+        @RequestBody @Valid NotificacaoCreationDTO dto
+    ) {
+        try {
+            long id = notificacaoService.enviarNotificacao(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(new NotificacaoCreatedDTO(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
 }

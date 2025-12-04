@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreatedDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
@@ -56,28 +58,30 @@ public class JanelasHorarioController {
     }
 
     @Operation(summary = "Cria uma nova janela de horário")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Janela criada com sucesso",
-            content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
-                examples = @ExampleObject(value = "{ \"janelasHorarioId\": 3, \"horaInicio\": \"13:30:00\", \"horaFim\": \"15:10:00\" }")))
-    })
     @PostMapping
-    public ResponseEntity<JanelasHorarioResponseDTO> criarJanelaHorario(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Dados da nova janela de horário",
-                required = true,
-                content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = JanelasHorarioCreationDTO.class),
-                    examples = @ExampleObject(value = "{ \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }")))
-            @RequestBody JanelasHorarioCreationDTO janelasHorarioCreationDTO) {
-        JanelasHorarioResponseDTO janelasHorarioResponseDTO =
-                janelasHorarioService.criarJanelaHorario(janelasHorarioCreationDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(janelasHorarioResponseDTO.janelasHorarioId()).toUri();
-
-        return ResponseEntity.created(uri).body(janelasHorarioResponseDTO);
+    public ResponseEntity<JanelasHorarioCreatedDTO> criarJanelaHorario(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Dados da nova janela de horário",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = JanelasHorarioCreationDTO.class),
+                examples = @ExampleObject(
+                    value = "{ \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }"
+                )
+            )
+        )
+        @RequestBody JanelasHorarioCreationDTO dto
+    ) {
+        try {
+            long id = janelasHorarioService.criarJanelaHorario(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(new JanelasHorarioCreatedDTO(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
+
 
     @Operation(summary = "Busca uma janela de horário pelo ID")
     @ApiResponses(value = {

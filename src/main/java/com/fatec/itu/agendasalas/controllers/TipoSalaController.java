@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaCreateAndUpdateDTO;
+import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaCreatedDTO;
 import com.fatec.itu.agendasalas.dto.tiposSalas.TipoSalaListDTO;
 import com.fatec.itu.agendasalas.services.TipoSalaService;
 
@@ -63,29 +65,29 @@ public class TipoSalaController {
     return ResponseEntity.ok(tipoSalaService.buscarPorIdRetornarDTO(idTipoSala));
   }
 
-  @Operation(summary = "Cria uma novo tipo de sala")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Criado com sucesso",
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = TipoSalaListDTO.class),
-            examples = @ExampleObject(value = "{ \"tipoSalaId\": 3, \"tipoSalaNome\": \"Sala de Aula Padrão\" }")))
-  })
+  @Operation(summary = "Cria um novo tipo de sala")
   @PostMapping
-  //@PreAuthorize("hasAuthority('AUXILIAR_DOCENTE')")
-  public ResponseEntity<TipoSalaListDTO> criar(
+  public ResponseEntity<TipoSalaCreatedDTO> criarTipoSala(
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
-        description = "Nome do tipo de sala",
-        required = true,
-        content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = TipoSalaCreateAndUpdateDTO.class),
-          examples = @ExampleObject(value = "{ \"tipoSalaNome\": \"Laboratório de Informática\" }")))
-      @RequestBody TipoSalaCreateAndUpdateDTO nomeTipoSala) {
-    TipoSalaListDTO novoTipoSala = tipoSalaService.criar(nomeTipoSala);
-
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idTipoSala}")
-        .buildAndExpand(novoTipoSala.tipoSalaId()).toUri();
-
-    return ResponseEntity.created(uri).body(novoTipoSala);
+          description = "Nome do tipo de sala",
+          required = true,
+          content = @Content(
+              mediaType = "application/json",
+              schema = @Schema(implementation = TipoSalaCreateAndUpdateDTO.class),
+              examples = @ExampleObject(value = "{ \"tipoSalaNome\": \"Laboratório de Informática\" }")
+          )
+      )
+      @RequestBody TipoSalaCreateAndUpdateDTO dto
+  ) {
+      try {
+          long id = tipoSalaService.criarTipoSala(dto);
+          return ResponseEntity.status(HttpStatus.CREATED)
+                              .body(new TipoSalaCreatedDTO(id));
+      } catch (RuntimeException e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+      }
   }
+
 
   @Operation(summary = "Atualiza um tipo de sala existente")
   @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Atualizado com sucesso") })

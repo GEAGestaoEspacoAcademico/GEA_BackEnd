@@ -39,12 +39,14 @@ public class TipoSalaService {
     return tiposSalasDTO;
   }
 
-  public TipoSalaListDTO criar(TipoSalaCreateAndUpdateDTO tipoSala) {
-    TipoSala novoTipoSala = new TipoSala();
-    novoTipoSala.setNome(tipoSala.tipoSalaNome());
+  public long criarTipoSala(TipoSalaCreateAndUpdateDTO dto) {
+      TipoSala novoTipoSala = new TipoSala();
+      novoTipoSala.setNome(dto.tipoSalaNome());
 
-    return converterParaDTO(tipoSalaRepository.save(novoTipoSala));
+      TipoSala salvo = tipoSalaRepository.save(novoTipoSala);
+      return salvo.getId(); 
   }
+
 
   public TipoSalaListDTO atualizar(Long id, TipoSalaCreateAndUpdateDTO tipoSala) {
 

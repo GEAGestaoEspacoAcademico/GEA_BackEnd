@@ -22,15 +22,20 @@ public class DisciplinaService {
     @Autowired
     private CursoRepository cursoRepository;
 
-    public DisciplinaListDTO criar(DisciplinaCreateDTO disciplina) {
-        Curso cursoDisciplina = cursoRepository.findById(disciplina.cursoId()).orElseThrow();
+    public Long criar(DisciplinaCreateDTO disciplina) {
+    Curso cursoDisciplina = cursoRepository.findById(disciplina.cursoId())
+            .orElseThrow();
 
-        Disciplina novaDisciplina = disciplinaRepository
-                .save(new Disciplina(disciplina.disciplinaNome(), disciplina.disciplinaSemestre(), cursoDisciplina));
+    Disciplina novaDisciplina = disciplinaRepository.save(
+            new Disciplina(
+                disciplina.disciplinaNome(),
+                disciplina.disciplinaSemestre(),
+                cursoDisciplina
+            )
+    );
 
-        return new DisciplinaListDTO(novaDisciplina.getId(), novaDisciplina.getNome(),
-                novaDisciplina.getSemestre(), novaDisciplina.getCurso().getNomeCurso());
-    }
+    return novaDisciplina.getId(); 
+}
 
     private List<DisciplinaListDTO> converterParaDTO(List<Disciplina> disciplinas) {
         return disciplinas.stream()

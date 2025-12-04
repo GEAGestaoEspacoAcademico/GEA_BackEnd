@@ -141,64 +141,64 @@ public class AgendamentoEventoService {
         }
 
     @Transactional
-    public void criarAgendamentoEvento(DEVAgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
-       
-        LocalDate diaInicial = agendamentoEventoCreationDTO.diasAgendados().stream()
-        .map(DEVAgendamentoEventoDiasAgendadosDTO::dia)
+public Long criarAgendamentoEvento(AgendamentoEventoCreationDTO dto) {
+    Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+        .orElseThrow(() -> new UsuarioNaoEncontradoException(dto.usuarioId()));
+
+    Sala sala = salaRepository.findById(dto.salaId())
+        .orElseThrow(() -> new SalaNaoEncontradaException(dto.salaId()));
+
+    Evento evento = eventoRepository.findByNome(dto.eventoNome())
+        .orElseGet(() -> eventoRepository.save(new Evento(dto.eventoNome(), "", null)));
+
+    List<AgendamentoEventoDiasAgendadosDTO> diasAgendadosDTO = dto.dias();
+
+    LocalDate diaInicial = diasAgendadosDTO.stream()
+        .map(AgendamentoEventoDiasAgendadosDTO::dia)
         .min(LocalDate::compareTo)
-        .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
-        
-        LocalDate diaFinal = agendamentoEventoCreationDTO.diasAgendados().stream()
-        .map(DEVAgendamentoEventoDiasAgendadosDTO::dia)
+        .orElseThrow(() -> new RuntimeException("Lista de dias vazia"));
+
+    LocalDate diaFinal = diasAgendadosDTO.stream()
+        .map(AgendamentoEventoDiasAgendadosDTO::dia)
         .max(LocalDate::compareTo)
-        .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
-        
+        .orElseThrow(() -> new RuntimeException("Lista de dias vazia"));
 
-        Recorrencia recorrencia = new Recorrencia(diaInicial, diaFinal);
-        Recorrencia recorrenciaSalva = recorrenciaRepository.save(recorrencia);
+    Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(diaInicial, diaFinal));
 
-        Usuario usuario = usuarioRepository.findById(agendamentoEventoCreationDTO.usuario())
-            .orElseThrow(()-> new UsuarioNaoEncontradoException(agendamentoEventoCreationDTO.usuario()));
-       
-        Evento evento = eventoRepository.findByNome(agendamentoEventoCreationDTO.nomeEvento())
-            .orElseThrow(()-> new RuntimeException("EVENTO NAO ENCONTRADO"));
-        
-        Sala sala = salaRepository.findById(agendamentoEventoCreationDTO.localId())
-            .orElseThrow(()-> new SalaNaoEncontradaException(agendamentoEventoCreationDTO.localId()));
+    AgendamentoEvento primeiroAgendamentoSalvo = null;
 
-        for(DEVAgendamentoEventoDiasAgendadosDTO agendamentoDia :  agendamentoEventoCreationDTO.diasAgendados()){
+    for (AgendamentoEventoDiasAgendadosDTO dia : diasAgendadosDTO) {
+        LocalDate diaAgendado = dia.dia();
+        LocalTime horaInicioDoDiaAgendado = dia.horaInicio();
+        LocalTime horaFimDoDiaAgendado = dia.horaFim();
 
-            for(Long janelaId : agendamentoDia.janelasHorarioId()){
-                JanelasHorario janela = janelasHorarioRepository.findById(janelaId).orElseThrow(()-> new JanelasHorarioNaoEncontradaException(janelaId));
-                AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), agendamentoDia.dia(), janelaId);
-                if(agendamentoAulaConflitante!=null){
-                    //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
-                    //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
-                    agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
-                }
-                if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), agendamentoDia.dia(), janelaId)){
-                    throw new ConflitoAoAgendarException(sala.getNome(), agendamentoDia.dia(), janela.getHoraInicio(), janela.getHoraFim());
-                }
+        List<JanelasHorario> horariosEncontrados = janelasHorarioRepository
+            .findByIntervaloIdHorarios(horaInicioDoDiaAgendado, horaFimDoDiaAgendado);
 
-                AgendamentoEvento agendamentoEvento = new AgendamentoEvento();
-                agendamentoEvento.setUsuario(usuario);
-                agendamentoEvento.setSala(sala);
-                agendamentoEvento.setEvento(evento);
-                agendamentoEvento.setJanelasHorario(janela);
-                agendamentoEvento.setData(agendamentoDia.dia());
-                agendamentoEvento.preencherDiaDaSemana();
-                agendamentoEvento.setRecorrencia(recorrenciaSalva);
-                agendamentoEvento.setIsEvento(true);
-                agendamentoEvento.setStatus("ATIVO");
-                agendamentoEvento.setSolicitante(usuario.getNome()); 
-                //estou considerando que a propria pessoa que agendou é a solicitante, pois na tela não tem nada disso.
-                agendamentoEventoRepository.save(agendamentoEvento);
+        for (JanelasHorario janela : horariosEncontrados) {
+            AgendamentoEvento agendamento = new AgendamentoEvento();
+            agendamento.setUsuario(usuario);
+            agendamento.setSala(sala);
+            agendamento.setEvento(evento);
+            agendamento.setData(diaAgendado);
+            agendamento.setJanelasHorario(janela);
+            agendamento.setRecorrencia(recorrencia);
+            agendamento.setIsEvento(true);
+            agendamento.setStatus("ATIVO");
+            agendamento.setSolicitante(usuario.getNome());
+            agendamento.preencherDiaDaSemana();
 
+            agendamentoEventoRepository.save(agendamento);
+
+            if (primeiroAgendamentoSalvo == null) {
+                primeiroAgendamentoSalvo = agendamento;
             }
-
         }
-           
     }
+
+    return primeiroAgendamentoSalvo.getId();
+}
+
 
     private AgendamentoEventoResponseDTO converterParaResponseDTO(AgendamentoEvento agendamentoEvento){
         return new AgendamentoEventoResponseDTO(

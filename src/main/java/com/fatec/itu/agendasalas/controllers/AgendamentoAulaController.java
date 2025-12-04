@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,29 +47,54 @@ public class AgendamentoAulaController {
     @Operation(summary = "Cria um novo agendamento de aula")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201",
-            description = "Agendamento feito com sucesso"),
-        @ApiResponse(responseCode = "409",
-            description = "Conflito: horário indisponível"),
-        @ApiResponse(responseCode = "400",
-            description = "Requisição inválida")
+            description = "Agendamento feito com sucesso",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(example = "{ \"agendamentoAulaId\": 16 }")
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Requisição inválida",
+            content = @Content(schema = @Schema(hidden = true))
+        ),
+        @ApiResponse(
+            responseCode = "409",
+            description = "Conflito: horário indisponível",
+            content = @Content(schema = @Schema(hidden = true))
+        )
+
     })
-    public ResponseEntity<Void> criarAgendamentoAula(
+    public ResponseEntity<Map<String, Long>> criarAgendamentoAula(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Dados para criação de um agendamento de aula",
             required = true,
-            content = @Content(mediaType = "application/json",
+            content = @Content(
+                mediaType = "application/json",
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
-                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
-        @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
+                examples = @ExampleObject(
+                    value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }"
+                )
+            )
+        )
+        @Valid @RequestBody AgendamentoAulaCreationDTO dto
+    ) {
         try {
-            agendamentoAulaService.criar(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (AgendamentoComHorarioIndisponivelException a) {
+            Long id = agendamentoAulaService.criar(dto);
+
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("agendamentoAulaId", id));
+
+        } catch (AgendamentoComHorarioIndisponivelException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (RuntimeException e) {
+
+        } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+
 
     @Operation(summary="Cria um novo agendamento de aula em um dia específico")
     @PostMapping("/auxiliar-docente")
