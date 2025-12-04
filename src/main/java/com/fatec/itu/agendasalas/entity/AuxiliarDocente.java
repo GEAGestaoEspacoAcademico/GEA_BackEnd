@@ -17,10 +17,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "AUXILIAR_DOCENTES")
 @PrimaryKeyJoinColumn(name = "user_id")
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class AuxiliarDocente extends Usuario {
     
-    @EqualsAndHashCode.Include
     @Column(name = "area", nullable=false)
     private String area;
 

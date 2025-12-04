@@ -21,7 +21,7 @@ import lombok.Setter;
 @PrimaryKeyJoinColumn(name = "user_id")
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Professor extends Usuario {
 
     @EqualsAndHashCode.Include

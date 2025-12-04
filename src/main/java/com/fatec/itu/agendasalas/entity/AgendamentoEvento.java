@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "AGENDAMENTO_EVENTOS")
 @PrimaryKeyJoinColumn(name = "agendamento_id")
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 public class AgendamentoEvento extends Agendamento {
     
     @ManyToOne

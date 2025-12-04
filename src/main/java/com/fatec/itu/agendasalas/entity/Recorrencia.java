@@ -26,6 +26,7 @@ public class Recorrencia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     @Column(name="id", nullable = false)
     private Long id;
 
