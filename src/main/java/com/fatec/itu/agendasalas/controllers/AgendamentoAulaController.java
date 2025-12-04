@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class AgendamentoAulaController {
         }
     }
 
-    @Operation(summary="Cria um novo agendamento de aula em um dia específico")
+    @Operation(summary = "Cria um novo agendamento de aula em um dia específico")
     @PostMapping("/auxiliar-docente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Agendamento(s) criado(s) com sucesso",
@@ -86,8 +87,14 @@ public class AgendamentoAulaController {
                     schema = @Schema(implementation = AgendamentoAulaCreationByAuxiliarDocenteDTO.class),
                     examples = @ExampleObject(
                         value = "{ \"usuarioId\": 4, \"salaId\": 5, \"disciplinaId\": 3, \"data\": \"2026-11-23\", \"horaInicio\": \"07:20\", \"horaFim\": \"09:30\", \"solicitante\": \"Sergio Salgado\" }")))
-            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
-        return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
+            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+        List<AgendamentoAulaResponseDTO> novosAgendamentos = agendamentoAulaService.criarAgendamentoAulaByAD(dto);
+        if (novosAgendamentos == null || novosAgendamentos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        Long idPrimeiroAgendamento = novosAgendamentos.get(0).agendamentoAulaId();
+        URI location = URI.create("/agendamentos/aulas/" + idPrimeiroAgendamento);
+        return ResponseEntity.created(location).body(novosAgendamentos);
     }
 
 
