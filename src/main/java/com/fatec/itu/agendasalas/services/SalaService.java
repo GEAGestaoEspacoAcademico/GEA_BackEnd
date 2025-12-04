@@ -31,6 +31,7 @@ import com.fatec.itu.agendasalas.repositories.PisoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
+import com.fatec.itu.agendasalas.dto.salas.RecomendacaoResponseDTO;
 
 @Service
 public class SalaService {
@@ -132,6 +133,20 @@ public class SalaService {
     rankingSalas.sort(Comparator.comparing((SalaPontuadaDTO sala) -> sala.salaPontuacao()).reversed());
 
     return rankingSalas.stream().limit(5).map(SalaPontuadaDTO::sala).toList();
+  }
+
+  @Transactional
+  public RecomendacaoResponseDTO gerarRecomendacoes(RequisicaoDeSalaDTO requisicao) {
+    List<SalaDetailDTO> recomendadas = recomendacaoDeSala(requisicao);
+    List<SalaDetailDTO> candidatas = listarSalasCandidatas(requisicao);
+
+    var idsRecomendadas = recomendadas.stream().map(SalaDetailDTO::salaId).toList();
+
+    List<SalaDetailDTO> outrasOpcoes = candidatas.stream()
+        .filter(s -> !idsRecomendadas.contains(s.salaId()))
+        .toList();
+
+    return new RecomendacaoResponseDTO(recomendadas, outrasOpcoes);
   }
 
   @Transactional
