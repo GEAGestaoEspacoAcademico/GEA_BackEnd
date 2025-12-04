@@ -29,4 +29,9 @@ public class Coordenador extends Usuario {
         super(login, email, nome);
         this.registroCoordenacao = registroCoordenacao;
     }
+
+    public Coordenador(Long id, String login, String email, String nome, Long registroCoordenacao){
+        super(login, email, nome);
+        this.registroCoordenacao = registroCoordenacao;
+    }
 }
