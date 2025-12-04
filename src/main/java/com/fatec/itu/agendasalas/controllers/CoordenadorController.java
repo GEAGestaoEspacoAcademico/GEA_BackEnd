@@ -2,6 +2,7 @@ package com.fatec.itu.agendasalas.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorCreationDTO;
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorResponseDTO;
 import com.fatec.itu.agendasalas.entity.Coordenador;
@@ -21,6 +23,7 @@ import com.fatec.itu.agendasalas.exceptions.CoordenadorNaoEncontradoException;
 import com.fatec.itu.agendasalas.exceptions.RegistroCoordenacaoDuplicadoException;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.services.CoordenadorService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -70,6 +73,12 @@ public class CoordenadorController {
 
 
     @Operation(summary = "Lista todos os coordenadores existentes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode="200", description="Listagem dos coordenadores", 
+        content=@Content(mediaType="application/json", 
+            schema=@Schema(implementation=CoordenadorResponseDTO.class),
+            examples=@ExampleObject(value = "{ \"coordenadorUsuarioId\":10, \"coordenadorNome\": \"Coord. Lucimar de Santi\", \"coordenadorEmail\": \"lucimar.desanti@fatec.sp.gov.br\", \"registroCoordenacao\": 2001, \"cargoId\": 4 }")))
+    })
     @GetMapping
     // @PreAuthorize("hasRole('ADMIN')")
     public List<CoordenadorResponseDTO> listar() {

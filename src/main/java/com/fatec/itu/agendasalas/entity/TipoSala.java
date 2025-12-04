@@ -20,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TipoSala implements Serializable {
   private static final long serialVersionUID = 1L;
 

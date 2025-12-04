@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
@@ -22,7 +24,8 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome(), curso.getSigla());
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getId(), curso.getSigla(), curso.getCoordenador().getId(),
+                curso.getCoordenador().getNome());
     }
 
     public CursoService(CursoRepository cursoRepository) {
@@ -54,7 +57,8 @@ public class CursoService {
 
     public CursoListDTO buscarPorId(Long id) {
         Curso cursoEncontrado = cursoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         return converteCursoParaDTO(cursoEncontrado);
     }
 
