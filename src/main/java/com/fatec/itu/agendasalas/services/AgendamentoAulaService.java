@@ -61,14 +61,18 @@ public class AgendamentoAulaService {
 
     @Transactional
     //método para a tela Agendar Sala da Matéria dos ADS
-    public void criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO){
+    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO){
+        List<AgendamentoAula> agendamentoAulasFeitos = new ArrayList<>();
         LocalDate dataInicial = agendamentoAulaCreationComRecorrenciaDTO.dataInicio();
         LocalDate dataFinal = agendamentoAulaCreationComRecorrenciaDTO.dataFim();
         List<Long> janelasHorarioId = agendamentoAulaCreationComRecorrenciaDTO.janelasHorarioId();
+
         Disciplina disciplina = disciplinaRepository.findById(agendamentoAulaCreationComRecorrenciaDTO.disciplinaId()).orElseThrow(()->new RuntimeException("aa"));
         Sala sala = salaRepository.findById(agendamentoAulaCreationComRecorrenciaDTO.salaId()).orElseThrow(()-> new RuntimeException("aa"));
+       
         Recorrencia recorrencia = new Recorrencia(dataInicial, dataFinal);
         Recorrencia recorrenciaSalva = recorrenciaRepository.save(recorrencia);
+
         Usuario usuario = usuarioRepository.findById(agendamentoAulaCreationComRecorrenciaDTO.usuarioId()).orElseThrow(()-> new RuntimeException("AA"));
         DayOfWeek diaDaSemana = agendamentoAulaCreationComRecorrenciaDTO.diaDaSemana().toJavaDay();
         while(!dataInicial.isAfter(dataFinal)){
@@ -92,11 +96,14 @@ public class AgendamentoAulaService {
                     agendamentoAula.setRecorrencia(recorrenciaSalva);
                     agendamentoAula.setStatus("ATIVO");
                     agendamentoAulaRepository.save(agendamentoAula);
-
+                    agendamentoAulasFeitos.add(agendamentoAula);
                 }
             }
             dataInicial = dataInicial.plusDays(1);
         }
+        return agendamentoAulasFeitos.stream()
+        .map(this::converterParaResponseDTO)
+        .toList();
     }
 
     @Transactional
@@ -166,7 +173,7 @@ public class AgendamentoAulaService {
                                                                 + dto.disciplinaId()));
 
                 List<JanelasHorario> horariosDisponiveis =
-                                janelasHorarioRepository.findDisponiveisPorData(dto.data());
+                                janelasHorarioRepository.findDisponiveisPorData(dto.data(), dto.salaId());
 
                 Set<Long> idsDesejados = LongStream
                                 .range(dto.janelasHorarioId(),
@@ -284,29 +291,24 @@ public class AgendamentoAulaService {
                 return converterParaResponseDTO(updated);
         }
 
-        
-
     private AgendamentoAulaResponseDTO converterParaResponseDTO(AgendamentoAula agendamento) {
-    return new AgendamentoAulaResponseDTO(
-        agendamento.getId(),
-        agendamento.getUsuario() != null ? agendamento.getUsuario().getNome() : null,
-        agendamento.getSala() != null ? agendamento.getSala().getNome() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getId() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getNome() : null,
-        agendamento.getDisciplina() != null ? agendamento.getDisciplina().getSemestre() : null,
-        agendamento.getDisciplina() != null && agendamento.getDisciplina().getCurso() != null
-            ? agendamento.getDisciplina().getCurso().getNomeCurso()
-            : null,
-        agendamento.getDisciplina() != null && agendamento.getDisciplina().getProfessor() != null
-            ? agendamento.getDisciplina().getProfessor().getNome()
-            : "Não atribuído",
-        agendamento.getData(),
-        agendamento.getDiaDaSemana(),
-        agendamento.getJanelasHorario().getHoraInicio(),
-        agendamento.getJanelasHorario().getHoraFim(),
-        agendamento.getIsEvento().booleanValue()
-        );
-    }
+         return new AgendamentoAulaResponseDTO(
+                 agendamento.getId(),
+                 agendamento.getUsuario().getNome(),
+                 agendamento.getSala().getId(),
+                 agendamento.getSala().getNome(),
+                 agendamento.getDisciplina().getId(),
+                 agendamento.getDisciplina().getNome(),
+                 agendamento.getDisciplina().getSemestre(),
+                 agendamento.getDisciplina().getCurso().getNomeCurso(),
+                 agendamento.getDisciplina().getProfessor().getNome(),
+                 agendamento.getData(),
+                 agendamento.getDiaDaSemana(),
+                 agendamento.getJanelasHorario().getId(),
+                 agendamento.getJanelasHorario().getHoraInicio(),
+                 agendamento.getJanelasHorario().getHoraFim(),
+                 agendamento.getIsEvento());
+        }
 
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {

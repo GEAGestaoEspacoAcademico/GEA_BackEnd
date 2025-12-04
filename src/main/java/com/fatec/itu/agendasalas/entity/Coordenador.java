@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+
 @Table(name = "COORDENADORES")
 @PrimaryKeyJoinColumn(name = "user_id")
 @Getter
@@ -22,9 +23,9 @@ public class Coordenador extends Usuario {
     
     @EqualsAndHashCode.Include
     @Column(name = "registro_coordenacao", nullable = false, unique = true)
-    private int registroCoordenacao;
+    private Long registroCoordenacao;
     
-    public Coordenador(String login, String email, String nome, int registroCoordenacao){
+    public Coordenador(String login, String email, String nome, Long registroCoordenacao){
         super(login, email, nome);
         this.registroCoordenacao = registroCoordenacao;
     }

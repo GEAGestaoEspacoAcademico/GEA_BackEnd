@@ -607,6 +607,31 @@ Exclui um curso.
 
 ---
 
+### Listar Disciplinas por ID do Curso
+**GET** `/cursos/{cursoId}/disciplinas`
+
+Lista todas as disciplinas do Curso.
+
+**Parâmetros de URL:**
+- `cursoId` (Long) - ID do curso
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "disciplinaId": 1,
+    "disciplinaNome": "Engenharia de Software III",
+    "disciplinaSemestre": "2025.2",
+    "cursoNome": "Análise e Desenvolvimento de Sistemas"
+  }
+]
+```
+
+**Possíveis Exceções:**
+- `"Curso não encontrado. Id={cursoId}"` - Curso não encontrado
+
+---
+
 ## 🎭 Cargos
 
 ### Listar Todos os Cargos

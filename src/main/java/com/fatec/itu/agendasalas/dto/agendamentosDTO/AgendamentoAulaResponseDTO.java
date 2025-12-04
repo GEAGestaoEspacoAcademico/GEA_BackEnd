@@ -6,6 +6,7 @@ import java.time.LocalTime;
 public record AgendamentoAulaResponseDTO(
     Long agendamentoAulaId,
     String usuarioNome,
+    Long salaId,
     String salaNome,
     Long disciplinaId,
     String disciplinaNome,
@@ -14,6 +15,7 @@ public record AgendamentoAulaResponseDTO(
     String professorNome,
     LocalDate data,
     String diaDaSemana,
+    Long janelaHorarioId,
     LocalTime horaInicio,
     LocalTime horaFim,
     boolean isEvento

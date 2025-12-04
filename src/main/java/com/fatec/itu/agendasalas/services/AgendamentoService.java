@@ -3,12 +3,13 @@ package com.fatec.itu.agendasalas.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisciplinaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
