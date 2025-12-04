@@ -24,7 +24,7 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getId(), curso.getSigla(),
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getId(), curso.getSigla(), curso.getCoordenador().getId(),
                 curso.getCoordenador().getNome());
     }
 
