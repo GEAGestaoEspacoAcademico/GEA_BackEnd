@@ -9,6 +9,7 @@ import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.exceptions.CursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 
@@ -42,8 +43,14 @@ public class DisciplinaService {
         return converterParaDTO(disciplinaRepository.findAll());
     }
 
-    public List<DisciplinaListDTO> listarDisciplinasPorProfessor(Long idProfessor) {
-        return converterParaDTO(disciplinaRepository.findByProfessorId(idProfessor));
+    public List<DisciplinaListDTO> listarDisciplinasPorProfessor(Long professorId) {
+        return converterParaDTO(disciplinaRepository.findByProfessorId(professorId));
+    }
+
+    public List<DisciplinaListDTO> listarDisciplinasPorCurso(Long cursoId){
+        Curso curso = cursoRepository.findById(cursoId)
+            .orElseThrow(() -> new CursoNaoEncontradoException(cursoId));
+        return converterParaDTO(disciplinaRepository.findByCursoId(curso.getId()));
     }
 
     public DisciplinaListDTO buscarPorId(Long id) {
@@ -78,4 +85,5 @@ public class DisciplinaService {
             .orElseThrow(() -> new RuntimeException("Disciplina não encontrada"));
     }
 
+   
 }

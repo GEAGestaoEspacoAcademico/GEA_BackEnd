@@ -1,11 +1,13 @@
 package com.fatec.itu.agendasalas.dto.salas;
 
 public record SalaDetailDTO(
-    Long salaId, 
-    String salaNome, 
-    int capacidade, 
-    int piso, 
+    Long salaId,
+    String salaNome,
+    int capacidade,
     boolean disponibilidade,
-    String tipoSala, 
+    Long tipoSalaId,
+    String tipoSala,
+    Long pisoId,
+    String piso,
     String salaObservacoes
-){}
+){ }

@@ -4,6 +4,6 @@ public record CoordenadorResponseDTO(
         Long coordenadorUsuarioId,
         String coordenadorNome,
         String coordenadorEmail,
-        int registroCoordenacao,
+        Long registroCoordenacao,
         Long cargoId
 ){}

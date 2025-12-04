@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,10 @@ import lombok.Setter;
 @Table(name = "EVENTOS")
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Evento implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +39,7 @@ public class Evento implements Serializable {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = true)
     private String descricao;
 
 }

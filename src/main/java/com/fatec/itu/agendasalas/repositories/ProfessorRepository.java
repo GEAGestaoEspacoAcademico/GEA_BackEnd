@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import com.fatec.itu.agendasalas.entity.Professor;
 
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
-    Optional<Professor> deleteByRegistroProfessor(Long registroProfessor);
 
     Optional<Professor> findByRegistroProfessor(Long registroProfessor);
 
