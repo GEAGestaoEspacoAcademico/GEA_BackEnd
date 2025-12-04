@@ -3,7 +3,7 @@ package com.fatec.itu.agendasalas.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoRequestDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoResponseDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisciplinaDTO;
-import com.fatec.itu.agendasalas.entity.Usuario;
-import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+ 
 import com.fatec.itu.agendasalas.services.AgendamentoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
+ 
 
 @CrossOrigin
 @RestController
@@ -38,8 +37,7 @@ public class AgendamentoController {
 
     private final AgendamentoService agendamentoService;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    
 
     public AgendamentoController(AgendamentoService agendamentoService) {
         this.agendamentoService = agendamentoService;
@@ -110,39 +108,11 @@ public class AgendamentoController {
             examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                 value = "{ \"motivoCancelamento\": \"Professor ausente\", \"usuarioId\": 5 }")))
     @PutMapping("/{id}/cancelar")
-    public ResponseEntity<?> cancelarAgendamento(
+    public ResponseEntity<AgendamentoCanceladoResponseDTO> cancelarAgendamento(
         @Parameter(description = "ID do agendamento a ser cancelado") @PathVariable Long id,
         @RequestBody AgendamentoCanceladoRequestDTO request) {
 
-            if (request.motivoCancelamento() == null || request.motivoCancelamento().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("O motivo do cancelamento é obrigatório.");
-            }
-
-            if (request.usuarioId() == null) {
-                return ResponseEntity.badRequest().body("O ID do usuário é obrigatório.");
-            }
-
-            try {
-        
-                Usuario usuarioCancelador = usuarioRepository.findById(request.usuarioId())
-                    .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
-
-                AgendamentoCanceladoResponseDTO responseDTO =
-                agendamentoService.cancelarAgendamento(id, usuarioCancelador, request);
-
-                return ResponseEntity.ok(responseDTO);
-
-            } catch (EntityNotFoundException e) {
-                return ResponseEntity.status(404).body(e.getMessage());
-
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-
-            } catch (IllegalStateException e) {
-                return ResponseEntity.status(409).body(e.getMessage());
-
-            } catch (Exception e) {
-                return ResponseEntity.internalServerError().body("Erro inesperado no cancelamento: " + e.getMessage());
-            }
+        AgendamentoCanceladoResponseDTO responseDTO = agendamentoService.cancelarAgendamento(id, request);
+        return ResponseEntity.ok(responseDTO);
     }
 }

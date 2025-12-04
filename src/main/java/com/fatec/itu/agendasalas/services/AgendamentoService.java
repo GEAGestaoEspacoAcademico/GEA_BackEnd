@@ -20,6 +20,8 @@ import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
 import com.fatec.itu.agendasalas.entity.AgendamentoEvento;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.RequisicaoInvalidaException;
+import com.fatec.itu.agendasalas.exceptions.RecursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
@@ -39,6 +41,9 @@ public class AgendamentoService {
 
     @Autowired
     private AgendamentoCanceladoRepository agendamentoCanceladoRepository;
+    
+    @Autowired
+    private com.fatec.itu.agendasalas.repositories.UsuarioRepository usuarioRepository;
 
     public List<AgendamentoDTO> listarAgendamentos() {
 
@@ -117,11 +122,25 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoCanceladoResponseDTO cancelarAgendamento(
         Long agendamentoId,
-        Usuario usuarioCancelador,
         AgendamentoCanceladoRequestDTO request
     ) {
+        if (request == null) {
+            throw new RequisicaoInvalidaException("Requisição de cancelamento inválida.");
+        }
+
+        if (request.motivoCancelamento() == null || request.motivoCancelamento().trim().isEmpty()) {
+            throw new RequisicaoInvalidaException("O motivo do cancelamento é obrigatório.");
+        }
+
+        if (request.usuarioId() == null) {
+            throw new RequisicaoInvalidaException("O ID do usuário é obrigatório.");
+        }
+
+        Usuario usuarioCancelador = usuarioRepository.findById(request.usuarioId())
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado."));
+
         Agendamento agendamentoOriginal = agendamentoRepository.findById(agendamentoId)
-            .orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
+            .orElseThrow(() -> new RecursoNaoEncontradoException("Agendamento não encontrado com ID: " + agendamentoId));
 
         String motivoCancelamento = request.motivoCancelamento();
 
@@ -129,7 +148,7 @@ public class AgendamentoService {
             agendamentoOriginal,
             usuarioCancelador,
             motivoCancelamento
-    );
+        );
 
         AgendamentoCancelado registroPersistido = agendamentoCanceladoRepository.save(registroCancelado);
 
@@ -142,7 +161,7 @@ public class AgendamentoService {
             .motivoCancelamento(registroPersistido.getMotivoCancelamento())
             .dataHoraCancelamento(registroPersistido.getDataHoraCancelamento())
             .build();
-        }
+    }
 
     private AgendamentoCancelado buildRegistroCancelado(
         Agendamento agendamentoOriginal, 
@@ -177,10 +196,6 @@ public class AgendamentoService {
         return builder.build();
     }
     
-    private static class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String message) {
-            super(message);
-        }
-    }
+    
 
 }
