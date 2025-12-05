@@ -225,34 +225,35 @@ public class AgendamentoAulaService {
 
                 boolean sequenciaEstaDisponivel = idsDisponiveis.containsAll(idsDesejados);
 
-                if (sequenciaEstaDisponivel) {
-                        int quantidadeAulasRestantes = dto.quantidade() - 1;
-
-                        for (int i = 0; i <= quantidadeAulasRestantes; i++) {
-                                long idDesejado = dto.janelasHorarioId() + i;
-                                JanelasHorario janela = horariosDisponiveis.stream()
-                                                .filter(j -> j.getId().longValue() == idDesejado)
-                                                .findFirst()
-                                                .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
-                                                                "Janela de horário inválida: " + idDesejado));
-
-                                if(agendamentoConflitoService.janelaHorarioPassou(dto.data(), janela.getHoraInicio(), janela.getHoraFim())){
-                                        throw new JanelaHorarioPassouException(dto.data(), janela.getHoraInicio(), janela.getHoraFim());
-                                }
-                                AgendamentoAula proximoAgendamento = new AgendamentoAula();
-
-                                proximoAgendamento.setUsuario(usuario);
-                                proximoAgendamento.setSala(sala);
-                                proximoAgendamento.setDisciplina(disciplina);
-                                proximoAgendamento.setData(dto.data());
-                                proximoAgendamento.setIsEvento((dto.isEvento()));
-                                proximoAgendamento.setJanelasHorario(janela);
-
-                                agendamentoAulaRepository.save(proximoAgendamento);
-                        }
-                } else {
-                        throw new AgendamentoComHorarioIndisponivelException("Horário indisponivel para esse agendamento.");
+                if (!sequenciaEstaDisponivel) {
+                        throw new AgendamentoComHorarioIndisponivelException(
+                                "Horário indisponível para esse agendamento.");
                 }
+                
+                Recorrencia recorrencia = new Recorrencia(dto.data(), dto.data());
+                recorrencia = recorrenciaRepository.save(recorrencia);
+                
+                int quantidadeAulasRestantes = dto.quantidade() - 1;
+
+                for (int i = 0; i <= quantidadeAulasRestantes; i++) {
+                        long idDesejado = dto.janelasHorarioId() + i;
+                        JanelasHorario janela = horariosDisponiveis.stream()
+                                        .filter(j -> j.getId().longValue() == idDesejado)
+                                        .findFirst()
+                                        .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
+                                                        "Janela de horário inválida: " + idDesejado));
+
+                        AgendamentoAula proximoAgendamento = new AgendamentoAula();
+
+                        proximoAgendamento.setUsuario(usuario);
+                        proximoAgendamento.setSala(sala);
+                        proximoAgendamento.setDisciplina(disciplina);
+                        proximoAgendamento.setData(dto.data());
+                        proximoAgendamento.setIsEvento((dto.isEvento()));
+                        proximoAgendamento.setJanelasHorario(janela);
+                        proximoAgendamento.setRecorrencia(recorrencia);                                
+                        agendamentoAulaRepository.save(proximoAgendamento);
+                        } 
         }
 
         public List<AgendamentoAulaResponseDTO> listarTodos() {
