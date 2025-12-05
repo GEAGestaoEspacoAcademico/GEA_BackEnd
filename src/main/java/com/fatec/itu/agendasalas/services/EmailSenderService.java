@@ -105,7 +105,7 @@ public class EmailSenderService {
 
             <div class="container">
                 <div class="card">
-
+                    <h1> E-MAIL DE TESTE DO SISTEMA GEA </h1>
                     <h2>Recuperação de Senha</h2>
 
                     <p>Olá, <b>%s</b>!</p>
