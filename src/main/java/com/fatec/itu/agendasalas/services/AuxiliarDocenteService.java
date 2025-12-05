@@ -14,6 +14,7 @@ import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -57,7 +58,7 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
 
           
             auxiliarDocente.setSenha(passwordEncryptService.criptografarSenha(auxiliarDocenteCreationDTO.senha()));
-            Cargo cargo = cargoRepository.findByNome("AUXILIAR_DOCENTE").orElseThrow(()-> new RuntimeException("CARGO AUXILIAR DOCENTE NÃO ENCONTRADO"));
+            Cargo cargo = cargoRepository.findByNome("AUXILIAR_DOCENTE").orElseThrow(()-> new EntityNotFoundException("CARGO AUXILIAR DOCENTE NÃO ENCONTRADO"));
             auxiliarDocente.setCargo(cargo);
 
             auxiliarDocenteRepository.save(auxiliarDocente);
