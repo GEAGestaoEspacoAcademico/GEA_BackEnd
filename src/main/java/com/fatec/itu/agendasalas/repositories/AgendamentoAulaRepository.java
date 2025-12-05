@@ -20,4 +20,7 @@ public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula
     List<AgendamentoAula> findByProfessorId(@Param("professorId") Integer professorId);
 
     AgendamentoAula findBySalaIdAndDataAndJanelasHorarioId(Long salaId, LocalDate data, Long janelaId);
+
+    @Query("SELECT CASE WHEN (COUNT(a) > 0) THEN true ELSE false END FROM AgendamentoAula a WHERE a.sala.id <> :salaId AND a.data = :data AND a.janelasHorario.id = :janelaId AND a.disciplina.professor.id = :professorId")
+    boolean checarDisponibilidadeProfessor(@Param("salaId") Long salaId, @Param("data") LocalDate data, @Param("janelaId") Long janelaId, @Param("professorId") Long professorId);
 }

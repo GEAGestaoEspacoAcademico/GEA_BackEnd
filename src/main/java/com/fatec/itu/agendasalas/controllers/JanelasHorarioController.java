@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorDataRequestDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorVariasDatasRequestDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
 import com.fatec.itu.agendasalas.services.JanelasHorarioService;
-import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorDataRequestDTO;
-import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorVariasDatasRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -134,8 +134,6 @@ public class JanelasHorarioController {
             List<JanelasHorarioResponseDTO> listaDTO = janelasHorarioService.buscarDisponiveisPorDataDTO(data, salaId);
             return ResponseEntity.ok(listaDTO);
     }
-
-
 
     @Operation(summary = "Lista os horários disponíveis em várias datas")
     @PostMapping("/disponiveis/datas")

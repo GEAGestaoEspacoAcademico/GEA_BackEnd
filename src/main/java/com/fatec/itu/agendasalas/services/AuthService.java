@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationResponseDTO;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.SenhaInvalidaException;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 @Service
@@ -25,7 +26,7 @@ public class AuthService {
             String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
             return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome);
         }
-        throw new RuntimeException("Erro ao validar senha");
+        throw new SenhaInvalidaException("Erro ao validar senha");
     }
 
  
