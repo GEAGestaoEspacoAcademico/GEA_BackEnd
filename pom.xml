@@ -73,7 +73,10 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+		</dependency>
 
 		
 		<dependency>

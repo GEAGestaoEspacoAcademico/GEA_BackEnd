@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 
 @Repository
-public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula, Long> {
+public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula, Long>, JpaSpecificationExecutor<AgendamentoAula> {
 
     // Buscar agendamentos de aula por disciplina
     @Query("SELECT a FROM AgendamentoAula a WHERE a.disciplina.id = :disciplinaId")

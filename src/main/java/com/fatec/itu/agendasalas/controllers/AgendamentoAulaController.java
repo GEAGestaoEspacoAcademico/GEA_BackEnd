@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAuxiliarDocenteDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComRecorrenciaDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.dto.paginacaoDTO.PageableResponseDTO;
-import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -227,10 +227,11 @@ public class AgendamentoAulaController {
 
     @PostMapping("/busca")
     public ResponseEntity<PageableResponseDTO<AgendamentoAulaResponseDTO>> buscaAgendamentosAulaComFiltros(
-        @RequestParam(required=false, defaultValue=1) int page,
-        @RequestParam(required=false, defaultValue=10) int limit,
-        @
+        @Valid @RequestBody AgendamentoAulaFilterDTO filtros,
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "10") int limit,
+        @RequestParam(required = false, defaultValue="ASC") String sort
     ){
-
+        return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
     }
 }
