@@ -28,6 +28,7 @@ import com.fatec.itu.agendasalas.exceptions.AgendamentoRecorrenteComDataInicialA
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.exceptions.DataNoPassadoException;
 import com.fatec.itu.agendasalas.exceptions.JanelaHorarioPassouException;
+import com.fatec.itu.agendasalas.exceptions.ProfessorJaPossuiAgendamentoEmOutraSalaException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
@@ -160,6 +161,10 @@ public class AgendamentoAulaService {
                 
            if(agendamentoConflitoService.existeAgendamentoNoHorario(sala.getId(), data, janela.getId())){
                 throw new ConflitoAoAgendarException(sala.getNome(), data, janela.getHoraInicio(), janela.getHoraFim());
+            }
+            
+            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(sala.getId(), data, janela.getId(), disciplina.getProfessor().getId())){
+                throw new ProfessorJaPossuiAgendamentoEmOutraSalaException(data, janela.getHoraInicio(), janela.getHoraFim(), disciplina.getProfessor().getNome());
             }
 
             AgendamentoAula agendamento = new AgendamentoAula();

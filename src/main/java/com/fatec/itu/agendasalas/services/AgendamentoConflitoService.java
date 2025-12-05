@@ -52,5 +52,8 @@ public class AgendamentoConflitoService {
         return fim.isBefore(LocalTime.now());
     }
 
-
+    public boolean professorJaPossuiAgendamentoEmOutraSala(Long salaId, LocalDate data, Long janelaId, Long professorId){
+        return agendamentoAulaRepository.checarDisponibilidadeProfessor(salaId, data, janelaId, professorId);
+    }
+    
 }
