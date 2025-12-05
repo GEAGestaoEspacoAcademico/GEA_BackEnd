@@ -39,7 +39,7 @@ public class AgendamentoConflitoService {
     }
 
     public boolean professorJaPossuiAgendamentoEmOutraSala(Long salaId, LocalDate data, Long janelaId, Long professorId){
-        return agendamentoAulaRepository.existsBySalaIdAndDataAndJanelasHorarioIdAndProfessorId(salaId, data, janelaId, professorId);
+        return agendamentoAulaRepository.checarDisponibilidadeProfessor(salaId, data, janelaId, professorId);
     }
     
 }

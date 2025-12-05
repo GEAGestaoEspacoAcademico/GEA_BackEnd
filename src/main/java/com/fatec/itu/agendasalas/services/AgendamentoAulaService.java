@@ -28,6 +28,7 @@ import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.exceptions.DisciplinaNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.SalaNaoEncontradaException;
 import com.fatec.itu.agendasalas.exceptions.UsuarioNaoEncontradoException;
+import com.fatec.itu.agendasalas.exceptions.ProfessorJaPossuiAgendamentoEmOutraSalaException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
@@ -134,7 +135,9 @@ public class AgendamentoAulaService {
                 throw new ConflitoAoAgendarException(sala.getNome(), data, janela.getHoraInicio(), janela.getHoraFim());
             }
             
-            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(data, janela.getId(), usuario.getId()))
+            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(sala.getId(), data, janela.getId(), disciplina.getProfessor().getId())){
+                throw new ProfessorJaPossuiAgendamentoEmOutraSalaException(data, janela.getHoraInicio(), janela.getHoraFim(), disciplina.getProfessor().getNome());
+            }
 
             AgendamentoAula agendamento = new AgendamentoAula();
             agendamento.setUsuario(usuario);
