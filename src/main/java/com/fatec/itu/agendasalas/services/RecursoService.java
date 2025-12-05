@@ -49,20 +49,14 @@ public class RecursoService {
   @Transactional
 public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
 
-    TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-        .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
-
     String nomePadronizado = StringUtils.capitalize(recursoDTO.recursoNome());
     
-<<<<<<< HEAD
     boolean existe = recursoRepository.existsByNomeIgnoreCase(nomePadronizado);
     if (existe) {
         throw new RecursoJaExisteException("O recurso informado já existe no sistema.");
     }
-=======
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
           .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
->>>>>>> 37bfcf1850f6d1db616bf14eb68e649d9b4b1323
 
     Recurso novoRecurso = new Recurso(nomePadronizado, tipo);
 
@@ -73,20 +67,12 @@ public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
 
   @Transactional
   public RecursoCompletoDTO atualizar(Long id, RecursoResumidoDTO recursoDTO) {
-<<<<<<< HEAD
-    Recurso recursoExistente = recursoRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado"));
-
-    TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-        .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
-=======
       Recurso recursoExistente = recursoRepository.findById(id)
           .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + id + " não encontrado"));
 
     
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
           .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
->>>>>>> 37bfcf1850f6d1db616bf14eb68e649d9b4b1323
 
     recursoExistente.setNome(recursoDTO.recursoNome());
     recursoExistente.setTipoRecurso(tipo);
