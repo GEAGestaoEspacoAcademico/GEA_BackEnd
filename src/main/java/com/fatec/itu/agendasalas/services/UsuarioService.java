@@ -8,33 +8,33 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRegisterDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
-import com.fatec.itu.agendasalas.entity.PasswordResetToken;
-import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.entity.Coordenador;
+import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Secretaria;
-import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
+import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.SenhasNaoConferemException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularCursoException;
+import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplinaException;
 import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
+import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
+import com.fatec.itu.agendasalas.repositories.CursoRepository;
+import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.PasswordResetTokenRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
-import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
-import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
-import com.fatec.itu.agendasalas.repositories.CursoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRegisterDTO;
-import com.fatec.itu.agendasalas.exceptions.usuarios.UsuarioNaoEncontradoException;
-import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
-import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplinaException;
-import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularCursoException;
 
 @Service
 public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, UsuarioResponseDTO> {
@@ -95,7 +95,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         usuario.setSenha(passwordEncryptService.criptografarSenha("Senha123@"));
 
         Cargo cargo = cargoRepository.findById(1L)
-            .orElseThrow(() -> new CargoNaoEncontradoException(1L));
+            .orElseThrow(() -> new EntityNotFoundException("Cargo de id: 1 não encontrado"));
         usuario.setCargo(cargo);
 
         usuarioRepository.save(usuario);
@@ -172,7 +172,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     }
 
     public UsuarioResponseDTO buscarUsuarioPorId(Long id){
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(()-> new RuntimeException("Usuario não encontrado"));
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Usuario de id "+ id + " não encontrado"));
         return conversaoUsuarioParaResponseDTO(usuario);
         
     }
@@ -194,7 +194,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         
         if(usuarioUpdateAdminDTO.cargoId() != null){
             Cargo cargo = cargoRepository.findById(usuarioUpdateAdminDTO.cargoId())
-            .orElseThrow(()-> new RuntimeException("Não encontrado cargo desejado"));
+            .orElseThrow(()-> new EntityNotFoundException("Cargo de id " + id + " não encontrado"));
             auxiliar.setCargo(cargo);
         }
 
@@ -214,7 +214,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         }
 
         if (!dto.novaSenha().equals(dto.repetirNovaSenha())) {
-            throw new RuntimeException("A nova senha e a de confirmação não coincidem");
+            throw new SenhasNaoConferemException();
         }
 
         passwordEncryptService.validarSenha(dto.novaSenha());
@@ -231,7 +231,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
    public void redefinirSenhaByAD(Long usuarioId, UsuarioRedefinirSenhaByAdDTO dto) {
 
     Usuario usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+            .orElseThrow(() -> new EntityNotFoundException("Usuário de id " + usuarioId + " não encontrado"));
 
     String novaSenha = dto.novaSenha();
 
@@ -249,7 +249,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
 
     public Usuario buscarUsuarioPeloEmail(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Usuário de e-mail " + email + " não encontrado"));
         return usuario;  
     }
 
@@ -270,7 +270,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     @Transactional
     public void deletarUsuario(Long usuarioId){
         Usuario usuario = usuarioRepository.findById(usuarioId)
-            .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+            .orElseThrow(() -> new EntityNotFoundException("Usuário de id " + usuarioId + " não encontrado"));
 
         List<com.fatec.itu.agendasalas.entity.Agendamento> agendamentos = agendamentoRepository.findByUsuarioId(usuarioId);
         if(agendamentos != null && !agendamentos.isEmpty()){

@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,6 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAu
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComRecorrenciaDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
-import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
-import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,17 +59,13 @@ public class AgendamentoAulaController {
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
                 examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
-        try {
+        
             agendamentoAulaService.criar(dto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (AgendamentoComHorarioIndisponivelException a) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+     
     }
 
-    @Operation(summary="Cria um novo agendamento de aula em um dia específico")
+    @Operation(summary = "Cria um novo agendamento de aula em um dia específico")
     @PostMapping("/auxiliar-docente")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Agendamento(s) criado(s) com sucesso",
@@ -86,8 +81,14 @@ public class AgendamentoAulaController {
                     schema = @Schema(implementation = AgendamentoAulaCreationByAuxiliarDocenteDTO.class),
                     examples = @ExampleObject(
                         value = "{ \"usuarioId\": 4, \"salaId\": 5, \"disciplinaId\": 3, \"data\": \"2026-11-23\", \"horaInicio\": \"07:20\", \"horaFim\": \"09:30\", \"solicitante\": \"Sergio Salgado\" }")))
-            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto){
-        return ResponseEntity.created(null).body(agendamentoAulaService.criarAgendamentoAulaByAD(dto));
+            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+        List<AgendamentoAulaResponseDTO> novosAgendamentos = agendamentoAulaService.criarAgendamentoAulaByAD(dto);
+        if (novosAgendamentos == null || novosAgendamentos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        Long idPrimeiroAgendamento = novosAgendamentos.get(0).agendamentoAulaId();
+        URI location = URI.create("/agendamentos/aulas/" + idPrimeiroAgendamento);
+        return ResponseEntity.created(location).body(novosAgendamentos);
     }
 
 
@@ -110,14 +111,14 @@ public class AgendamentoAulaController {
                         value = "{ \"usuarioId\": 7, \"dataInicio\": \"2026-02-02\", \"dataFim\": \"2026-06-06\", \"diaDaSemana\": \"SEGUNDA\", \"janelasHorarioId\": [1,2,3,4], \"disciplinaId\": 2, \"salaId\": 6 }")))
     @PostMapping("/recorrencia")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaComRecorrencia(@Valid @RequestBody AgendamentoAulaCreationComRecorrenciaDTO dto) {
-        try {
+        
             List<AgendamentoAulaResponseDTO> agendamentosCriados = agendamentoAulaService.criarAgendamentoAulaComRecorrencia(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(agendamentosCriados);
-        } catch (ConflitoAoAgendarException c) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+            return ResponseEntity.created(null).body(agendamentosCriados);
+       
+            
+        
+           
+        
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")
