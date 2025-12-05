@@ -20,6 +20,7 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAu
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComRecorrenciaDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCreatedResponseDTO;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,13 +46,15 @@ public class AgendamentoAulaController {
     @Operation(summary = "Cria um novo agendamento de aula")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201",
-            description = "Agendamento feito com sucesso"),
+            description = "Agendamento criado com sucesso",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = AgendamentoCreatedResponseDTO.class))),
         @ApiResponse(responseCode = "409",
             description = "Conflito: horário indisponível"),
         @ApiResponse(responseCode = "400",
             description = "Requisição inválida")
     })
-    public ResponseEntity<Void> criarAgendamentoAula(
+    public ResponseEntity<AgendamentoCreatedResponseDTO> criarAgendamentoAula(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Dados para criação de um agendamento de aula",
             required = true,
@@ -59,11 +62,18 @@ public class AgendamentoAulaController {
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
                 examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
-        
-            agendamentoAulaService.criar(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-     
-    }
+    
+        Long idCriado = agendamentoAulaService.criar(dto);
+
+        URI location = URI.create("/agendamentos/aulas/" + idCriado);
+
+        AgendamentoCreatedResponseDTO responseBody =
+            new AgendamentoCreatedResponseDTO(idCriado);
+
+        return ResponseEntity
+                .created(location)
+                .body(responseBody);
+    }   
 
     @Operation(summary = "Cria um novo agendamento de aula em um dia específico")
     @PostMapping("/auxiliar-docente")
