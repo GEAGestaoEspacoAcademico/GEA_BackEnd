@@ -168,8 +168,18 @@ public class RestExceptionHandler {
     //Erros de servidor (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAll(Exception ex, HttpServletRequest request) {
-         return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
     }
 
-
+    @ExceptionHandler(RecursoJaExisteException.class)
+    public ResponseEntity<ApiError> handleRecursoDuplicado(RecursoJaExisteException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+    }
 }

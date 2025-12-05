@@ -10,4 +10,6 @@ import com.fatec.itu.agendasalas.entity.Recurso;
 public interface RecursoRepository extends JpaRepository<Recurso, Long> {
 
     List<Recurso> findByTipoRecursoId(Long tipoId);
+    boolean existsByNome(String nome);
+    boolean existsByNomeIgnoreCase(String nome);
 }
