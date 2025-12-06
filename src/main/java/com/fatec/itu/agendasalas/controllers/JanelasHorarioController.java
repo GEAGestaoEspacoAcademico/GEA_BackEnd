@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorDataRequestDTO;
+import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioPorVariasDatasRequestDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.janelasHorario.JanelasHorarioUpdateDTO;
-import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.services.JanelasHorarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -120,17 +120,42 @@ public class JanelasHorarioController {
                 schema = @Schema(type = "array", implementation = JanelasHorarioResponseDTO.class),
                 examples = @ExampleObject(value = "[ { \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" } ]")))
     })
-    @GetMapping("/disponiveis/{data}")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+        description = "Data e sala a serem checadas",
+        required = true,
+        content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = JanelasHorarioPorDataRequestDTO.class),
+            examples = @ExampleObject(value = "{ \"data\": \"2026-01-10\", \"salaId\": 1 }")))
+    @PostMapping("/disponiveis")
     public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveis(
-        @Parameter(description = "Data para verificar disponibilidade (YYYY-MM-DD)") @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-            List<JanelasHorario> lista = janelasHorarioService.buscarDisponiveisPorData(data);
-            List<JanelasHorarioResponseDTO> listaDTO = lista.stream()
-            .map(j -> new JanelasHorarioResponseDTO(
-                    j.getId(),
-                    j.getHoraInicio(),
-                    j.getHoraFim()
-            ))
-            .toList();
+        @RequestBody JanelasHorarioPorDataRequestDTO request) {
+            LocalDate data = LocalDate.parse(request.data());
+            Long salaId = request.salaId();
+            List<JanelasHorarioResponseDTO> listaDTO = janelasHorarioService.buscarDisponiveisPorDataDTO(data, salaId);
             return ResponseEntity.ok(listaDTO);
-}
+    }
+
+    @Operation(summary = "Lista os horários disponíveis em várias datas")
+    @PostMapping("/disponiveis/datas")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+            description = "OK",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = JanelasHorarioResponseDTO.class),
+                examples = @ExampleObject(
+                    value = "[{ \"janelasHorarioId\": 1, \"horaInicio\": \"07:40:00\", \"horaFim\": \"09:20:00\" }]")))
+    })
+    public ResponseEntity<List<JanelasHorarioResponseDTO>> getDisponiveisEmVariasDatas(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Lista de datas e sala a serem checadas",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = JanelasHorarioPorVariasDatasRequestDTO.class),
+                    examples = @ExampleObject(
+                        value = "{ \"datas\": [\"2026-01-10\", \"2026-01-11\"], \"salaId\": 1 }")))
+        @RequestBody JanelasHorarioPorVariasDatasRequestDTO datasRequest) {
+
+        List<JanelasHorarioResponseDTO> listaDTO = janelasHorarioService.buscarDisponiveisEmVariasDatas(datasRequest);
+        return ResponseEntity.ok(listaDTO);
+    }
 }

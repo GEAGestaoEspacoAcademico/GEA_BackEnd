@@ -1,33 +1,37 @@
-package com.fatec.itu.agendasalas.entity;
+package com.fatec.itu.agendasalas.entity; 
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+
 @Table(name = "COORDENADORES")
 @PrimaryKeyJoinColumn(name = "user_id")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Coordenador extends Usuario {
     
+    @EqualsAndHashCode.Include
     @Column(name = "registro_coordenacao", nullable = false, unique = true)
-    private int registroCoordenacao;
+    private Long registroCoordenacao;
     
-    public Coordenador() {
-        super();
-    }
-    
-    public Coordenador(String login, String email, String nome, int registroCoordenacao){
+    public Coordenador(String login, String email, String nome, Long registroCoordenacao){
         super(login, email, nome);
         this.registroCoordenacao = registroCoordenacao;
     }
 
-    public int getRegistroCoordenacao() {
-        return registroCoordenacao;
-    }
-
-    public void setRegistroCoordenacao(int registroCoordenacao) {
+    public Coordenador(Long id, String login, String email, String nome, Long registroCoordenacao){
+        super(login, email, nome);
         this.registroCoordenacao = registroCoordenacao;
     }
-
 }

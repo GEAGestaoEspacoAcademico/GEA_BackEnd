@@ -12,15 +12,18 @@ import com.fatec.itu.agendasalas.dto.recursos.RecursoCompletoDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoResumidoDTO;
 import com.fatec.itu.agendasalas.entity.Recurso;
-import com.fatec.itu.agendasalas.entity.TipoRecurso;  
+import com.fatec.itu.agendasalas.entity.TipoRecurso;
+import com.fatec.itu.agendasalas.exceptions.RecursoJaExisteException;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.TipoRecursoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RecursoService {
   @Autowired
   RecursoRepository recursoRepository;
-  
+
   @Autowired
   TipoRecursoRepository tipoRecursoRepository;
 
@@ -30,45 +33,52 @@ public class RecursoService {
 
   private RecursoCompletoDTO transformarRecursoEmRecursoDTO(Recurso recurso) {
     return new RecursoCompletoDTO(recurso.getId(), recurso.getNome(), recurso.getTipoRecurso().getId());
-  } 
+  }
 
   public RecursoResponseDTO buscarPorId(Long id) {
-    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    Recurso recurso = recursoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + id + " não encontrado"));
     return transformarRecursoEmRecursoResponseDTO(recurso);
   }
-  
+
   public List<RecursoResponseDTO> listarTodosOsRecursos() {
     return recursoRepository.findAll().stream()
-    .map(recurso -> new RecursoResponseDTO(recurso.getId(), recurso.getNome(), recurso.getTipoRecurso().getNome()))
-    .toList();
+        .map(recurso -> new RecursoResponseDTO(recurso.getId(), recurso.getNome(), recurso.getTipoRecurso().getNome()))
+        .toList();
   }
 
   @Transactional
-  public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
+public RecursoCompletoDTO criar(RecursoResumidoDTO recursoDTO) {
+
+    String nomePadronizado = StringUtils.capitalize(recursoDTO.recursoNome());
     
+    boolean existe = recursoRepository.existsByNomeIgnoreCase(nomePadronizado);
+    if (existe) {
+        throw new RecursoJaExisteException("O recurso informado já existe no sistema.");
+    }
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-          .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
 
-      Recurso novoRecurso = new Recurso(recursoDTO.recursoNome(), tipo);
-      Recurso recursoSalvo = recursoRepository.save(novoRecurso);
+    Recurso novoRecurso = new Recurso(nomePadronizado, tipo);
 
-      return transformarRecursoEmRecursoDTO(recursoSalvo);
-  }
+    Recurso recursoSalvo = recursoRepository.save(novoRecurso);
+
+    return transformarRecursoEmRecursoDTO(recursoSalvo);
+}
 
   @Transactional
   public RecursoCompletoDTO atualizar(Long id, RecursoResumidoDTO recursoDTO) {
       Recurso recursoExistente = recursoRepository.findById(id)
-          .orElseThrow(() -> new RuntimeException("Recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + id + " não encontrado"));
 
     
       TipoRecurso tipo = tipoRecursoRepository.findById(recursoDTO.recursoTipoId())
-          .orElseThrow(() -> new RuntimeException("Tipo de recurso não encontrado"));
+          .orElseThrow(() -> new EntityNotFoundException("Tipo de recurso de id: " + recursoDTO.recursoTipoId() + " não encontrado"));
 
-      recursoExistente.setNome(recursoDTO.recursoNome());
-      recursoExistente.setTipoRecurso(tipo);
+    recursoExistente.setNome(recursoDTO.recursoNome());
+    recursoExistente.setTipoRecurso(tipo);
 
-      Recurso recursoSalvo = recursoRepository.save(recursoExistente);
-      return transformarRecursoEmRecursoDTO(recursoSalvo);
+    Recurso recursoSalvo = recursoRepository.save(recursoExistente);
+    return transformarRecursoEmRecursoDTO(recursoSalvo);
   }
 
   @Transactional
@@ -98,8 +108,7 @@ public class RecursoService {
               r.getId(),
               r.getNome(),
               r.getTipoRecurso().getId(),
-              Integer.valueOf(quantidadeTotal)
-          );
+              Integer.valueOf(quantidadeTotal));
         })
         .toList();
   }

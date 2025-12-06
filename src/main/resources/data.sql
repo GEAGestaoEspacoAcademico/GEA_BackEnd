@@ -2,7 +2,7 @@
 -- Alimenta o BD com cargos
 -- -----------------------------------------------------------------------------
 INSERT INTO CARGOS(nome)
-VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
+VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETARIA');
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com usuarios
@@ -10,7 +10,7 @@ VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR');
 -- Usuarios
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucasmorais@1022.com', 1);
+    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'aa', 1);
 -- senha: ls123
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
@@ -35,7 +35,7 @@ VALUES
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'sergio.salgado@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'lucasmorais2214@gmail.com', 3);
 -- senha: ss123
     
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
@@ -161,6 +161,29 @@ VALUES
     ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1);
 -- senha: ar123
 
+-- Adição de secretários(as)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Maria Oliveira', 'maria.oliveira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'maria.oliveira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('Beatriz Pereira', 'beatriz.pereira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'beatriz.pereira@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+VALUES
+    ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5);
+-- senha: ls123
+
+
+INSERT INTO SEMESTRES (nome) VALUES ('1º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('2º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('3º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('4º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('5º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('6º semestre');
 
 
 -- -----------------------------------------------------------------------------
@@ -213,47 +236,51 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
+
+-- Adiciona coluna 'excluida' se não existir
+ALTER TABLE DISCIPLINAS ADD COLUMN IF NOT EXISTS excluida BOOLEAN DEFAULT FALSE;
+
 -- Disciplinas: Curso ADS (curso_id = 1)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Engenharia de Software III', '2025.2', 5, 1),
-    ('Laboratório de Banco de Dados', '2025.2', 7, 1),
-    ('Programação Orientada à objetos', '2025.1', 6, 1),
-    ('Segurança da Informação', '2025.1', 8, 1),
-    ('Sistemas de Informação', '2024.1', 9, 1),
-    ('Algoritmos', '2024.1', 17, 1),
-    ('Programação Web', '2025.1', 17, 1),
-    ('Arq e Organização de Computadores', '2024.1', 18, 1),
-    ('Administração Geral', '2024.1', 19, 1),
-    ('Programação em Microinformática', '2024.1', 20, 1),
-    ('Comunicação e Expressão', '2024.1', 21, 1),
-    ('Matemática Discreta', '2024.1', 22, 1),
-    ('Banco de Dados', '2024.2', 24, 1),
-    ('Contabilidade', '2024.2', 23, 1),
-    ('Engenharia de Software I', '2024.2', 25, 1),
-    ('Linguagem de Programação', '2024.2', 24, 1);
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Engenharia de Software III', 2, 5, 1, FALSE),
+    ('Laboratório de Banco de Dados', 2, 7, 1, FALSE),
+    ('Programação Orientada à Objetos', 1, 6, 1, FALSE),
+    ('Segurança da Informação', 1, 8, 1, FALSE),
+    ('Sistemas de Informação', 1, 9, 1, FALSE),
+    ('Algoritmos', 1, 17, 1, FALSE),
+    ('Programação Web', 1, 17, 1, FALSE),
+    ('Arq e Organização de Computadores', 1, 18, 1, FALSE),
+    ('Administração Geral', 1, 19, 1, FALSE),
+    ('Programação em Microinformática', 1, 20, 1, FALSE),
+    ('Comunicação e Expressão', 1, 21, 1, FALSE),
+    ('Matemática Discreta', 1, 22, 1, FALSE),
+    ('Banco de Dados', 2, 24, 1, FALSE),
+    ('Contabilidade', 2, 23, 1, FALSE),
+    ('Engenharia de Software I', 2, 25, 1, FALSE),
+    ('Linguagem de Programação', 2, 24, 1, FALSE);
 
--- Disciplinas: Curso GTI (curso_id = 2)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Gestão de Projetos', '2024.2', 8, 2),
-    ('Governança de TI', '2024.2', 7, 2),
-    ('Processos Gerenciais', '2025.2', 25, 2),
-    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
-    ('Matemática Financeira', '2025.1', 21, 2),
-    ('Modelagem de Processos', '2024.2', 20, 2),
-    ('Gestão de Pessoas', '2024.2', 18, 2);
 
--- Disciplinas: Curso Mecatrônica Industrial (curso_id = 3)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Eletromagnetismo', '2023.2', 8, 3),
-    ('Cálculo', '2023.2', 7, 3),
-    ('Comunicação Acadêmica', '2024.1', 9, 3),
-    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
-    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
-    ('Estatística Descritiva', '2025.2', 5, 3),
-    ('Desenho Técnico', '2025.2', 23, 3);
+
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Gestão de Projetos', 2, 8, 2, FALSE),
+    ('Governança de TI', 2, 7, 2, FALSE),
+    ('Processos Gerenciais', 2, 25, 2, FALSE),
+    ('Gestão de Sistemas Operacionais', 2, 17, 2, FALSE),
+    ('Matemática Financeira', 1, 21, 2, FALSE),
+    ('Modelagem de Processos', 2, 20, 2, FALSE),
+    ('Gestão de Pessoas', 2, 18, 2, FALSE);
+
+
+
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Eletromagnetismo', 2, 8, 3, FALSE),
+    ('Cálculo', 2, 7, 3, FALSE),
+    ('Comunicação Acadêmica', 1, 9, 3, FALSE),
+    ('Sist. Eletroeletrônicos Aplicados I', 2, 21, 3, FALSE),
+    ('Int. Sistemas Dimensionais', 1, 25, 3, FALSE),
+    ('Estatística Descritiva', 2, 5, 3, FALSE),
+    ('Desenho Técnico', 2, 23, 3, FALSE);
+
 
 
     INSERT INTO TIPOS_SALAS (nome)
@@ -265,24 +292,34 @@ VALUES
 
 
 -- -----------------------------------------------------------------------------
+-- Alimenta o BD com Andares
+-- -----------------------------------------------------------------------------
+INSERT INTO PISOS (nome)
+VALUES 
+    ('Térreo'),
+    ('1º Andar'),
+    ('2º Andar');
+
+    
+-- -----------------------------------------------------------------------------
 -- Alimenta o BD com Salas
 -- -----------------------------------------------------------------------------
 -- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
-INSERT INTO SALAS (nome, capacidade, piso, disponibilidade, id_tipo_sala, observacoes)
+INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, piso_id, observacoes)
 VALUES 
-    ('Lab 301', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 302', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 303', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Lab 304', 30, 3, FALSE, 2, 'Laboratório com 30 computadores'),
-    ('Lab 305', 25, 3, FALSE, 2, 'Laboratório de redes e infraestrutura'),
-    ('Lab 306', 30, 3, FALSE, 2, 'Laboratório com computadores high-end'),
-    ('Sala 101', 40, 1, FALSE, 1, 'Sala com projetor e ar condicionado'),
-    ('Sala 102', 40, 1, FALSE, 1, 'Sala com lousa digital'),
-    ('Sala 201', 50, 2, FALSE, 1, 'Auditório pequeno'),
-    ('Sala 202', 35, 2, FALSE, 2, 'Sala com projetor'),
-    ('Sala 103', 40, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'),
-    ('Sala 104', 35, 1, TRUE, 1, 'Sala de aula padrão com lousa branca'), 
-    ('Sala 203', 50, 2, TRUE, 1, 'Sala ampla com duas lousas');
+    ('Lab 301', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 302', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 303', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Lab 304', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 305', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 306', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Sala 101', 40, FALSE, 1, 1, 'Sala com projetor e ar condicionado'),
+    ('Sala 102', 40, FALSE, 1, 1, 'Sala com lousa digital'),
+    ('Sala 201', 50, FALSE, 1, 2, 'Auditório pequeno'),
+    ('Sala 202', 35, FALSE, 2, 2, 'Sala com projetor'),
+    ('Sala 103', 40, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'),
+    ('Sala 104', 35, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'), 
+    ('Sala 203', 50, TRUE, 1, 2, 'Sala ampla com duas lousas');
 
 
 -- -----------------------------------------------------------------------------

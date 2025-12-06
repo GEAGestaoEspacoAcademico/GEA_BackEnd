@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationResponseDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRegisterDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.services.AuthService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
@@ -50,11 +50,11 @@ public class AuthController {
                 description = "Dados para criação de um novo usuário",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioCreationDTO.class),
+                    schema = @Schema(implementation = UsuarioRegisterDTO.class),
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-                        value = "{ \"usuarioLogin\": \"ana.maria\", \"usuarioNome\": \"Ana Maria\", \"usuarioEmail\": \"ana.maria@fatec.edu.br\", \"usuarioSenha\": \"SenhaForte2025!\" }")))
-            @RequestBody UsuarioCreationDTO usuarioDTO) {
-        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
+                        value = "{ \"usuarioNome\": \"Felipa Elisélvisky\", \"usuarioEmail\": \"felipa.eliselvisky@exemplo.com\" }")))
+            @RequestBody UsuarioRegisterDTO usuarioRegisterDTO) {
+        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuarioPeloNomeEmail(usuarioRegisterDTO);
         return ResponseEntity.ok(responseDTO);
     }
 

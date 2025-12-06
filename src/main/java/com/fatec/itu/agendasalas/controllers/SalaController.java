@@ -22,6 +22,7 @@ import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecurso
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
+import com.fatec.itu.agendasalas.dto.salas.RecomendacaoResponseDTO;
 import com.fatec.itu.agendasalas.services.SalaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +52,7 @@ public class SalaController {
             description = "Lista de salas encontrada",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(type = "array", implementation = SalaDetailDTO.class),
-                examples = @ExampleObject(value = "[ { \"salaId\": 1, \"salaNome\": \"Sala 101\", \"capacidade\": 30, \"piso\": 1, \"disponibilidade\": true, \"tipoSala\": \"Laboratório de Informática\", \"salaObservacoes\": \"Nenhuma\" } ]")))
+                examples = @ExampleObject(value = "{ \"salaId\": 7, \"salaNome\": \"Sala 101\", \"capacidade\": 40, \"disponibilidade\": false, \"tipoSalaId\": 1, \"tipoSala\": \"Sala de Aula\", \"pisoId\": 1, \"piso\": \"1º Andar\", \"salaObservacoes\": \"Sala com projetor e ar condicionado\" }")))
     })
     public ResponseEntity<List<SalaDetailDTO>> listarTodas() {
         return ResponseEntity.ok(salaService.listarTodasAsSalas());
@@ -65,7 +66,7 @@ public class SalaController {
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SalaDetailDTO.class),
                 examples = @ExampleObject(
-                    value = "{ \"salaId\": 1, \"salaNome\": \"Sala 101\", \"capacidade\": 10, \"piso\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala de Aula\", \"salaObservacoes\": \"Sala com notebooks\" }")))
+                    value = "{ \"salaId\": 1, \"salaNome\": \"Sala 101\", \"capacidade\": 10, \"pisoId\": 2, \"disponibilidade\": false, \"tipoSala\": \"Sala de Aula\", \"salaObservacoes\": \"Sala com notebooks\" }")))
     })
     public ResponseEntity<SalaDetailDTO> buscarPorId(
             @Parameter(description = "ID da sala a ser buscada") @PathVariable Long salaId) {
@@ -80,7 +81,7 @@ public class SalaController {
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SalaDetailDTO.class),
                 examples = @ExampleObject(
-                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"piso\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
+                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"pisoId\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
     })
     public ResponseEntity<SalaDetailDTO> criar(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -89,7 +90,7 @@ public class SalaController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
                     examples = @ExampleObject(
-                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"piso\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
+                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Nova Sala\", \"salaCapacidade\": 10, \"pisoId\": 1, \"disponibilidade\": true, \"salaObservacoes\": \"Sala em perfeito estado\" }")))
             @RequestBody SalaCreateAndUpdateDTO sala) {
 
         SalaDetailDTO salaCriada = salaService.criar(sala);
@@ -186,7 +187,7 @@ public class SalaController {
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = SalaDetailDTO.class),
                 examples = @ExampleObject(
-                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101 - Atualizada\", \"salaCapacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"salaObservacoes\": \"Sala em manutenção\" }")))
+                    value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101\", \"salaCapacidade\": 20, \"pisoId\": 1, \"disponibilidade\": false, \"salaObservacoes\": \"Sala em manutenção\" }")))
     })
     public ResponseEntity<SalaDetailDTO> atualizarSala(
             @PathVariable Long salaId,
@@ -196,7 +197,7 @@ public class SalaController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = SalaCreateAndUpdateDTO.class),
                     examples = @ExampleObject(
-                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101 - Atualizada\", \"salaCapacidade\": 20, \"piso\": 1, \"disponibilidade\": false, \"salaObservacoes\": \"Sala em manutenção\" }")))
+                        value = "{ \"tipoSalaId\": 1, \"salaNome\": \"Sala 101\", \"salaCapacidade\": 20, \"pisoId\": 1, \"salaObservacoes\": \"Sala em manutenção\" }")))
             @RequestBody SalaCreateAndUpdateDTO sala) {
 
         return ResponseEntity.ok(salaService.atualizar(salaId, sala));
@@ -207,10 +208,10 @@ public class SalaController {
     @ApiResponse(responseCode = "200", description = "Recomendações retornadas")
         })
     @Operation(summary = "Lista recomendações de sala baseado nos parâmetros passados")
-    public ResponseEntity<List<SalaDetailDTO>> recomendacoes(
+    public ResponseEntity<RecomendacaoResponseDTO> recomendacoes(
             @RequestBody @Valid RequisicaoDeSalaDTO requisicao) {
 
-        return ResponseEntity.ok(salaService.recomendacaoDeSala(requisicao));
+        return ResponseEntity.ok(salaService.gerarRecomendacoes(requisicao));
     }
 
     @GetMapping("/disponiveis")

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
@@ -12,6 +14,8 @@ import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CursoService {
@@ -22,7 +26,8 @@ public class CursoService {
     private CoordenadorRepository coordenadorRepository;
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
-        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getNome(), curso.getSigla());
+        return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getId(), curso.getSigla(), curso.getCoordenador().getId(),
+                curso.getCoordenador().getNome());
     }
 
     public CursoService(CursoRepository cursoRepository) {
@@ -54,15 +59,15 @@ public class CursoService {
 
     public CursoListDTO buscarPorId(Long id) {
         Curso cursoEncontrado = cursoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id: " + id + " não encontrado"));
         return converteCursoParaDTO(cursoEncontrado);
     }
 
     public CursoListDTO atualizar(Long id, CursoCreateDTO novoCurso) {
         Curso atual = cursoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado. Id=" + id));
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id: " + id + " não encontrado"));
         atual.setNomeCurso(novoCurso.cursoNome());
-        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow();
+        Coordenador coordenadorEncontrado = coordenadorRepository.findById(novoCurso.coordenadorId()).orElseThrow(()-> new EntityNotFoundException("Coordenador de id: " + id + " não encontrado"));
         atual.setCoordenador(coordenadorEncontrado);
         atual.setSigla(novoCurso.cursoSigla());
 
@@ -73,7 +78,7 @@ public class CursoService {
 
     public void excluir(Long id) {
         if (!cursoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Curso não encontrado. Id=" + id);
+            throw new EntityNotFoundException("Curso de id: " + id + " não encontrado");
         }
         cursoRepository.deleteById(id);
     }

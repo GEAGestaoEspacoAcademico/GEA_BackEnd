@@ -10,7 +10,8 @@ import com.fatec.itu.agendasalas.entity.Coordenador;
 @Repository
 public interface CoordenadorRepository extends JpaRepository<Coordenador, Long> {
     
-    boolean existsByRegistroCoordenacao(int registroCoordenacao);
+    boolean existsByRegistroCoordenacao(Long registroCoordenacao);
     
-    Optional<Coordenador> findByRegistroCoordenacao(int registroCoordenacao);
+    Optional<Coordenador> findByRegistroCoordenacao(Long registroCoordenacao);
+    
 }

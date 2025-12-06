@@ -10,21 +10,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(name = "DISCIPLINAS")
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Disciplina implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    public Disciplina() {
-    }
-
-    public Disciplina(String nome, String semestre, Curso curso) {
-        this.nome = nome;
-        this.semestre = semestre;
-        this.curso = curso;
-    }
-
+    
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -32,59 +34,29 @@ public class Disciplina implements Serializable {
 
     @Column(name = "nome", nullable = false)
     private String nome;
+    
+    @ManyToOne
+    @JoinColumn(name = "semestre_id")
+    private Semestre semestre;
 
-    @Column(name = "semestre", nullable = false)
-    private String semestre;
+    @Column(name = "excluida", nullable = false)
+    private boolean excluida = false;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id")
+    @JoinColumn(name = "professor_id", nullable=true)
     private Professor professor;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public Disciplina(String nome, Semestre semestre, Curso curso) {
         this.nome = nome;
-    }
-
-    public String getSemestre() {
-        return semestre;
-    }
-
-    public void setSemestre(String semestre) {
         this.semestre = semestre;
-    }
-
-    public Professor getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
-
-    public Curso getCurso() {
-        return curso;
-    }
-
-    public void setCurso(Curso curso) {
         this.curso = curso;
     }
 
-    public void editarDisciplina(String novoNome, String novoSemestre, Professor novoProfessor) {
+    public void editarDisciplina(String novoNome, Semestre novoSemestre, Professor novoProfessor) {
         this.nome = novoNome;
         this.semestre = novoSemestre;
         this.professor = novoProfessor;

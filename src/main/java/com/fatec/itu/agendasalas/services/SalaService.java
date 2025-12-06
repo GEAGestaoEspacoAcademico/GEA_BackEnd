@@ -20,14 +20,20 @@ import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaPontuadaDTO;
+import com.fatec.itu.agendasalas.entity.Piso;
 import com.fatec.itu.agendasalas.entity.Recurso;
 import com.fatec.itu.agendasalas.entity.RecursoSala;
 import com.fatec.itu.agendasalas.entity.RecursoSalaId;
 import com.fatec.itu.agendasalas.entity.Sala;
+import com.fatec.itu.agendasalas.entity.TipoSala;
 import com.fatec.itu.agendasalas.exceptions.RecursoJaAdicionadoNaSalaException;
+import com.fatec.itu.agendasalas.repositories.PisoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
+import com.fatec.itu.agendasalas.dto.salas.RecomendacaoResponseDTO;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class SalaService {
@@ -44,15 +50,27 @@ public class SalaService {
     @Autowired
     private TipoSalaService tipoSalaService;
 
+    @Autowired
+    private PisoRepository pisoRepository;
+
     public SalaDetailDTO buscarPorId(Long id) {
-      Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+      Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sala com id " + id + " não encontrada"));
       return transformarSalaEmSalaDetailDTO(salaExistente);
     }
 
     private SalaDetailDTO transformarSalaEmSalaDetailDTO(Sala sala) {
 
-      return new SalaDetailDTO(sala.getId(), sala.getNome(), sala.getCapacidade(), sala.getPiso(),
-          sala.isDisponibilidade(), sala.getTipoSala().getNome(), sala.getObservacoes());
+      return new SalaDetailDTO(
+          sala.getId(),
+          sala.getNome(),
+          sala.getCapacidade(),
+          sala.isDisponibilidade(),
+          sala.getTipoSala() != null ? sala.getTipoSala().getId() : null,
+          sala.getTipoSala() != null ? sala.getTipoSala().getNome() : null,
+          sala.getPiso() != null ? sala.getPiso().getId() : null,
+          sala.getPiso() != null ? sala.getPiso().getNome() : null,
+          sala.getObservacoes()
+      );
     }
 
     public List<SalaDetailDTO> listarSalasDisponiveis() {
@@ -70,14 +88,20 @@ public class SalaService {
       .toList();
   }
 
-
-  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+  public List<SalaDetailDTO> listarSalasCandidatas(RequisicaoDeSalaDTO requisicao){
     List<Long> salasParaExcluir =
         salaRepository.findByDataEHorario(requisicao.data(), requisicao.horarios().horaInicio(),
             requisicao.horarios().horaFim(), requisicao.capacidade());
 
     List<SalaDetailDTO> salasCandidatas = listarTodasAsSalas().stream()
         .filter(sala -> !salasParaExcluir.contains(sala.salaId())).toList();
+
+    return salasCandidatas;
+  }
+
+  public List<SalaDetailDTO> recomendacaoDeSala(RequisicaoDeSalaDTO requisicao) {
+
+    List<SalaDetailDTO> salasCandidatas = listarSalasCandidatas(requisicao);
 
     List<Long> idsDeSalasCandidatas = salasCandidatas.stream().map(sala -> sala.salaId()).toList();
 
@@ -114,9 +138,33 @@ public class SalaService {
   }
 
   @Transactional
+  public RecomendacaoResponseDTO gerarRecomendacoes(RequisicaoDeSalaDTO requisicao) {
+    List<SalaDetailDTO> recomendadas = recomendacaoDeSala(requisicao);
+    List<SalaDetailDTO> candidatas = listarSalasCandidatas(requisicao);
+
+    var idsRecomendadas = recomendadas.stream().map(SalaDetailDTO::salaId).toList();
+
+    List<SalaDetailDTO> outrasOpcoes = candidatas.stream()
+        .filter(s -> !idsRecomendadas.contains(s.salaId()))
+        .toList();
+
+    return new RecomendacaoResponseDTO(recomendadas, outrasOpcoes);
+  }
+
+  @Transactional
   public SalaDetailDTO criar(SalaCreateAndUpdateDTO salaDTO) {
-    Sala novaSala = new Sala(salaDTO.salaNome(), salaDTO.salaCapacidade(), salaDTO.piso(),
-        tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    TipoSala tipoSala = tipoSalaService.buscarPorId(salaDTO.tipoSalaId());
+    
+    Piso piso = pisoRepository.findById(salaDTO.pisoId())
+            .orElseThrow(() -> new EntityNotFoundException("Andar de id " + salaDTO.pisoId() + " não encontrado"));
+
+    Sala novaSala = new Sala(
+            salaDTO.salaNome(),
+            salaDTO.salaCapacidade(),
+            tipoSala,
+            piso
+    );
+
     novaSala.setDisponibilidade(salaDTO.disponibilidade());
     novaSala.setObservacoes(salaDTO.salaObservacoes());
 
@@ -125,16 +173,36 @@ public class SalaService {
     return transformarSalaEmSalaDetailDTO(salaSalva);
   }
 
+
   @Transactional
   public SalaDetailDTO atualizar(Long id, SalaCreateAndUpdateDTO salaDTO) {
-    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sala de id: " + id + " não encontrado"));
 
-    salaExistente.setNome(salaDTO.salaNome());
-    salaExistente.setCapacidade(salaDTO.salaCapacidade());
-    salaExistente.setPiso(salaDTO.piso());
-    salaExistente.setDisponibilidade(salaDTO.disponibilidade());
-    salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
-    salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    if (salaDTO.salaNome() != null) {
+      salaExistente.setNome(salaDTO.salaNome());
+    }
+
+    if (salaDTO.salaCapacidade() != null) {
+      salaExistente.setCapacidade(salaDTO.salaCapacidade());
+    }
+
+    if (salaDTO.pisoId() != null) {
+      Piso piso = pisoRepository.findById(salaDTO.pisoId())
+            .orElseThrow(() -> new RuntimeException("Andar de id " + salaDTO.pisoId() + " não encontrado"));
+      salaExistente.setPiso(piso);
+    }
+
+    if (salaDTO.disponibilidade() != null) {
+      salaExistente.setDisponibilidade(salaDTO.disponibilidade());
+    }
+
+    if (salaDTO.tipoSalaId() != null) {
+      salaExistente.setTipoSala(tipoSalaService.buscarPorId(salaDTO.tipoSalaId()));
+    }
+
+    if (salaDTO.salaObservacoes() != null) {
+      salaExistente.setObservacoes(salaDTO.salaObservacoes());
+    }
 
     return transformarSalaEmSalaDetailDTO(salaRepository.save(salaExistente));
   }
@@ -142,7 +210,7 @@ public class SalaService {
   @Transactional
   public void deletar(Long id) {
     if (!salaRepository.existsById(id)) {
-      throw new RuntimeException();
+      throw new EntityNotFoundException("Sala de id: " + id + " não encontrado");
     }
     salaRepository.deleteById(id);
   }
@@ -153,7 +221,7 @@ public class SalaService {
 
     for(RecursoSalaIndividualCreationDTO recurso : dto.listaDeRecursosParaAdicionar()){
         Recurso recursoExistente = recursoRepository.findById(recurso.recursoId())
-            .orElseThrow(() -> new RuntimeException("Recurso não encontrado!"));
+            .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + recurso.recursoId() + " não encontrado"));
 
         boolean recursoJaAdicionado = salaExistente.getRecursos().stream()
                 .anyMatch(rs -> rs.getRecurso().getId().equals(recurso.recursoId()));
@@ -179,11 +247,11 @@ public class SalaService {
   @Transactional
   public void removerRecurso(Long salaId, Long recursoId) {
     Sala sala = salaRepository.findById(salaId)
-        .orElseThrow(() -> new RuntimeException("Sala não encontrada!"));
+        .orElseThrow(() -> new EntityNotFoundException("Sala de id: " + salaId + " não encontrada"));
 
     RecursoSala linkParaRemover = sala.getRecursos().stream()
         .filter(rs -> rs.getRecurso().getId().equals(recursoId)).findFirst()
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado nesta sala!"));
+        .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + recursoId +  " não encontrado na sala " + sala.getNome()));
 
     sala.getRecursos().remove(linkParaRemover);
 
@@ -194,11 +262,11 @@ public class SalaService {
   public void atualizarQuantidade(Long salaId, Long recursoId,
       RecursoSalaUpdateQuantidadeDTO dto) {
     Sala sala = salaRepository.findById(salaId)
-        .orElseThrow(() -> new RuntimeException("Sala não encontrada!"));
+        .orElseThrow(() -> new EntityNotFoundException("Sala de id: " + salaId + " não encontrada"));
 
     RecursoSala linkParaAtualizar = sala.getRecursos().stream()
         .filter(rs -> rs.getRecurso().getId().equals(recursoId)).findFirst()
-        .orElseThrow(() -> new RuntimeException("Recurso não encontrado nesta sala!"));
+        .orElseThrow(() -> new EntityNotFoundException("Recurso de id: " + recursoId +  " não encontrado na sala " + sala.getNome()));
 
     linkParaAtualizar.setQuantidade(dto.quantidade());
 
@@ -207,7 +275,7 @@ public class SalaService {
   }
 
   public List<RecursoSalaListagemRecursosDTO> listarRecursosPorSala(Long id) {
-    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    Sala salaExistente = salaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Sala de id: " + id + " não encontrada"));
     List<RecursoSala> recursoNaSala = recursoSalaRepository.findBySalaId(salaExistente.getId());
     return recursoNaSala.stream()
         .map(recurso -> new RecursoSalaListagemRecursosDTO(

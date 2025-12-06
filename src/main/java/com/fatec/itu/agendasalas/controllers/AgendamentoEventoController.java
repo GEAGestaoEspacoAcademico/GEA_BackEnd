@@ -50,7 +50,7 @@ public class AgendamentoEventoController {
         content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
             examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-                value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00:00\", \"horaFim\": \"17:00:00\" } ] }")))
+                value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00\", \"horaFim\": \"12:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00\", \"horaFim\": \"17:00\" } ] }")))
         @RequestBody @Valid AgendamentoEventoCreationDTO dto) {
       try {
         agendamentoEventoService.criar(dto);
@@ -67,7 +67,7 @@ public class AgendamentoEventoController {
         content = @Content(mediaType = "application/json",
           schema = @Schema(type = "array", implementation = AgendamentoEventoResponseDTO.class),
           examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-            value = "[ { \"agendamentoEventoId\": 55, \"usuarioNome\": \"Fernanda Lima\", \"salaNome\": \"Auditório Principal\", \"eventoNome\": \"Fórum de Tecnologia\", \"data\": \"2025-12-10\", \"diaDaSemana\": \"Quarta-feira\", \"horaInicio\": \"09:00:00\", \"horaFim\": \"12:00:00\", \"isEvento\": true, \"recorrenciaId\": null, \"status\": \"CONFIRMADO\", \"solicitante\": \"Coordenação de Cursos\" } ]")))
+            value = "[ { \"agendamentoEventoId\": 11, \"usuarioNome\": \"Prof. Francisco Bianchi\", \"salaNome\": \"Lab 303\", \"eventoNome\": \"InterFATECS\", \"data\": \"2025-11-15\", \"diaDaSemana\": \"Sexta-feira\", \"horaInicio\": \"09:30\", \"horaFim\": \"11:20\", \"isEvento\": true, \"recorrenciaId\": 2, \"status\": \"ATIVO\", \"solicitante\": \"Sistema\" } ]")))
     })
     @GetMapping
     public ResponseEntity<List<AgendamentoEventoResponseDTO>> listar(){
