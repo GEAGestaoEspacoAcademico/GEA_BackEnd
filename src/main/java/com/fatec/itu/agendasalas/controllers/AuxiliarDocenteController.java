@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin
@@ -74,7 +75,7 @@ public class AuxiliarDocenteController {
                     schema = @Schema(implementation = AuxiliarDocenteCreationDTO.class),
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                         value = "{ \"login\": \"marcia.oliveira\", \"nome\": \"Marcia Oliveira\", \"email\": \"marcia.oliveira@fatec.edu.br\", \"senha\": \"SenhaSegura2025!\", \"area\": \"Laboratórios\" }")))
-            @RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
+            @Valid @RequestBody AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO){
         return ResponseEntity.created(null).body(auxiliarDocenteService.cadastrarUsuario(auxiliarDocenteCreationDTO));
 
     } 
