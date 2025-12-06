@@ -210,19 +210,105 @@ public class AgendamentoAulaController {
             return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/busca")
-    public ResponseEntity<PageableResponseDTO<AgendamentoAulaResponseDTO>> buscaAgendamentosAulaComFiltros(
-        @RequestBody @Valid  AgendamentoAulaFilterDTO filtros,
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(required = false, defaultValue="data") String sort
-    ){
-        if(filtros.dataInicio()!=null && filtros.dataFim()!=null){
-            if(filtros.dataInicio().isAfter(filtros.dataFim())){
-                throw new DataInicialMaiorQueDataFinalException(filtros.dataInicio(), filtros.dataFim());
-            }
-        }
+        @PostMapping("/busca")
+        @Operation(
+            summary = "Busca agendamentos de aula filtrando por usuário, sala, disciplina, datas e horários.",
+            description = """
+                Realiza a busca paginada de agendamentos de aulas usando múltiplos filtros.
+                Todos os campos de lista são obrigatórios e não podem ser vazios.
+                Caso a data inicial seja maior que a data final, retorna erro 400.
+            """
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "Busca realizada com sucesso",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PageableResponseDTO.class),
+                    examples = @ExampleObject(
+                        name="Busca realizada com sucesso",
+                        value="""
+                        {
+                        "conteudo": [
+                                        {
+                                            "agendamentoAulaId": 1,
+                                            "usuarioNome": "Lucas Silva",
+                                            "salaId": 1,
+                                            "salaNome": "Lab 301",
+                                            "disciplinaId": 1,
+                                            "disciplinaNome": "Engenharia de Software III",
+                                            "semestre": "2025.2",
+                                            "cursoNome": "Análise e Desenvolvimento de Sistemas",
+                                            "professorNome": "Prof. Sergio Salgado",
+                                            "data": "2025-12-15",
+                                            "diaDaSemana": "Segunda-feira",
+                                            "janelaHorarioId": 1,
+                                            "horaInicio": "07:40:00",
+                                            "horaFim": "09:20:00",
+                                            "isEvento": false
+                                        }
+                                ],
+                        "numeroDaPagina": 0,
+                        "tamanhoDaPagina": 10,
+                        "totalDeElementos": 1,
+                        "totalDePaginas": 1,
+                        "ultimaPagina": true
+                        }
+                            """
+                    )
+                )
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Erro de validação ou intervalo de datas inválido",
+                content = @Content(
+                    mediaType = "application/json",
+                    examples = {
+                        @ExampleObject(
+                            name = "Lista vazia",
+                            value = """
+                            {
+                                "status": 400,
+                                "error": "Bad Request",
+                                "message": "A lista de IDs nao pode ser vazia.",
+                                "path": "/agendamentos/aulas/busca"
+                            }
+                            """
+                        ),
+                        @ExampleObject(
+                            name = "Data inicial maior que data final",
+                            value = """
+                            {
+                                "status": 400,
+                                "error": "Bad Request",
+                                "message": "Intervalo de datas inválido: dataInicial (20-12-2025) é maior que dataFinal (10-12-2025)",
+                                "path": "/agendamentos/aulas/busca"
+                            }
+                            """
+                        )
+                    }
+                )
+            )
+        })
+        public ResponseEntity<PageableResponseDTO<AgendamentoAulaResponseDTO>> buscaAgendamentosAulaComFiltros(
+            @RequestBody @Valid  AgendamentoAulaFilterDTO filtros,
 
-        return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
-    }
+            @Parameter(description = "Número da página", example = "1")
+            @RequestParam(required=false, defaultValue = "1") int page,
+
+            @Parameter(description = "Quantidade de registros por página", example = "10")
+            @RequestParam(required=false, defaultValue = "10") int limit,
+
+            @Parameter(description = "Campo para ordenação", example = "data")
+            @RequestParam(required = false, defaultValue="data") String sort
+        ){
+            if(filtros.dataInicio()!=null && filtros.dataFim()!=null){
+                if(filtros.dataInicio().isAfter(filtros.dataFim())){
+                    throw new DataInicialMaiorQueDataFinalException(filtros.dataInicio(), filtros.dataFim());
+                }
+            }
+
+            return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
+        }
 }
