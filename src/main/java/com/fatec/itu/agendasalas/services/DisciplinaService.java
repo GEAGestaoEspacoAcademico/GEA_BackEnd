@@ -14,6 +14,11 @@ import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.SemestreRepository;
 
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
+import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -125,11 +130,41 @@ public class DisciplinaService {
     }
 
 
+    @Autowired
+    private AgendamentoAulaRepository agendamentoAulaRepository;
+
+    @Autowired
+    private AgendamentoCanceladoRepository agendamentoCanceladoRepository;
+
     public void excluir(Long id) {
-        if (!disciplinaRepository.existsById(id)) {
-            throw new EntityNotFoundException("Disciplina de id: " + id + " não encontrada");
+        Disciplina disciplina = disciplinaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
+
+
+        disciplina.setExcluida(true);
+
+
+        disciplina.setProfessor(null);
+
+
+        disciplina.setCurso(null);
+
+
+        List<AgendamentoAula> agendamentos = agendamentoAulaRepository.findByDisciplinaId(id.intValue());
+        for (AgendamentoAula agendamento : agendamentos) {
+            AgendamentoCancelado cancelado = AgendamentoCancelado.builder()
+                .agendamentoOriginalId(agendamento.getId())
+                .tipoAgendamento("AULA")
+                .data(agendamento.getData())
+                .statusOriginal(agendamento.getStatus())
+                .solicitante(agendamento.getSolicitante())
+                .usuario(agendamento.getUsuario())
+                .build();
+            agendamentoCanceladoRepository.save(cancelado);
+            agendamentoAulaRepository.delete(agendamento);
         }
-        disciplinaRepository.deleteById(id);
+
+        disciplinaRepository.save(disciplina);
     }
 
     public Disciplina findById(Long id) {
