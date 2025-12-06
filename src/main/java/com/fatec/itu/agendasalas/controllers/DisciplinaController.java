@@ -74,8 +74,17 @@ public class DisciplinaController {
             description = "Disciplina encontrada",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos\" }"))),
-        @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
+                examples = @ExampleObject(value = "[ { \"disciplinaId\": 1, \"disciplinaNome\": \"Engenharia de Software III\", \"disciplinaSemestre\": \"2025.2\", \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" } ]"))),
+        @ApiResponse(responseCode = "404", 
+            description = "Disciplina não encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(),
+                examples = @ExampleObject(value = "{ \"status\": 404, \"error\": \"Not Found\", \"message\": \"Disciplina não encontrada\", \"path\": \"/disciplinas/9999\", \"timestamp\": \"2025-11-23T22:58:51-03:00\" }"))),
+        @ApiResponse(responseCode = "500", 
+            description = "Disciplina não encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(),
+                examples = @ExampleObject(value = "{ \"status\": 500, \"error\": \"Internal Server Error\", \"message\": \"Usuário não encontrado\", \"path\": \"/usuarios/64\", \"timestamp\": \"2025-11-23T22:58:51-03:00\" }")))
     })
     @GetMapping("{disciplinaId}")
     public DisciplinaListDTO buscarPorId(
