@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationByAuxiliarDocenteDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationComRecorrenciaDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
@@ -24,8 +30,8 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.AgendamentoComHorarioIndisponivelException;
-import com.fatec.itu.agendasalas.exceptions.AgendamentoRecorrenteComDataInicialAposADataFinalException;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
+import com.fatec.itu.agendasalas.exceptions.DataInicialMaiorQueDataFinalException;
 import com.fatec.itu.agendasalas.exceptions.DataNoPassadoException;
 import com.fatec.itu.agendasalas.exceptions.JanelaHorarioPassouException;
 import com.fatec.itu.agendasalas.exceptions.ProfessorJaPossuiAgendamentoEmOutraSalaException;
@@ -35,6 +41,7 @@ import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+import com.fatec.itu.agendasalas.specifications.AgendamentoAulaSpecification;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -72,7 +79,7 @@ public class AgendamentoAulaService {
         LocalDate dataFinal = agendamentoAulaCreationComRecorrenciaDTO.dataFim();
         
         if(dataInicial.isAfter(dataFinal)){
-            throw new AgendamentoRecorrenteComDataInicialAposADataFinalException(dataInicial, dataFinal); 
+            throw new DataInicialMaiorQueDataFinalException(dataInicial, dataFinal); 
         }
 
         if(agendamentoConflitoService.dataNoPassado(dataInicial)){
@@ -389,6 +396,14 @@ public class AgendamentoAulaService {
 
         
         return converterParaResponseDTO(saved);
+    }
+
+    public Page<AgendamentoAulaResponseDTO> listarDisciplinasPorFiltro(AgendamentoAulaFilterDTO filtros, int page, int limit, String sort) {
+        Pageable pageable = PageRequest.of(page-1, limit, Sort.by(sort).ascending());
+        Specification<AgendamentoAula> spec = AgendamentoAulaSpecification.porFiltros(filtros);
+        
+        return agendamentoAulaRepository.findAll(spec, pageable)
+            .map(this::converterParaResponseDTO); 
     }
 }
 

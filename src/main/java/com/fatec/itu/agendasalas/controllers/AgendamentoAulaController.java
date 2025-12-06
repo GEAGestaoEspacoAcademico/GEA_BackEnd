@@ -23,6 +23,7 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.dto.paginacaoDTO.PageableResponseDTO;
+import com.fatec.itu.agendasalas.exceptions.DataInicialMaiorQueDataFinalException;
 import com.fatec.itu.agendasalas.services.AgendamentoAulaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -116,12 +117,7 @@ public class AgendamentoAulaController {
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> criarAgendamentoAulaComRecorrencia(@Valid @RequestBody AgendamentoAulaCreationComRecorrenciaDTO dto) {
         
             List<AgendamentoAulaResponseDTO> agendamentosCriados = agendamentoAulaService.criarAgendamentoAulaComRecorrencia(dto);
-            return ResponseEntity.created(null).body(agendamentosCriados);
-       
-            
-        
-           
-        
+            return ResponseEntity.created(null).body(agendamentosCriados);     
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula")
@@ -148,13 +144,9 @@ public class AgendamentoAulaController {
     @GetMapping("/{agendamentoAulaId}")
     public ResponseEntity<AgendamentoAulaResponseDTO> buscarAgendamentoAulaPorId(
            @Parameter(description = "ID do agendamento de aula") @PathVariable Long agendamentoAulaId) {
-        try {
-            AgendamentoAulaResponseDTO response =
-                    agendamentoAulaService.buscarPorId(agendamentoAulaId);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+
+            return ResponseEntity.ok(agendamentoAulaService.buscarPorId(agendamentoAulaId));
+      
     }
 
     @Operation(summary = "Lista todos os agendamentos de aula por disciplina")
@@ -202,13 +194,9 @@ public class AgendamentoAulaController {
                     schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
                     examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody AgendamentoAulaCreationDTO dto) {
-        try {
-            AgendamentoAulaResponseDTO response =
-                    agendamentoAulaService.atualizarAgendamentoAula(agendamentoAulaId, dto);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+       
+            return ResponseEntity.ok(agendamentoAulaService.atualizarAgendamentoAula(agendamentoAulaId, dto));
+        
     }
 
     @Operation(summary = "Deleta um agendamento de aula pelo seu id")
@@ -217,21 +205,24 @@ public class AgendamentoAulaController {
     @DeleteMapping("/{agendamentoAulaId}")
     public ResponseEntity<Void> excluirAgendamentoAula(
         @Parameter(description = "ID do agendamento a ser excluído") @PathVariable Long agendamentoAulaId) {
-        try {
+     
             agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaId);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+            return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/busca")
     public ResponseEntity<PageableResponseDTO<AgendamentoAulaResponseDTO>> buscaAgendamentosAulaComFiltros(
-        @Valid @RequestBody AgendamentoAulaFilterDTO filtros,
+        @RequestBody @Valid  AgendamentoAulaFilterDTO filtros,
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(required = false, defaultValue="ASC") String sort
+        @RequestParam(required = false, defaultValue="data") String sort
     ){
+        if(filtros.dataInicio()!=null && filtros.dataFim()!=null){
+            if(filtros.dataInicio().isAfter(filtros.dataFim())){
+                throw new DataInicialMaiorQueDataFinalException(filtros.dataInicio(), filtros.dataFim());
+            }
+        }
+
         return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
     }
 }
