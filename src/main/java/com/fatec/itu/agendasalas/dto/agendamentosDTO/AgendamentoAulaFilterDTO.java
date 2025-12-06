@@ -30,17 +30,21 @@ public record AgendamentoAulaFilterDTO(
     List<Long> disciplinaIds,
 
     @Schema(
-        description = "Data final (formato ISO: yyyy-MM-dd).",
-        example = "2025-12-16"
+        description = "Data inicial (formato ISO: yyyy-MM-dd).",
+        example = "2025-01-01"
     )
     LocalDate dataInicio,
 
     @Schema(
-        description = "Lista de IDs das janelas de horário.",
-        example = "[1, 3, 6]"
+        description = "Data final (formato ISO: yyyy-MM-dd).",
+        example = "2025-12-16"
     )
     LocalDate dataFim,
     
+    @Schema(
+        description = "Lista de IDs das janelas de horário.",
+        example = "[1, 3, 6]"
+    )
     @NotEmptyList(message = "A lista de IDs nao pode ser vazia.")
     List<Long> janelaHorarioIds
 ) {}
