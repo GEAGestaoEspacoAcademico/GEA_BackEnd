@@ -8,6 +8,7 @@ import com.fatec.itu.agendasalas.dto.andaresDTO.PisoResponseDTO;
 import com.fatec.itu.agendasalas.entity.Piso;
 import com.fatec.itu.agendasalas.repositories.PisoRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,7 +19,7 @@ public class PisoService {
 
     public Piso buscarPorId(Long id) {
         return pisoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Piso não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Piso de id: " + id + " não encontrado"));
     }
 
     public List<PisoResponseDTO> listar() {

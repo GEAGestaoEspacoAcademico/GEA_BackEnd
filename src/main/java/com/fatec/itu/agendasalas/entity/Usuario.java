@@ -16,17 +16,20 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="USUARIOS")
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario implements UserDetails{
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +41,7 @@ public class Usuario implements UserDetails{
     }
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private Long id;
@@ -58,9 +62,6 @@ public class Usuario implements UserDetails{
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
 
-   @EqualsAndHashCode.Include
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (cargo == null || cargo.getNome() == null) {
@@ -71,6 +72,8 @@ public class Usuario implements UserDetails{
         
         return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
     }
+
+    
 
     @Override
     public String getPassword() {
@@ -101,8 +104,4 @@ public class Usuario implements UserDetails{
     public boolean isEnabled() {
         return true; 
     }
-
-    
-
-    
 }

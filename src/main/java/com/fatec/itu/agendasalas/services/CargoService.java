@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.entity.Cargo;
-import com.fatec.itu.agendasalas.exceptions.CargoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CargoService {
@@ -33,11 +34,11 @@ public class CargoService {
 
     public Cargo findById(Long id) {
         return cargoRepository.findById(id)
-            .orElseThrow(() -> new CargoNaoEncontradoException(id));
+            .orElseThrow(() -> new EntityNotFoundException("Cargo de id: " + id + " não encontrado"));
     }
 
     public Cargo findByNome(String nome){
         return cargoRepository.findByNome(nome)
-            .orElseThrow(() -> new CargoNaoEncontradoException(nome));
+            .orElseThrow(() -> new EntityNotFoundException("Cargo de nome: " + nome + " não encontrado"));
     }
 }

@@ -178,6 +178,13 @@ VALUES
 -- senha: ls123
 
 
+INSERT INTO SEMESTRES (nome) VALUES ('1º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('2º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('3º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('4º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('5º semestre');
+INSERT INTO SEMESTRES (nome) VALUES ('6º semestre');
+
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com as informações dos usuarios
@@ -229,47 +236,51 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
+
+-- Adiciona coluna 'excluida' se não existir
+ALTER TABLE DISCIPLINAS ADD COLUMN IF NOT EXISTS excluida BOOLEAN DEFAULT FALSE;
+
 -- Disciplinas: Curso ADS (curso_id = 1)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Engenharia de Software III', '2025.2', 5, 1),
-    ('Laboratório de Banco de Dados', '2025.2', 7, 1),
-    ('Programação Orientada à objetos', '2025.1', 6, 1),
-    ('Segurança da Informação', '2025.1', 8, 1),
-    ('Sistemas de Informação', '2024.1', 9, 1),
-    ('Algoritmos', '2024.1', 17, 1),
-    ('Programação Web', '2025.1', 17, 1),
-    ('Arq e Organização de Computadores', '2024.1', 18, 1),
-    ('Administração Geral', '2024.1', 19, 1),
-    ('Programação em Microinformática', '2024.1', 20, 1),
-    ('Comunicação e Expressão', '2024.1', 21, 1),
-    ('Matemática Discreta', '2024.1', 22, 1),
-    ('Banco de Dados', '2024.2', 24, 1),
-    ('Contabilidade', '2024.2', 23, 1),
-    ('Engenharia de Software I', '2024.2', 25, 1),
-    ('Linguagem de Programação', '2024.2', 24, 1);
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Engenharia de Software III', 2, 5, 1, FALSE),
+    ('Laboratório de Banco de Dados', 2, 7, 1, FALSE),
+    ('Programação Orientada à Objetos', 1, 6, 1, FALSE),
+    ('Segurança da Informação', 1, 8, 1, FALSE),
+    ('Sistemas de Informação', 1, 9, 1, FALSE),
+    ('Algoritmos', 1, 17, 1, FALSE),
+    ('Programação Web', 1, 17, 1, FALSE),
+    ('Arq e Organização de Computadores', 1, 18, 1, FALSE),
+    ('Administração Geral', 1, 19, 1, FALSE),
+    ('Programação em Microinformática', 1, 20, 1, FALSE),
+    ('Comunicação e Expressão', 1, 21, 1, FALSE),
+    ('Matemática Discreta', 1, 22, 1, FALSE),
+    ('Banco de Dados', 2, 24, 1, FALSE),
+    ('Contabilidade', 2, 23, 1, FALSE),
+    ('Engenharia de Software I', 2, 25, 1, FALSE),
+    ('Linguagem de Programação', 2, 24, 1, FALSE);
 
--- Disciplinas: Curso GTI (curso_id = 2)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Gestão de Projetos', '2024.2', 8, 2),
-    ('Governança de TI', '2024.2', 7, 2),
-    ('Processos Gerenciais', '2025.2', 25, 2),
-    ('Gestão de Sistemas Operacionais', '2025.2', 17, 2),
-    ('Matemática Financeira', '2025.1', 21, 2),
-    ('Modelagem de Processos', '2024.2', 20, 2),
-    ('Gestão de Pessoas', '2024.2', 18, 2);
 
--- Disciplinas: Curso Mecatrônica Industrial (curso_id = 3)
-INSERT INTO DISCIPLINAS (nome, semestre, professor_id, curso_id)
-VALUES
-    ('Eletromagnetismo', '2023.2', 8, 3),
-    ('Cálculo', '2023.2', 7, 3),
-    ('Comunicação Acadêmica', '2024.1', 9, 3),
-    ('Sist. Eletroeletrônicos Aplicados I', '2023.2', 21, 3),
-    ('Int. Sistemas Dimensionais', '2025.1', 25, 3),
-    ('Estatística Descritiva', '2025.2', 5, 3),
-    ('Desenho Técnico', '2025.2', 23, 3);
+
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Gestão de Projetos', 2, 8, 2, FALSE),
+    ('Governança de TI', 2, 7, 2, FALSE),
+    ('Processos Gerenciais', 2, 25, 2, FALSE),
+    ('Gestão de Sistemas Operacionais', 2, 17, 2, FALSE),
+    ('Matemática Financeira', 1, 21, 2, FALSE),
+    ('Modelagem de Processos', 2, 20, 2, FALSE),
+    ('Gestão de Pessoas', 2, 18, 2, FALSE);
+
+
+
+INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
+    ('Eletromagnetismo', 2, 8, 3, FALSE),
+    ('Cálculo', 2, 7, 3, FALSE),
+    ('Comunicação Acadêmica', 1, 9, 3, FALSE),
+    ('Sist. Eletroeletrônicos Aplicados I', 2, 21, 3, FALSE),
+    ('Int. Sistemas Dimensionais', 1, 25, 3, FALSE),
+    ('Estatística Descritiva', 2, 5, 3, FALSE),
+    ('Desenho Técnico', 2, 23, 3, FALSE);
+
 
 
     INSERT INTO TIPOS_SALAS (nome)

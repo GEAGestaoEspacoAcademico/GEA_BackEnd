@@ -141,7 +141,7 @@ public class NotificacaoService {
             notificacao.setMensagem(dto.notificacaoMensagem());
             notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
-            notificacao.setDestinatario(destinatarios);
+            notificacao.setDestinatarios(destinatarios);
 
             notificacaoRepository.save(notificacao);
         }
@@ -154,7 +154,7 @@ public class NotificacaoService {
             notificacao.getUsuarioRemetente().getNome()
         );
 
-        List<UsuarioResumoDTO> destinatariosDTO = notificacao.getDestinatario().stream()
+        List<UsuarioResumoDTO> destinatariosDTO = notificacao.getDestinatarios().stream()
                 .map(dest -> new UsuarioResumoDTO(dest.getId(), dest.getNome()))
                 .collect(Collectors.toList());
 
@@ -202,7 +202,7 @@ public class NotificacaoService {
 
         notificacao.setAgendamento(agendamento);
 
-        if (notificacao.getDestinatario() == null || notificacao.getDestinatario().isEmpty()) {
+        if (notificacao.getDestinatarios() == null || notificacao.getDestinatarios().isEmpty()) {
             throw new IllegalArgumentException("A lista de destinatários não pode estar vazia");
         }
 
