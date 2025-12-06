@@ -34,9 +34,10 @@ public class Disciplina implements Serializable {
 
     @Column(name = "nome", nullable = false)
     private String nome;
-
-    @Column(name = "semestre", nullable = false)
-    private String semestre;
+    
+    @ManyToOne
+    @JoinColumn(name = "semestre_id")
+    private Semestre semestre;
 
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable=true)
@@ -46,13 +47,13 @@ public class Disciplina implements Serializable {
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    public Disciplina(String nome, String semestre, Curso curso) {
+    public Disciplina(String nome, Semestre semestre, Curso curso) {
         this.nome = nome;
         this.semestre = semestre;
         this.curso = curso;
     }
 
-    public void editarDisciplina(String novoNome, String novoSemestre, Professor novoProfessor) {
+    public void editarDisciplina(String novoNome, Semestre novoSemestre, Professor novoProfessor) {
         this.nome = novoNome;
         this.semestre = novoSemestre;
         this.professor = novoProfessor;

@@ -9,8 +9,10 @@ import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.Semestre;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
+import com.fatec.itu.agendasalas.repositories.SemestreRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -21,24 +23,48 @@ public class DisciplinaService {
     private DisciplinaRepository disciplinaRepository;
 
     @Autowired
+    private SemestreRepository semestreRepository;
+
+    @Autowired
     private CursoRepository cursoRepository;
 
-    public DisciplinaListDTO criar(DisciplinaCreateDTO disciplina) {
-        Curso cursoDisciplina = cursoRepository.findById(disciplina.cursoId()).orElseThrow();
+    public DisciplinaListDTO criar(DisciplinaCreateDTO dto) {
 
-        Disciplina novaDisciplina = disciplinaRepository
-                .save(new Disciplina(disciplina.disciplinaNome(), disciplina.disciplinaSemestre(), cursoDisciplina));
+    Curso curso = cursoRepository.findById(dto.cursoId())
+            .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
 
-        return new DisciplinaListDTO(novaDisciplina.getId(), novaDisciplina.getNome(),
-                novaDisciplina.getSemestre(), novaDisciplina.getCurso().getNomeCurso());
-    }
+    Semestre semestre = semestreRepository.findById(dto.semestreId())
+            .orElseThrow(() -> new RuntimeException("Semestre não encontrado"));
 
-    private List<DisciplinaListDTO> converterParaDTO(List<Disciplina> disciplinas) {
-        return disciplinas.stream()
-                .map(disciplina -> new DisciplinaListDTO(disciplina.getId(), disciplina.getNome(),
-                        disciplina.getSemestre(), disciplina.getCurso().getNomeCurso()))
-                .toList();
-    }
+    Disciplina nova = new Disciplina();
+    nova.setNome(dto.disciplinaNome());
+    nova.setCurso(curso);
+    nova.setSemestre(semestre);
+
+    nova = disciplinaRepository.save(nova);
+
+    return new DisciplinaListDTO(
+            nova.getId(),
+            nova.getNome(),
+            nova.getSemestre().getId(),
+            nova.getSemestre().getNome(),
+            nova.getCurso().getNomeCurso()
+    );
+}
+
+
+   private List<DisciplinaListDTO> converterParaDTO(List<Disciplina> disciplinas) {
+    return disciplinas.stream()
+            .map(d -> new DisciplinaListDTO(
+                    d.getId(),
+                    d.getNome(),
+                    d.getSemestre().getId(),
+                    d.getSemestre().getNome(),
+                    d.getCurso().getNomeCurso()
+            ))
+            .toList();
+}
+
 
     public List<DisciplinaListDTO> listar() {
         return converterParaDTO(disciplinaRepository.findAll());
@@ -55,24 +81,45 @@ public class DisciplinaService {
     }
 
     public DisciplinaListDTO buscarPorId(Long id) {
-        Disciplina disciplina = disciplinaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
-        return new DisciplinaListDTO(disciplina.getId(), disciplina.getNome(),
-                disciplina.getSemestre(), disciplina.getCurso().getNomeCurso());
+    Disciplina disciplina = disciplinaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
+
+    return new DisciplinaListDTO(
+        disciplina.getId(),
+        disciplina.getNome(),
+        disciplina.getSemestre().getId(),
+        disciplina.getSemestre().getNome(),
+        disciplina.getCurso().getNomeCurso()   
+        );
     }
 
-    public DisciplinaListDTO atualizar(Long id, DisciplinaCreateDTO novaDisciplina) {
-        Disciplina atual = disciplinaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
-        atual.setNome(novaDisciplina.disciplinaNome());
-        atual.setSemestre(novaDisciplina.disciplinaSemestre());
-        atual.setCurso(cursoRepository.findById(novaDisciplina.cursoId()).orElseThrow());
 
-        Disciplina disciplinaAtualizada = disciplinaRepository.save(atual);
+    public DisciplinaListDTO atualizar(Long id, DisciplinaCreateDTO dto) {
 
-        return new DisciplinaListDTO(disciplinaAtualizada.getId(), disciplinaAtualizada.getNome(),
-                disciplinaAtualizada.getSemestre(), disciplinaAtualizada.getCurso().getNomeCurso());
+    Disciplina atual = disciplinaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
+
+    Curso curso = cursoRepository.findById(dto.cursoId())
+            .orElseThrow();
+
+    Semestre semestre = semestreRepository.findById(dto.semestreId())
+            .orElseThrow();
+
+    atual.setNome(dto.disciplinaNome());
+    atual.setCurso(curso);
+    atual.setSemestre(semestre);
+
+    Disciplina disciplinaAtualizada = disciplinaRepository.save(atual);
+
+    return new DisciplinaListDTO(
+        disciplinaAtualizada.getId(),
+        disciplinaAtualizada.getNome(),
+        disciplinaAtualizada.getSemestre().getId(),
+        disciplinaAtualizada.getSemestre().getNome(),
+        disciplinaAtualizada.getCurso().getNomeCurso()
+    );
     }
+
 
     public void excluir(Long id) {
         if (!disciplinaRepository.existsById(id)) {

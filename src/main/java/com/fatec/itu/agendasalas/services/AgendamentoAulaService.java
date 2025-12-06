@@ -342,23 +342,27 @@ public class AgendamentoAulaService {
         }
 
     private AgendamentoAulaResponseDTO converterParaResponseDTO(AgendamentoAula agendamento) {
-         return new AgendamentoAulaResponseDTO(
-                 agendamento.getId(),
-                 agendamento.getUsuario().getNome(),
-                 agendamento.getSala().getId(),
-                 agendamento.getSala().getNome(),
-                 agendamento.getDisciplina().getId(),
-                 agendamento.getDisciplina().getNome(),
-                 agendamento.getDisciplina().getSemestre(),
-                 agendamento.getDisciplina().getCurso().getNomeCurso(),
-                 agendamento.getDisciplina().getProfessor().getNome(),
-                 agendamento.getData(),
-                 agendamento.getDiaDaSemana(),
-                 agendamento.getJanelasHorario().getId(),
-                 agendamento.getJanelasHorario().getHoraInicio(),
-                 agendamento.getJanelasHorario().getHoraFim(),
-                 agendamento.getIsEvento());
-        }
+    Disciplina d = agendamento.getDisciplina();
+
+    return new AgendamentoAulaResponseDTO(
+        agendamento.getId(),
+        agendamento.getUsuario().getNome(),
+        agendamento.getSala().getId(),
+        agendamento.getSala().getNome(),
+        d.getId(),
+        d.getNome(),
+        d.getSemestre().getId(),   
+        d.getSemestre().getNome(),   
+        d.getCurso().getNomeCurso(),
+        d.getProfessor().getNome(),
+        agendamento.getData(),
+        agendamento.getDiaDaSemana(),
+        agendamento.getJanelasHorario().getId(),
+        agendamento.getJanelasHorario().getHoraInicio(),
+        agendamento.getJanelasHorario().getHoraFim(),
+        agendamento.getIsEvento()
+    );
+}
 
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {
