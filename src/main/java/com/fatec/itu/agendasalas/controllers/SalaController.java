@@ -22,6 +22,7 @@ import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecurso
 import com.fatec.itu.agendasalas.dto.salas.RequisicaoDeSalaDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaCreateAndUpdateDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaDetailDTO;
+import com.fatec.itu.agendasalas.dto.salas.RecomendacaoResponseDTO;
 import com.fatec.itu.agendasalas.services.SalaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -207,10 +208,10 @@ public class SalaController {
     @ApiResponse(responseCode = "200", description = "Recomendações retornadas")
         })
     @Operation(summary = "Lista recomendações de sala baseado nos parâmetros passados")
-    public ResponseEntity<List<SalaDetailDTO>> recomendacoes(
+    public ResponseEntity<RecomendacaoResponseDTO> recomendacoes(
             @RequestBody @Valid RequisicaoDeSalaDTO requisicao) {
 
-        return ResponseEntity.ok(salaService.recomendacaoDeSala(requisicao));
+        return ResponseEntity.ok(salaService.gerarRecomendacoes(requisicao));
     }
 
     @GetMapping("/disponiveis")
