@@ -41,7 +41,9 @@ public class DisciplinaController {
                     +
                     "  \"disciplinaId\": 31,\n" +
                     "  \"disciplinaNome\": \"Computação Gráfica\",\n" +
-                    "  \"disciplinaSemestre\": \"2025.2\",\n" +
+                    "  \"semestreId\": 2,\n" +
+                    "  \"semestreNome\": \"2025.2\",\n" +
+                    "  \"cursoId\": 1,\n" +
                     "  \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\"\n" +
                     "}")))
     })
@@ -58,7 +60,7 @@ public class DisciplinaController {
 
     @Operation(summary = "Lista todas as disciplinas existentes")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de disciplinas encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
+            @ApiResponse(responseCode = "200", description = "Lista de disciplinas encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "[ { \"disciplinaId\": 1, \"disciplinaNome\": \"Algoritmos\", \"semestreId\": 1, \"semestreNome\": \"2025.1\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" }, { \"disciplinaId\": 2, \"disciplinaNome\": \"Banco de Dados\", \"semestreId\": 1, \"semestreNome\": \"2025.1\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" } ]")))
     })
     @GetMapping
     public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {
@@ -67,7 +69,7 @@ public class DisciplinaController {
 
     @Operation(summary = "Apresenta uma disciplina existente pelo ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Disciplina encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "{ \"id\": 1, \"nome\": \"Algoritmos\" }"))),
+            @ApiResponse(responseCode = "200", description = "Disciplina encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "{ \"disciplinaId\": 1, \"disciplinaNome\": \"Algoritmos\", \"semestreId\": 1, \"semestreNome\": \"2025.1\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" }"))),
             @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
     })
     @GetMapping("{disciplinaId}")
@@ -89,7 +91,9 @@ public class DisciplinaController {
                         {
                           "disciplinaId": 1,
                           "disciplinaNome": "Computação em Nuvem",
-                          "disciplinaSemestre": "2025.1",
+                          "semestreId": 1,
+                          "semestreNome": "2025.1",
+                          "cursoId": 2,
                           "cursoNome": "Gestão da Tecnologia da Informação"
                         }
                         """
