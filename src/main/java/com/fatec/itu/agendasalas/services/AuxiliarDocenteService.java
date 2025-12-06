@@ -30,7 +30,7 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
     private CargoRepository cargoRepository;
 
     public Page<AuxiliarDocenteResponseDTO> listarAuxiliaresDocentes(int page, int size) {
-       Pageable pageable = PageRequest.of(page, size);
+       Pageable pageable = PageRequest.of(page-1, size);
        return auxiliarDocenteRepository.findAll(pageable)
        .map(this::converterParaDTO);
     }
