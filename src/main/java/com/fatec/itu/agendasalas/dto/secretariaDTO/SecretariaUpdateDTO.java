@@ -1,10 +1,10 @@
 package com.fatec.itu.agendasalas.dto.secretariaDTO;
 
-import jakarta.validation.constraints.Email;
+import com.fatec.itu.agendasalas.validators.EmailValido;
 
 public record SecretariaUpdateDTO(
     String nome,
-    @Email(message = "Email inválido")
+    @EmailValido(message="Envie um e-mail válido")
     String email,
     Long matricula
 ) {}
