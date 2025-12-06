@@ -5,6 +5,7 @@ public record DisciplinaListDTO(
     String disciplinaNome,
     Long semestreId,
     String semestreNome,
+    Long cursoId,
     String cursoNome
 ){}
 

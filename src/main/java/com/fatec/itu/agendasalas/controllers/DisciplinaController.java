@@ -58,7 +58,7 @@ public class DisciplinaController {
 
     @Operation(summary = "Lista todas as disciplinas existentes")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de disciplinas encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "[ { \"id\": 1, \"nome\": \"Algoritmos\" }, { \"id\": 2, \"nome\": \"Banco de Dados\" } ]")))
+            @ApiResponse(responseCode = "200", description = "Lista de disciplinas encontrada", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = DisciplinaListDTO.class), examples = @ExampleObject(value = "[ { \"disciplinaId\": 1, \"disciplinaNome\": \"Algoritmos\", \"semestreId\": 1, \"semestreNome\": \"2025.1\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" }, { \"disciplinaId\": 2, \"disciplinaNome\": \"Banco de Dados\", \"semestreId\": 1, \"semestreNome\": \"2025.1\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" } ]")))
     })
     @GetMapping
     public ResponseEntity<List<DisciplinaListDTO>> listarDisciplinas() {

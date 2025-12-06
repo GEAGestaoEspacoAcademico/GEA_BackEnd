@@ -48,6 +48,7 @@ public class DisciplinaService {
             nova.getNome(),
             nova.getSemestre().getId(),
             nova.getSemestre().getNome(),
+            nova.getCurso().getId(),
             nova.getCurso().getNomeCurso()
     );
 }
@@ -60,6 +61,7 @@ public class DisciplinaService {
                     d.getNome(),
                     d.getSemestre().getId(),
                     d.getSemestre().getNome(),
+                    d.getCurso().getId(),
                     d.getCurso().getNomeCurso()
             ))
             .toList();
@@ -89,6 +91,7 @@ public class DisciplinaService {
         disciplina.getNome(),
         disciplina.getSemestre().getId(),
         disciplina.getSemestre().getNome(),
+        disciplina.getCurso().getId(),
         disciplina.getCurso().getNomeCurso()   
         );
     }
@@ -116,6 +119,7 @@ public class DisciplinaService {
         disciplinaAtualizada.getNome(),
         disciplinaAtualizada.getSemestre().getId(),
         disciplinaAtualizada.getSemestre().getNome(),
+        disciplinaAtualizada.getCurso().getId(),
         disciplinaAtualizada.getCurso().getNomeCurso()
     );
     }
