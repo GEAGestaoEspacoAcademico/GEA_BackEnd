@@ -3,6 +3,7 @@ package com.fatec.itu.agendasalas.exceptions;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,6 +17,7 @@ import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularDisciplin
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -83,6 +85,18 @@ public class RestExceptionHandler {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(RecursoJaExisteException.class)
+    public ResponseEntity<ApiError> handleRecursoDuplicado(RecursoJaExisteException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ConflitoException.class)
+    public ResponseEntity<ApiError> handleConflict(ConflitoException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+    }
+
+
     //Erros de Não autorizado (401)
     @ExceptionHandler(JWTNaoEValidoException.class)
     public ResponseEntity<ApiError> handleJWTNaoEValido(JWTNaoEValidoException ex, HttpServletRequest request) {
@@ -91,22 +105,20 @@ public class RestExceptionHandler {
 
 
     //Erros de bad request (400)
-    @ExceptionHandler(RecursoNaoEncontradoException.class)
-    public ResponseEntity<ApiError> handleResourceNotFound(RecursoNaoEncontradoException ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
-    }
 
     @ExceptionHandler(RequisicaoInvalidaException.class)
     public ResponseEntity<ApiError> handleBadRequest(RequisicaoInvalidaException ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
-    @ExceptionHandler(ConflitoException.class)
-    public ResponseEntity<ApiError> handleConflict(ConflitoException ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request){
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request){
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -143,8 +155,8 @@ public class RestExceptionHandler {
          return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
-    @ExceptionHandler(AgendamentoRecorrenteComDataInicialAposADataFinalException.class)
-    public ResponseEntity<ApiError> handleAgendamentoRecorrenteComDataInicialAposADataFinal(AgendamentoRecorrenteComDataInicialAposADataFinalException ex, HttpServletRequest request){
+    @ExceptionHandler(DataInicialMaiorQueDataFinalException.class)
+    public ResponseEntity<ApiError> handleAgendamentoRecorrenteComDataInicialAposADataFinal(DataInicialMaiorQueDataFinalException ex, HttpServletRequest request){
          return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
@@ -165,21 +177,16 @@ public class RestExceptionHandler {
        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ResponseEntity<ApiError> handleResourceNotFound(RecursoNaoEncontradoException ex, HttpServletRequest request) {
+        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
+
     //Erros de servidor (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleAll(Exception ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);  
     }
 
-    @ExceptionHandler(RecursoJaExisteException.class)
-    public ResponseEntity<ApiError> handleRecursoDuplicado(RecursoJaExisteException ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(
-                HttpStatus.CONFLICT.value(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
-    }
+   
 }
