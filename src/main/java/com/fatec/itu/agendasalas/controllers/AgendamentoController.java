@@ -3,13 +3,12 @@ package com.fatec.itu.agendasalas.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoRequestDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoResponseDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDisciplinaDTO;
- 
 import com.fatec.itu.agendasalas.services.AgendamentoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
  
 
 @CrossOrigin
@@ -107,10 +106,10 @@ public class AgendamentoController {
             schema = @Schema(implementation = AgendamentoCanceladoRequestDTO.class),
             examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                 value = "{ \"motivoCancelamento\": \"Professor ausente\", \"usuarioId\": 5 }")))
-    @PutMapping("/{id}/cancelar")
+    @PostMapping("/{id}/cancelar")
     public ResponseEntity<AgendamentoCanceladoResponseDTO> cancelarAgendamento(
         @Parameter(description = "ID do agendamento a ser cancelado") @PathVariable Long id,
-        @RequestBody AgendamentoCanceladoRequestDTO request) {
+        @Valid @RequestBody AgendamentoCanceladoRequestDTO request) {
 
         AgendamentoCanceladoResponseDTO responseDTO = agendamentoService.cancelarAgendamento(id, request);
         return ResponseEntity.ok(responseDTO);

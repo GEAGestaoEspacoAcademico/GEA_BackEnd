@@ -24,6 +24,7 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Professor;
@@ -308,6 +309,7 @@ public class AgendamentoAulaService {
         if (!agendamentoAulaRepository.existsById(id)) {
             throw new EntityNotFoundException("Agendamento de aula não encontrado com ID: " + id);
         }
+        AgendamentoCancelado agendamentoCancelado = new AgendamentoCancelado();
         agendamentoAulaRepository.deleteById(id);
       
     }
@@ -441,7 +443,6 @@ public class AgendamentoAulaService {
 
     public void cancelarAgendamentoPorRecorrencia(Long recorrenciaId){
         Recorrencia recorrencia = recorrenciaRepository.findById(recorrenciaId).orElseThrow(() -> new EntityNotFoundException("Recorrencia de id: " + recorrenciaId + " não encontrada"));
-
         recorrenciaRepository.delete(recorrencia);
     }
 }

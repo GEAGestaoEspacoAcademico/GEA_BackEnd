@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoRequestDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoDiasAgendadosDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDTO;
@@ -106,8 +107,9 @@ public class AgendamentoEventoService {
                         if(agendamentoAulaConflitante!=null){
                             //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
                             //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
-                            agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
-        
+                            AgendamentoCanceladoRequestDTO request = new AgendamentoCanceladoRequestDTO(usuario.getId(), "EVENTO " + evento.getNome() + " está sobrescrevendo a sua aula");
+                            agendamentoService.cancelarAgendamento(agendamentoAulaConflitante.getId(), request);
+    
                         }
                         if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId())){
                             throw new ConflitoAoAgendarException(sala.getNome(), diaAgendado, horariosEncontrados.get(i).getHoraInicio(), horariosEncontrados.get(i).getHoraFim());

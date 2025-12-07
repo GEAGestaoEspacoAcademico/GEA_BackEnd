@@ -50,10 +50,6 @@ public class AgendamentoCancelado {
     private JanelasHorario janelasHorario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recorrencia_id")
-    private Recorrencia recorrencia;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disciplina_id")
     private Disciplina disciplina;
 
