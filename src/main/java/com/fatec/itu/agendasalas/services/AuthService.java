@@ -24,7 +24,7 @@ public class AuthService {
         //a autenticação certa usa o JWT Token
         if(user!=null && cryptPasswordEncoder.matches(usuarioAuthDTO.usuarioSenha(), user.getSenha())){
             String cargoNome = (user.getCargo() != null) ? user.getCargo().getNome() : null;
-            return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome);
+            return new UsuarioAuthenticationResponseDTO(user.getId(), user.getNome(), cargoNome, user.isNovoUsuario());
         }
         throw new SenhaInvalidaException("Erro ao validar senha");
     }
