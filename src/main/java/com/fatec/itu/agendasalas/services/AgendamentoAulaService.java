@@ -211,7 +211,7 @@ public class AgendamentoAulaService {
     }
 
     @Transactional
-    public Long criar(AgendamentoAulaCreationDTO dto) {
+    public Long criar(AgendamentoAulaCreationDTO dto) throws MessagingException {
 
         Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
                 () -> new EntityNotFoundException("Usuário com id: " + dto.usuarioId() + " não encontrado"));
@@ -278,13 +278,14 @@ public class AgendamentoAulaService {
             novoAgendamento.setJanelasHorario(janela);
             novoAgendamento.setStatus("ATIVO");
             recorrencia.addAgendamento(novoAgendamento);
-            notificacaoService.notificarAoCriarAgendamentoAulaUnica(novoAgendamento);
+            
             novoAgendamento = agendamentoAulaRepository.save(novoAgendamento);
 
             if (i == 0) {
                 idPrimeiroAgendamento = novoAgendamento.getId();
             }
         }   
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
 
         return idPrimeiroAgendamento;
     }

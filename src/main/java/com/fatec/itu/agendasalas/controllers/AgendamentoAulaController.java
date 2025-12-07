@@ -66,7 +66,7 @@ public class AgendamentoAulaController {
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
                 examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 2, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
-        @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
+        @RequestBody @Valid AgendamentoAulaCreationDTO dto) throws MessagingException {
     
         Long idCriado = agendamentoAulaService.criar(dto);
 
@@ -96,7 +96,7 @@ public class AgendamentoAulaController {
                     schema = @Schema(implementation = AgendamentoAulaCreationByAuxiliarDocenteDTO.class),
                     examples = @ExampleObject(
                         value = "{ \"usuarioId\": 4, \"salaId\": 5, \"disciplinaId\": 3, \"data\": \"2026-11-23\", \"horaInicio\": \"07:20\", \"horaFim\": \"09:30\", \"solicitante\": \"Sergio Salgado\" }")))
-            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) throws MessagingException {
         List<AgendamentoAulaResponseDTO> novosAgendamentos = agendamentoAulaService.criarAgendamentoAulaByAD(dto);
         if (novosAgendamentos == null || novosAgendamentos.isEmpty()) {
             return ResponseEntity.noContent().build();
