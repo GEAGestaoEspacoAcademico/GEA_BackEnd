@@ -149,7 +149,8 @@ public class UsuarioController {
     @Operation(summary = "Deleta um usuário desfazendo relações que violam integridade")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Usuário deletado com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+        @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+        @ApiResponse(responseCode="409", description="Erro ao excluir secretaria, pois não há 2 secretários cadastrados pelo menos")
     })
     @DeleteMapping("{usuarioId}")
     public ResponseEntity<Void> deletarUsuario(
