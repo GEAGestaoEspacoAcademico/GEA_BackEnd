@@ -7,17 +7,16 @@ import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaCreateDTO;
 import com.fatec.itu.agendasalas.dto.disciplinas.DisciplinaListDTO;
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Semestre;
+import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
+import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.SemestreRepository;
-
-import com.fatec.itu.agendasalas.entity.AgendamentoAula;
-import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
-import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
-import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -154,7 +153,7 @@ public class DisciplinaService {
         disciplina.setCurso(null);
 
 
-        List<AgendamentoAula> agendamentos = agendamentoAulaRepository.findByDisciplinaId(id.intValue());
+        List<AgendamentoAula> agendamentos = agendamentoAulaRepository.findByDisciplinaId(id);
         for (AgendamentoAula agendamento : agendamentos) {
             AgendamentoCancelado cancelado = AgendamentoCancelado.builder()
                 .agendamentoOriginalId(agendamento.getId())

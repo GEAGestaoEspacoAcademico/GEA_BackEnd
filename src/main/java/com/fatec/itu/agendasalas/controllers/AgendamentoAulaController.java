@@ -169,7 +169,7 @@ public class AgendamentoAulaController {
     })
     @GetMapping("/disciplina/{disciplinaId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorDisciplina(
-            @Parameter(description = "ID da disciplina") @PathVariable Integer disciplinaId) {
+            @Parameter(description = "ID da disciplina") @PathVariable Long disciplinaId) {
         List<AgendamentoAulaResponseDTO> agendamentos =
                 agendamentoAulaService.buscarPorDisciplina(disciplinaId);
         return ResponseEntity.ok(agendamentos);

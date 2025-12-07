@@ -15,8 +15,7 @@ import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 public interface AgendamentoAulaRepository extends JpaRepository<AgendamentoAula, Long>, JpaSpecificationExecutor<AgendamentoAula> {
 
     // Buscar agendamentos de aula por disciplina
-    @Query("SELECT a FROM AgendamentoAula a WHERE a.disciplina.id = :disciplinaId")
-    List<AgendamentoAula> findByDisciplinaId(@Param("disciplinaId") Integer disciplinaId);
+    List<AgendamentoAula> findByDisciplinaId(Long disciplinaId);
 
     // Buscar agendamentos de aula por professor (através da disciplina)
     @Query("SELECT a FROM AgendamentoAula a WHERE a.disciplina.professor.id = :professorId")

@@ -283,18 +283,17 @@ public class AgendamentoAulaService {
     }
 
 
-        public List<AgendamentoAulaResponseDTO> listarTodos() {
-                return agendamentoAulaRepository.findAll().stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
+    public List<AgendamentoAulaResponseDTO> listarTodos() {
+        return agendamentoAulaRepository.findAll().stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-        public AgendamentoAulaResponseDTO buscarPorId(Long id) {
-                AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Agendamento de aula não encontrado com ID: "
-                                                                + id));
-                return converterParaResponseDTO(agendamento);
-        }
+    public AgendamentoAulaResponseDTO buscarPorId(Long id) {
+        AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(
+            "Agendamento de aula não encontrado com ID: "+ id));
+            return converterParaResponseDTO(agendamento);
+    }
 
       
     
@@ -307,30 +306,29 @@ public class AgendamentoAulaService {
         agendamentoAulaRepository.deleteById(id);
       
     }
-        public List<AgendamentoAulaResponseDTO> buscarPorDisciplina(Integer disciplinaId) {
-                return agendamentoAulaRepository.findByDisciplinaId(disciplinaId).stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
 
-        public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Integer professorId) {
-                return agendamentoAulaRepository.findByProfessorId(professorId).stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
+    public List<AgendamentoAulaResponseDTO> buscarPorDisciplina(Long disciplinaId) {
+        Disciplina disciplina = disciplinaRepository.findById(disciplinaId).orElseThrow(()-> new EntityNotFoundException("Disciplina de id: " + disciplinaId + " não encontrada"));
+        return agendamentoAulaRepository.findByDisciplinaId(disciplina.getId()).stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-        @Transactional
-        public AgendamentoAulaResponseDTO atualizarAgendamentoAula(Long id,
-                        AgendamentoAulaCreationDTO dto) {
-                AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Agendamento de aula não encontrado com ID: "
-                                                                + id));
+    public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Integer professorId) {
+        return agendamentoAulaRepository.findByProfessorId(professorId).stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-                if (dto.usuarioId() != null) {
-                        Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
-                                        () -> new EntityNotFoundException("Usuário não encontrado com ID: "
-                                                        + dto.usuarioId()));
-                        agendamento.setUsuario(usuario);
-                }
+    @Transactional
+    public AgendamentoAulaResponseDTO atualizarAgendamentoAula(Long id, AgendamentoAulaCreationDTO dto) {
+        AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(
+            "Agendamento de aula não encontrado com ID: " + id));
+
+            if (dto.usuarioId() != null) {
+                 Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
+                    () -> new EntityNotFoundException("Usuário não encontrado com ID: " + dto.usuarioId()));
+                agendamento.setUsuario(usuario);
+            }
 
                 if (dto.salaId() != null) {
                         Sala sala = salaRepository.findById(dto.salaId()).orElseThrow(
