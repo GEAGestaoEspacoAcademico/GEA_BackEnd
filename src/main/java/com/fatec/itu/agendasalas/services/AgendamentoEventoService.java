@@ -44,6 +44,9 @@ public class AgendamentoEventoService {
         private AgendamentoRepository agendamentoRepository;
 
         @Autowired
+        private AgendamentoService agendamentoService;
+
+        @Autowired
         private SalaRepository salaRepository;
 
         @Autowired
@@ -104,6 +107,7 @@ public class AgendamentoEventoService {
                             //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
                             //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
                             agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
+        
                         }
                         if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId())){
                             throw new ConflitoAoAgendarException(sala.getNome(), diaAgendado, horariosEncontrados.get(i).getHoraInicio(), horariosEncontrados.get(i).getHoraFim());
@@ -120,7 +124,7 @@ public class AgendamentoEventoService {
                         proximoAgendamento.setStatus("ATIVO");
                         proximoAgendamento.setSolicitante(usuario.getNome());
                         proximoAgendamento.preencherDiaDaSemana();
-                        proximoAgendamento.setRecorrencia(recorrencia);
+                        recorrencia.addAgendamento(proximoAgendamento);
 
                         agendamentoEventoRepository.save(proximoAgendamento);
                 }
@@ -186,7 +190,7 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setData(agendamentoDia.dia());
                 agendamentoEvento.preencherDiaDaSemana();
-                agendamentoEvento.setRecorrencia(recorrenciaSalva);
+                recorrenciaSalva.addAgendamento(agendamentoEvento);
                 agendamentoEvento.setIsEvento(true);
                 agendamentoEvento.setStatus("ATIVO");
                 agendamentoEvento.setSolicitante(usuario.getNome()); 

@@ -43,9 +43,8 @@ import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 import com.fatec.itu.agendasalas.specifications.AgendamentoAulaSpecification;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AgendamentoAulaService {
@@ -125,8 +124,8 @@ public class AgendamentoAulaService {
                     agendamentoAula.setJanelasHorario(janelaHorario);
                     agendamentoAula.preencherDiaDaSemana();
                     agendamentoAula.setIsEvento(false);
-                    agendamentoAula.setRecorrencia(recorrenciaSalva);
                     agendamentoAula.setStatus("ATIVO");
+                    recorrenciaSalva.addAgendamento(agendamentoAula);
                     agendamentoAulaRepository.save(agendamentoAula);
                     agendamentoAulasFeitos.add(agendamentoAula);
                 }
@@ -188,9 +187,9 @@ public class AgendamentoAulaService {
             agendamento.setJanelasHorario(janela);
             agendamento.setIsEvento(false);
             agendamento.setStatus("ATIVO");
-            agendamento.setRecorrencia(recorrencia);
             agendamento.setSolicitante(solicitante);
             agendamento.preencherDiaDaSemana();
+            recorrencia.addAgendamento(agendamento);
             AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
             agendamentosRealizados.add(saved);
         }
@@ -255,17 +254,23 @@ public class AgendamentoAulaService {
                     .findFirst()
                     .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
                             "Janela de horário inválida: " + idDesejado));
+            
+            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(sala.getId(), dto.data(), janela.getId(), usuario.getId())){
+                throw new ProfessorJaPossuiAgendamentoEmOutraSalaException(dto.data(), janela.getHoraInicio(), janela.getHoraFim(), usuario.getNome());
+            }
 
             AgendamentoAula novoAgendamento = new AgendamentoAula();
 
             novoAgendamento.setUsuario(usuario);
+            novoAgendamento.setSolicitante(usuario.getNome());
             novoAgendamento.setSala(sala);
             novoAgendamento.setDisciplina(disciplina);
             novoAgendamento.setData(dto.data());
+            novoAgendamento.preencherDiaDaSemana();
             novoAgendamento.setIsEvento(dto.isEvento());
             novoAgendamento.setJanelasHorario(janela);
-            novoAgendamento.setRecorrencia(recorrencia);
-
+            novoAgendamento.setStatus("ATIVO");
+            recorrencia.addAgendamento(novoAgendamento);
             novoAgendamento = agendamentoAulaRepository.save(novoAgendamento);
 
             if (i == 0) {
@@ -422,6 +427,13 @@ public class AgendamentoAulaService {
         
         return agendamentoAulaRepository.findAll(spec, pageable)
             .map(this::converterParaResponseDTO); 
+    }
+
+
+    public void cancelarAgendamentoPorRecorrencia(Long recorrenciaId){
+        Recorrencia recorrencia = recorrenciaRepository.findById(recorrenciaId).orElseThrow(() -> new EntityNotFoundException("Recorrencia de id: " + recorrenciaId + " não encontrada"));
+
+        recorrenciaRepository.delete(recorrencia);
     }
 }
 
