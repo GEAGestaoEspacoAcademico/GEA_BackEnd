@@ -58,6 +58,9 @@ public class Usuario implements UserDetails{
     @Column(name="nome", nullable = false)
     private String nome;
 
+     @Column(name="novo_usuario", nullable = false)
+     private boolean novoUsuario = true;   
+
     @ManyToOne
     @JoinColumn(name="cargo_id", referencedColumnName = "id")
     private Cargo cargo;
