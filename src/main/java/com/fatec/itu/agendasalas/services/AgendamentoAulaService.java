@@ -24,8 +24,10 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
@@ -38,14 +40,14 @@ import com.fatec.itu.agendasalas.exceptions.ProfessorJaPossuiAgendamentoEmOutraS
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
+import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 import com.fatec.itu.agendasalas.specifications.AgendamentoAulaSpecification;
 
-import jakarta.persistence.EntityNotFoundException;
-
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AgendamentoAulaService {
@@ -63,6 +65,9 @@ public class AgendamentoAulaService {
     private DisciplinaRepository disciplinaRepository;
 
     @Autowired
+    private ProfessorRepository professorRepository;
+
+    @Autowired
     private JanelasHorarioRepository janelasHorarioRepository;
 
     @Autowired
@@ -75,7 +80,7 @@ public class AgendamentoAulaService {
     private NotificacaoService notificacaoService;
 
     @Transactional
-    //método para a tela Agendar Sala da Matéria dos ADS
+    //método para a tela Agendar Sala da Matéria da Secretaria
     public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO) throws MessagingException{
         List<AgendamentoAula> agendamentoAulasFeitos = new ArrayList<>();
         
@@ -125,15 +130,16 @@ public class AgendamentoAulaService {
                     agendamentoAula.setJanelasHorario(janelaHorario);
                     agendamentoAula.preencherDiaDaSemana();
                     agendamentoAula.setIsEvento(false);
-                    agendamentoAula.setRecorrencia(recorrenciaSalva);
                     agendamentoAula.setStatus("ATIVO");
+                    agendamentoAula.setSolicitante("SECRETARIA");
+                    recorrenciaSalva.addAgendamento(agendamentoAula);
                     agendamentoAulaRepository.save(agendamentoAula);
                     agendamentoAulasFeitos.add(agendamentoAula);
                 }
             }
             dataInicial = dataInicial.plusDays(1);
         }
-        notificacaoService.notificarAoCriarAgendamentoAula(recorrencia);
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
         return agendamentoAulasFeitos.stream()
         .map(this::converterParaResponseDTO)
         .toList();
@@ -143,7 +149,7 @@ public class AgendamentoAulaService {
 
     @Transactional
     //Esse método se refere ao Agendar Aula pelo AD
-    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaByAD(AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaByAD(AgendamentoAulaCreationByAuxiliarDocenteDTO dto) throws MessagingException {
         
         List<AgendamentoAula> agendamentosRealizados = new ArrayList<>();
         List<AgendamentoAulaResponseDTO> listaResposta = new ArrayList<>();
@@ -188,13 +194,13 @@ public class AgendamentoAulaService {
             agendamento.setJanelasHorario(janela);
             agendamento.setIsEvento(false);
             agendamento.setStatus("ATIVO");
-            agendamento.setRecorrencia(recorrencia);
             agendamento.setSolicitante(solicitante);
             agendamento.preencherDiaDaSemana();
+            recorrencia.addAgendamento(agendamento);
             AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
             agendamentosRealizados.add(saved);
         }
-
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
         listaResposta = agendamentosRealizados
             .stream()
             .map(this::converterParaResponseDTO)
@@ -205,7 +211,7 @@ public class AgendamentoAulaService {
     }
 
     @Transactional
-    public Long criar(AgendamentoAulaCreationDTO dto) {
+    public Long criar(AgendamentoAulaCreationDTO dto) throws MessagingException {
 
         Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
                 () -> new EntityNotFoundException("Usuário com id: " + dto.usuarioId() + " não encontrado"));
@@ -255,40 +261,47 @@ public class AgendamentoAulaService {
                     .findFirst()
                     .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
                             "Janela de horário inválida: " + idDesejado));
+            
+            if(agendamentoConflitoService.professorJaPossuiAgendamentoEmOutraSala(sala.getId(), dto.data(), janela.getId(), usuario.getId())){
+                throw new ProfessorJaPossuiAgendamentoEmOutraSalaException(dto.data(), janela.getHoraInicio(), janela.getHoraFim(), usuario.getNome());
+            }
 
             AgendamentoAula novoAgendamento = new AgendamentoAula();
 
             novoAgendamento.setUsuario(usuario);
+            novoAgendamento.setSolicitante(usuario.getNome());
             novoAgendamento.setSala(sala);
             novoAgendamento.setDisciplina(disciplina);
             novoAgendamento.setData(dto.data());
+            novoAgendamento.preencherDiaDaSemana();
             novoAgendamento.setIsEvento(dto.isEvento());
             novoAgendamento.setJanelasHorario(janela);
-            novoAgendamento.setRecorrencia(recorrencia);
-
+            novoAgendamento.setStatus("ATIVO");
+            recorrencia.addAgendamento(novoAgendamento);
+            
             novoAgendamento = agendamentoAulaRepository.save(novoAgendamento);
 
             if (i == 0) {
                 idPrimeiroAgendamento = novoAgendamento.getId();
             }
         }   
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
 
         return idPrimeiroAgendamento;
     }
 
 
-        public List<AgendamentoAulaResponseDTO> listarTodos() {
-                return agendamentoAulaRepository.findAll().stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
+    public List<AgendamentoAulaResponseDTO> listarTodos() {
+        return agendamentoAulaRepository.findAll().stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-        public AgendamentoAulaResponseDTO buscarPorId(Long id) {
-                AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Agendamento de aula não encontrado com ID: "
-                                                                + id));
-                return converterParaResponseDTO(agendamento);
-        }
+    public AgendamentoAulaResponseDTO buscarPorId(Long id) {
+        AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(
+            "Agendamento de aula não encontrado com ID: "+ id));
+            return converterParaResponseDTO(agendamento);
+    }
 
       
     
@@ -298,33 +311,34 @@ public class AgendamentoAulaService {
         if (!agendamentoAulaRepository.existsById(id)) {
             throw new EntityNotFoundException("Agendamento de aula não encontrado com ID: " + id);
         }
+        AgendamentoCancelado agendamentoCancelado = new AgendamentoCancelado();
         agendamentoAulaRepository.deleteById(id);
       
     }
-        public List<AgendamentoAulaResponseDTO> buscarPorDisciplina(Integer disciplinaId) {
-                return agendamentoAulaRepository.findByDisciplinaId(disciplinaId).stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
 
-        public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Integer professorId) {
-                return agendamentoAulaRepository.findByProfessorId(professorId).stream()
-                                .map(this::converterParaResponseDTO).collect(Collectors.toList());
-        }
+    public List<AgendamentoAulaResponseDTO> buscarPorDisciplina(Long disciplinaId) {
+        Disciplina disciplina = disciplinaRepository.findById(disciplinaId).orElseThrow(()-> new EntityNotFoundException("Disciplina de id: " + disciplinaId + " não encontrada"));
+        return agendamentoAulaRepository.findByDisciplinaId(disciplina.getId()).stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-        @Transactional
-        public AgendamentoAulaResponseDTO atualizarAgendamentoAula(Long id,
-                        AgendamentoAulaCreationDTO dto) {
-                AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Agendamento de aula não encontrado com ID: "
-                                                                + id));
+    public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Long professorId) {
+        Professor professor = professorRepository.findById(professorId).orElseThrow(()-> new EntityNotFoundException("Professor de id: " + professorId + " não encontrado"));
+        return agendamentoAulaRepository.findByProfessorId(professor.getId()).stream()
+            .map(this::converterParaResponseDTO).collect(Collectors.toList());
+    }
 
-                if (dto.usuarioId() != null) {
-                        Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
-                                        () -> new EntityNotFoundException("Usuário não encontrado com ID: "
-                                                        + dto.usuarioId()));
-                        agendamento.setUsuario(usuario);
-                }
+    @Transactional
+    public AgendamentoAulaResponseDTO atualizarAgendamentoAula(Long id, AgendamentoAulaCreationDTO dto) {
+        AgendamentoAula agendamento = agendamentoAulaRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(
+            "Agendamento de aula não encontrado com ID: " + id));
+
+            if (dto.usuarioId() != null) {
+                 Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
+                    () -> new EntityNotFoundException("Usuário não encontrado com ID: " + dto.usuarioId()));
+                agendamento.setUsuario(usuario);
+            }
 
                 if (dto.salaId() != null) {
                         Sala sala = salaRepository.findById(dto.salaId()).orElseThrow(
@@ -378,6 +392,9 @@ public class AgendamentoAulaService {
     );
 }
 
+
+    //Não use.
+    @Deprecated(since = "07/12/2025", forRemoval=true)
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {
         
@@ -416,12 +433,19 @@ public class AgendamentoAulaService {
         return converterParaResponseDTO(saved);
     }
 
-    public Page<AgendamentoAulaResponseDTO> listarDisciplinasPorFiltro(AgendamentoAulaFilterDTO filtros, int page, int limit, String sort) {
+
+    public Page<AgendamentoAulaResponseDTO> listarAgendamentosAulaPorFiltros(AgendamentoAulaFilterDTO filtros, int page, int limit, String sort) {
         Pageable pageable = PageRequest.of(page-1, limit, Sort.by(sort).ascending());
         Specification<AgendamentoAula> spec = AgendamentoAulaSpecification.porFiltros(filtros);
         
         return agendamentoAulaRepository.findAll(spec, pageable)
             .map(this::converterParaResponseDTO); 
+    }
+
+
+    public void cancelarAgendamentoPorRecorrencia(Long recorrenciaId){
+        Recorrencia recorrencia = recorrenciaRepository.findById(recorrenciaId).orElseThrow(() -> new EntityNotFoundException("Recorrencia de id: " + recorrenciaId + " não encontrada"));
+        recorrenciaRepository.delete(recorrencia);
     }
 }
 

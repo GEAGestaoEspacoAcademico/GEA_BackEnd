@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoCanceladoRequestDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoCreationDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoDiasAgendadosDTO;
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoEventoResponseDTO;
@@ -22,6 +23,7 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
+import com.fatec.itu.agendasalas.exceptions.ListaVaziaException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
@@ -30,6 +32,7 @@ import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -42,6 +45,9 @@ public class AgendamentoEventoService {
 
         @Autowired
         private AgendamentoRepository agendamentoRepository;
+
+        @Autowired
+        private AgendamentoService agendamentoService;
 
         @Autowired
         private SalaRepository salaRepository;
@@ -61,8 +67,11 @@ public class AgendamentoEventoService {
         @Autowired
         private AgendamentoAulaService agendamentoAulaService;
 
+        @Autowired
+        private NotificacaoService notificacaoService;
+
         @Transactional
-        public void criar(AgendamentoEventoCreationDTO dto) {
+        public void criar(AgendamentoEventoCreationDTO dto) throws MessagingException {
                 Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
                                 () -> new EntityNotFoundException("Usuário não encontrado com ID: "
                                                 + dto.usuarioId()));
@@ -80,12 +89,12 @@ public class AgendamentoEventoService {
              LocalDate diaInicial = diasAgendadosDTO.stream()
             .map(AgendamentoEventoDiasAgendadosDTO::dia)
             .min(LocalDate::compareTo)
-            .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
+            .orElseThrow(()-> new ListaVaziaException("Lista de dias vazia. Envie uma lista de dias com pelo menos 1 dia."));
         
             LocalDate diaFinal = diasAgendadosDTO.stream()
             .map(AgendamentoEventoDiasAgendadosDTO::dia)
             .max(LocalDate::compareTo)
-            .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
+            .orElseThrow(()-> new ListaVaziaException("Lista de dias vazia. Envie uma lista de dias com pelo menos 1 dia."));
         
             Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(diaInicial, diaFinal));
 
@@ -97,13 +106,18 @@ public class AgendamentoEventoService {
                 List<JanelasHorario> horariosEncontrados = janelasHorarioRepository
                                 .findByIntervaloIdHorarios(horaInicioDoDiaAgendado, horaFimDoDiaAgendado);
 
+                if(horariosEncontrados.size()==0){
+                    throw new ListaVaziaException("Lista de janelas de horário foi vazia, envie um periodo de tempo válido (contendo 1h40 no minimo), ex: 07h40 - 09h20");
+                }
 
                 for (int i = 0; i < horariosEncontrados.size(); i++) {
                       AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId());
                         if(agendamentoAulaConflitante!=null){
-                            //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
-                            //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
-                            agendamentoAulaService.excluirAgendamentoAula(agendamentoAulaConflitante.getId());
+                           
+                            AgendamentoCanceladoRequestDTO request = new AgendamentoCanceladoRequestDTO(usuario.getId(), "O evento " + evento.getNome() + " está sobrescrevendo a sua aula");
+                            agendamentoService.cancelarAgendamento(agendamentoAulaConflitante.getId(), request);
+                           
+    
                         }
                         if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId())){
                             throw new ConflitoAoAgendarException(sala.getNome(), diaAgendado, horariosEncontrados.get(i).getHoraInicio(), horariosEncontrados.get(i).getHoraFim());
@@ -120,7 +134,7 @@ public class AgendamentoEventoService {
                         proximoAgendamento.setStatus("ATIVO");
                         proximoAgendamento.setSolicitante(usuario.getNome());
                         proximoAgendamento.preencherDiaDaSemana();
-                        proximoAgendamento.setRecorrencia(recorrencia);
+                        recorrencia.addAgendamento(proximoAgendamento);
 
                         agendamentoEventoRepository.save(proximoAgendamento);
                 }
@@ -139,6 +153,7 @@ public class AgendamentoEventoService {
                
         }
 
+    @Deprecated(since="07/12/2025", forRemoval=true)
     @Transactional
     public void criarAgendamentoEvento(DEVAgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
        
@@ -186,7 +201,7 @@ public class AgendamentoEventoService {
                 agendamentoEvento.setJanelasHorario(janela);
                 agendamentoEvento.setData(agendamentoDia.dia());
                 agendamentoEvento.preencherDiaDaSemana();
-                agendamentoEvento.setRecorrencia(recorrenciaSalva);
+                recorrenciaSalva.addAgendamento(agendamentoEvento);
                 agendamentoEvento.setIsEvento(true);
                 agendamentoEvento.setStatus("ATIVO");
                 agendamentoEvento.setSolicitante(usuario.getNome()); 
@@ -226,10 +241,5 @@ public class AgendamentoEventoService {
         agendamentoEventoRepository.deleteById(agendamentoEventoId);
     }
 
-    public void deletarAgendamentoEventoPelaRecorrencia(Long recorrenciaId)
-    {
-        
-    }  
-
-    }
+}
 

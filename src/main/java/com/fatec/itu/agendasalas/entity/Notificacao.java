@@ -2,8 +2,7 @@ package com.fatec.itu.agendasalas.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,10 +10,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Notificacao implements Serializable {
     
     @EqualsAndHashCode.Include
@@ -33,9 +34,18 @@ public class Notificacao implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idNotificacao;
 
-    @ManyToOne
-    @JoinColumn(name = "agendamento", nullable = false)
-    private Agendamento agendamento;
+    
+    @Column(name="agendamento_id", nullable=false)
+    private Long agendamentoId;
+
+    @Column(name="agendamento_data", nullable=false)
+    private LocalDate data;
+
+    @Column(name="agendamento_hora_inicio", nullable=false)
+    private LocalTime horaInicio;
+
+    @Column(name="agendamento_hora_fim", nullable=false)
+    private LocalTime horaFim;
 
     @Column(name = "titulo", nullable = false)
     private String titulo;
@@ -50,20 +60,12 @@ public class Notificacao implements Serializable {
     @JoinColumn(name = "usuario_remetente")
     private Usuario usuarioRemetente;
 
-    @ManyToMany
-    @JoinTable(
-        name = "notificacao_destinatario",
-        joinColumns = @JoinColumn(name = "notificacao_id"),
-        inverseJoinColumns = @JoinColumn(name = "usuario_id")
-    )
-    private List<Usuario> destinatarios = new ArrayList<>();
+    @ManyToOne
+    private Usuario destinatario;
 
     public Notificacao(LocalDate dataEnvio) {
-        this.destinatarios = new ArrayList<Usuario>();
         this.dataEnvio = dataEnvio == null ? LocalDate.now() : dataEnvio;
     }
 
-    public void addDestinatario(Usuario usuario) {
-        this.destinatarios.add(usuario);
-    }
+
 }

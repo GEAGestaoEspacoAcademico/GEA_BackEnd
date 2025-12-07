@@ -79,13 +79,8 @@ public class AuthController {
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                         value = "{ \"usuarioLogin\": \"lucas.silva\", \"usuarioSenha\": \"SenhaForte123!\" }")))
             @RequestBody UsuarioAuthenticationDTO usuarioAuthDTO) {
-
-         try {
+                
              UsuarioAuthenticationResponseDTO authDTO = authService.login(usuarioAuthDTO);
              return ResponseEntity.ok(authDTO);
-         } catch (Exception e) {
-             throw new RuntimeException(e.getMessage());
-         }
-
      }
 }

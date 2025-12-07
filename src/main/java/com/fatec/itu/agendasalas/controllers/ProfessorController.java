@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @CrossOrigin
@@ -73,7 +74,7 @@ public class ProfessorController {
                 content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ProfessorCreateDTO.class),
                     examples = @ExampleObject(value = "{ \"login\": \"sergio.salgado\", \"nome\": \"Sergio Salgado\", \"email\": \"sergio.salgado@fatec.edu.br\", \"senha\": \"SenhaProf2025!\", \"registroProfessor\": 12345 }")))
-           @Valid @RequestBody ProfessorCreateDTO professorCreateDTO){
+           @Valid @RequestBody ProfessorCreateDTO professorCreateDTO) throws MessagingException{
         return ResponseEntity.created(null).body(professorService.cadastrarUsuario(professorCreateDTO));
     }
 

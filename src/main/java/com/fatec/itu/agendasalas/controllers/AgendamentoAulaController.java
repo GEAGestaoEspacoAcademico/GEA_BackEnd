@@ -65,8 +65,8 @@ public class AgendamentoAulaController {
             required = true,
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
-                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
-        @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
+                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 2, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
+        @RequestBody @Valid AgendamentoAulaCreationDTO dto) throws MessagingException {
     
         Long idCriado = agendamentoAulaService.criar(dto);
 
@@ -96,7 +96,7 @@ public class AgendamentoAulaController {
                     schema = @Schema(implementation = AgendamentoAulaCreationByAuxiliarDocenteDTO.class),
                     examples = @ExampleObject(
                         value = "{ \"usuarioId\": 4, \"salaId\": 5, \"disciplinaId\": 3, \"data\": \"2026-11-23\", \"horaInicio\": \"07:20\", \"horaFim\": \"09:30\", \"solicitante\": \"Sergio Salgado\" }")))
-            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+            @Valid @RequestBody AgendamentoAulaCreationByAuxiliarDocenteDTO dto) throws MessagingException {
         List<AgendamentoAulaResponseDTO> novosAgendamentos = agendamentoAulaService.criarAgendamentoAulaByAD(dto);
         if (novosAgendamentos == null || novosAgendamentos.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -169,7 +169,7 @@ public class AgendamentoAulaController {
     })
     @GetMapping("/disciplina/{disciplinaId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorDisciplina(
-            @Parameter(description = "ID da disciplina") @PathVariable Integer disciplinaId) {
+            @Parameter(description = "ID da disciplina") @PathVariable Long disciplinaId) {
         List<AgendamentoAulaResponseDTO> agendamentos =
                 agendamentoAulaService.buscarPorDisciplina(disciplinaId);
         return ResponseEntity.ok(agendamentos);
@@ -183,9 +183,8 @@ public class AgendamentoAulaController {
     })
     @GetMapping("/professor/{professorId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorProfessor(
-            @Parameter(description = "ID do professor (usuário)") @PathVariable Integer professorId) {
-        List<AgendamentoAulaResponseDTO> agendamentos =
-                agendamentoAulaService.buscarPorProfessor(professorId);
+            @Parameter(description = "ID do professor (usuário)") @PathVariable Long professorId) {
+        List<AgendamentoAulaResponseDTO> agendamentos = agendamentoAulaService.buscarPorProfessor(professorId);
         return ResponseEntity.ok(agendamentos);
     }
 
@@ -321,6 +320,16 @@ public class AgendamentoAulaController {
                 }
             }
 
-            return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
+            return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarAgendamentosAulaPorFiltros(filtros, page, limit, sort)));
+        }
+
+
+        @Operation(summary = "Deleta um agendamento de aula pelo id da recorrencia")
+        @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Agendamento deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Recorrencia não encontrado") })
+        @DeleteMapping("/recorrencia/{recorrenciaId}")
+        public ResponseEntity<Void> deletarPelaRecorrenciaId(@Parameter(description="Id da recorrencia")@PathVariable Long recorrenciaId){
+            agendamentoAulaService.cancelarAgendamentoPorRecorrencia(recorrenciaId);
+            return ResponseEntity.noContent().build();
         }
 }

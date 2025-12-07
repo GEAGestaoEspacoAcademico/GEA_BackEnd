@@ -66,7 +66,6 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
        @Override  
        public UsuarioResponseDTO cadastrarUsuario(UsuarioCreationDTO usuarioDTO){
 
-        passwordEncryptService.validarSenha(usuarioDTO.usuarioSenha());
 
         Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
         usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.usuarioSenha()));
@@ -78,6 +77,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
     }
 
+    @Deprecated
     public UsuarioResponseDTO cadastrarUsuarioPeloNomeEmail(UsuarioRegisterDTO dto){
 
         String email = dto.usuarioEmail();
@@ -85,7 +85,8 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         String login;
         login = dto.usuarioNome().toLowerCase().replaceAll("\\s+", ".");
         login = java.text.Normalizer.normalize(login, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-        
+
+
         String baseLogin = login;
         int suffix = 1;
         while (usuarioRepository.findByLogin(login).isPresent()) {
@@ -219,7 +220,6 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
             throw new SenhasNaoConferemException();
         }
 
-        passwordEncryptService.validarSenha(dto.novaSenha());
 
         if (passwordEncryptService.matches(dto.novaSenha(), usuario.getSenha())){
             throw new SenhaInvalidaException("A nova senha não pode ser igual à última utilizada.");
@@ -236,8 +236,6 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
             .orElseThrow(() -> new EntityNotFoundException("Usuário de id " + usuarioId + " não encontrado"));
 
     String novaSenha = dto.novaSenha();
-
-    passwordEncryptService.validarSenha(novaSenha);
 
     if (passwordEncryptService.matches(novaSenha, usuario.getSenha())) {
         throw new SenhaInvalidaException("A nova senha não pode ser igual à senha atual.");
@@ -260,7 +258,6 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
        if(!dto.senha().equals(dto.repetirSenha())){
             throw new SenhasNaoConferemException();
        }
-       passwordEncryptService.validarSenha(dto.senha());
        
        PasswordResetToken passToken = passwordResetTokenRepository.findByToken(dto.token());
        Usuario usuario = passToken.getUsuario();

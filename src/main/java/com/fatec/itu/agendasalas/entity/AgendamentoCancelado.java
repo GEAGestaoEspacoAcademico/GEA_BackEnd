@@ -27,7 +27,6 @@ public class AgendamentoCancelado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long agendamentoOriginalId;
     private String tipoAgendamento; 
     private LocalDate data; 
@@ -49,10 +48,6 @@ public class AgendamentoCancelado {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "janelas_horario_id")
     private JanelasHorario janelasHorario;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recorrencia_id")
-    private Recorrencia recorrencia;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disciplina_id")

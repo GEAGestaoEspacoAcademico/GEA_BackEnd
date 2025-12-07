@@ -1,5 +1,5 @@
 package com.fatec.itu.agendasalas.controllers;
-
+/* 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,3 +59,4 @@ public class NotificacaoController {
         notificacaoService.enviarNotificacoes(notificacoesDTO);
     }
 }
+*/

@@ -14,6 +14,7 @@ import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.AuxiliarDocenteRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -28,6 +29,9 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
 
     @Autowired
     private CargoRepository cargoRepository;
+
+    @Autowired
+    private NotificacaoService notificacaoService;
 
     public Page<AuxiliarDocenteResponseDTO> listarAuxiliaresDocentes(int page, int size) {
        Pageable pageable = PageRequest.of(page-1, size);
@@ -48,7 +52,7 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
 
     @Override
     @Transactional
-    public AuxiliarDocenteResponseDTO cadastrarUsuario(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) {
+    public AuxiliarDocenteResponseDTO cadastrarUsuario(AuxiliarDocenteCreationDTO auxiliarDocenteCreationDTO) throws MessagingException {
         AuxiliarDocente auxiliarDocente = new AuxiliarDocente(
                 auxiliarDocenteCreationDTO.login(), 
                 auxiliarDocenteCreationDTO.email(),
@@ -62,6 +66,7 @@ public class AuxiliarDocenteService implements UsuarioCadastravel<AuxiliarDocent
             auxiliarDocente.setCargo(cargo);
 
             auxiliarDocenteRepository.save(auxiliarDocente);
+            notificacaoService.notificarCadastro(auxiliarDocente, auxiliarDocenteCreationDTO.senha());
             return converterParaDTO(auxiliarDocente);
     }
 

@@ -24,7 +24,9 @@ import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
+import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
@@ -57,18 +59,21 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
     @Autowired
     private PasswordEncryptService passwordEncryptService;
 
+    @Autowired
+    private NotificacaoService notificacaoService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
     }
 
     @Override
     @Transactional
-    public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) {
+    public ProfessorResponseDTO cadastrarUsuario(ProfessorCreateDTO professorCreateDTO) throws MessagingException { 
 
-        String[] nomeSeparado = professorCreateDTO.nome().split(" ");
-        String primeiroNome =  nomeSeparado[0].toLowerCase();
-        String ultimoNome = nomeSeparado[nomeSeparado.length-1].toLowerCase();
-        String login = primeiroNome + "." + ultimoNome; 
+        String login = gerarNovoLoginCasoJaExista(professorCreateDTO.login());
         
         if(usuarioService.existeEmailCadastrado(professorCreateDTO.email())){
             throw new EmailJaCadastradoException(professorCreateDTO.email());
@@ -78,14 +83,14 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
                 login,
                 professorCreateDTO.email(), 
                 professorCreateDTO.nome(),
-                professorCreateDTO.registroProfessor());
+                professorCreateDTO.matricula());
 
         Cargo cargo = cargoService.findByNome("PROFESSOR");
         
         novoProfessor.setCargo(cargo);
-        novoProfessor.setSenha(passwordEncryptService.criptografarSenha(primeiroNome+"123"));
+        novoProfessor.setSenha(passwordEncryptService.criptografarSenha(professorCreateDTO.senha()));
         professorRepository.save(novoProfessor);
-
+        
         
         List<Disciplina> disciplinasParaAdicionar = professorCreateDTO.disciplinasId()
                     .stream()
@@ -96,10 +101,21 @@ public class ProfessorService implements UsuarioCadastravel<ProfessorCreateDTO, 
             disciplina.setProfessor(novoProfessor);
         });
         
-    
+        notificacaoService.notificarCadastro(novoProfessor, professorCreateDTO.senha());
         disciplinaRepository.saveAll(disciplinasParaAdicionar);
         return toResponseDTO(novoProfessor);
     }
+
+    private String gerarNovoLoginCasoJaExista(String login){
+        String baseLogin = login;
+        int suffix = 1;
+        while (usuarioRepository.findByLogin(login).isPresent()) {
+            suffix++;
+            login = baseLogin + suffix;
+        }
+        return login;
+    }
+
 
     /********* Lista por ID *********/
     public ProfessorResponseDTO buscarPorId(Long id) {

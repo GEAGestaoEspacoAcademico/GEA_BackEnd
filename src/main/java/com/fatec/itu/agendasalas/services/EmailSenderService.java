@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -11,8 +12,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Usuario;
 
 import jakarta.mail.MessagingException;
@@ -162,6 +165,7 @@ public class EmailSenderService {
         mailSender.send(message);
       
     }
+
 
     private String formatarHorarios(Set<JanelasHorario> janelasHorarios){
         StringBuilder horarios = new StringBuilder();
@@ -338,6 +342,215 @@ public class EmailSenderService {
                 LocalDate.now().getYear()
             );
     }
+
+    @Async
+    public void enviarNotificacaoCadastro(Usuario destinatario, String primeiraSenha) throws MessagingException {
+        
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+        helper.setTo(destinatario.getEmail());
+        helper.setFrom(hostEmail);
+        helper.setSubject("Cadastro Realizado com Sucesso");
+
+        String mensagem = montarMensagemCadastro(destinatario, destinatario.getLogin(), primeiraSenha);
+        helper.setText(mensagem, true);
+        mailSender.send(message);
+      
+    }
+
+    private String montarMensagemCadastro(Usuario usuario, String login, String senhaInicial) {
+
+        String nome = usuario != null ? usuario.getNome() : "Usuário";
+
+        return """
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            margin: 0;
+                            padding: 20px;
+                            background-color: #f8f9fa;
+                        }
+                        .email-container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        .header {
+                            text-align: center;
+                            padding-bottom: 20px;
+                            border-bottom: 2px solid #2b7a0b;
+                            margin-bottom: 25px;
+                        }
+                        .header h3 {
+                            color: #2c3e50;
+                            margin: 0;
+                        }
+                        .section-title {
+                            background-color: #2b7a0b;
+                            color: white;
+                            padding: 10px 15px;
+                            border-radius: 5px;
+                            margin-bottom: 15px;
+                            font-weight: bold;
+                        }
+                        .info-grid {
+                            display: grid;
+                            grid-template-columns: 130px 1fr;
+                            gap: 10px;
+                            margin-bottom: 10px;
+                        }
+                        .label {
+                            font-weight: bold;
+                            color: #555;
+                        }
+                        .value {
+                            color: #333;
+                        }
+                        .alerta {
+                            margin-top: 20px;
+                            background-color: #fff3cd;
+                            padding: 15px;
+                            border-left: 4px solid #ffca2c;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            color: #856404;
+                        }
+                        .footer {
+                            margin-top: 30px;
+                            padding-top: 20px;
+                            border-top: 1px solid #ddd;
+                            font-size: 12px;
+                            color: #777;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="email-container">
+                        <div class="header">
+                            <h3>Cadastro Realizado com Sucesso</h3>
+                        </div>
+                        
+                        <p><strong>Olá, %s!</strong></p>
+                        <p>Seu cadastro no sistema foi concluído com sucesso.</p>
+
+                        <div class="section-title">🔐 DADOS DE ACESSO</div>
+                        <div class="info-grid">
+                            <div class="label">Login:</div>
+                            <div class="value">%s</div>
+
+                            <div class="label">Senha inicial:</div>
+                            <div class="value">%s</div>
+                        </div>
+
+                        <div class="alerta">
+                            ⚠️ Ao realizar seu primeiro login, não se esqueça de alterar sua senha!
+                        </div>
+
+                        <div class="footer">
+                            <p>Esta é uma mensagem automática, por favor não responder.</p>
+                            <p>Sistema GEA Fatec Itu • %s</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """.formatted(
+                    nome,
+                    login,
+                    senhaInicial,
+                    LocalDate.now().getYear()
+                );
+        }
+
+    
+    @Async
+    public void enviarNotificacaoCancelamentoAula(Disciplina disciplina, AgendamentoAula aula, String motivo, Usuario usuarioCancelador) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        Professor professor = disciplina.getProfessor();    
+        
+        helper.setTo(professor.getEmail());
+        helper.setFrom(hostEmail);
+        helper.setSubject("Agendamento de Aula Cancelada");
+
+        String mensagem = montarMensagemCancelamentoAula(professor.getNome(), disciplina.getNome(), aula.getData(), aula.getJanelasHorario().getHoraInicio(), aula.getJanelasHorario().getHoraFim(), motivo, usuarioCancelador.getNome());
+        helper.setText(mensagem, true);
+        mailSender.send(message);
+    
+    }
+
+    private String montarMensagemCancelamentoAula(
+        String nomeProfessor,
+        String nomeDisciplina,
+        LocalDate data,
+        LocalTime horaInicio,
+        LocalTime horaFim,
+        String motivo,
+        String nomeCancelador) {
+
+        DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String dataFormatada = data != null ? data.format(dataFormatter) : "data não disponível";
+        String inicioFormatado = horaInicio != null ? horaInicio.format(horaFormatter) : "--:--";
+        String fimFormatado = horaFim != null ? horaFim.format(horaFormatter) : "--:--";
+        String motivoSafe = motivo != null ? motivo : "Não informado";
+        String canceladorSafe = nomeCancelador != null ? nomeCancelador : "Não informado";
+        String professorSafe = nomeProfessor != null ? nomeProfessor : "Professor";
+        String disciplinaSafe = nomeDisciplina != null ? nomeDisciplina : "Disciplina";
+
+        return """
+            <!doctype html>
+            <html lang="pt-BR">
+            <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <style>
+                body { font-family: Arial, Helvetica, sans-serif; line-height:1.4; color:#333; }
+                .container { max-width:600px; margin:20px auto; padding:20px; border:1px solid #e6e6e6; border-radius:8px; background:#fafafa; }
+                .header { font-size:18px; font-weight:700; margin-bottom:12px; }
+                .content { font-size:14px; }
+                .badge { display:inline-block; padding:6px 10px; background:#f2f2f2; border-radius:6px; margin:8px 0; }
+                .footer { margin-top:18px; font-size:12px; color:#666; }
+                .highlight { font-weight:700; }
+            </style>
+            </head>
+            <body>
+            <div class="container">
+                <div class="header">Olá, %s!</div>
+
+                <div class="content">
+                <p>Sua aula do dia <span class="highlight">%s</span> da disciplina <span class="highlight">%s</span> foi <strong>cancelada</strong> no seguinte horário:</p>
+
+                <p class="badge">%s - %s</p>
+
+                <p><strong>Motivo do cancelamento:</strong><br/>%s</p>
+
+                <p><strong>Usuário responsável pelo cancelamento:</strong><br/>%s</p>
+                </div>
+
+                <div class="footer">
+                <p>Se você acha que houve um engano, por favor entre em contato com a coordenação.</p>
+                </div>
+            </div>
+            </body>
+            </html>
+            """.formatted(professorSafe, dataFormatada, disciplinaSafe, inicioFormatado, fimFormatado, motivoSafe, canceladorSafe);
+    }
+
+
 
 }
 

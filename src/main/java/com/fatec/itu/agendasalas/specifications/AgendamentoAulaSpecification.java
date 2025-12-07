@@ -34,7 +34,7 @@ public class AgendamentoAulaSpecification {
                 return builder.equal(root.get("usuario").get("id"), usuariosIds.get(0));
             }
 
-            return root.get("usario").get("id").in(usuariosIds);          
+            return root.get("usuario").get("id").in(usuariosIds);          
         };
     }
 

@@ -93,7 +93,12 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(NaoEPossivelExcluirSecretarioException.class)
-    public ResponseEntity<ApiError> handleNaoEPossivelExcluirSecreatarioException(NaoEPossivelExcluirSecretarioException ex, HttpServletRequest request){
+    public ResponseEntity<ApiError> handleNaoEPossivelExcluirSecretario(NaoEPossivelExcluirSecretarioException ex, HttpServletRequest request){
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ListaVaziaException.class)
+    public ResponseEntity<ApiError> handleListaVazia(ListaVaziaException ex, HttpServletRequest request){
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 

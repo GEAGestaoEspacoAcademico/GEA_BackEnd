@@ -20,12 +20,13 @@ import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.AgendamentoCancelado;
 import com.fatec.itu.agendasalas.entity.AgendamentoEvento;
 import com.fatec.itu.agendasalas.entity.Usuario;
-import com.fatec.itu.agendasalas.exceptions.RequisicaoInvalidaException;
-import com.fatec.itu.agendasalas.exceptions.RecursoNaoEncontradoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
+
+import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AgendamentoService {
@@ -42,6 +43,9 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoCanceladoRepository agendamentoCanceladoRepository;
     
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     @Autowired
     private com.fatec.itu.agendasalas.repositories.UsuarioRepository usuarioRepository;
 
@@ -122,25 +126,15 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoCanceladoResponseDTO cancelarAgendamento(
         Long agendamentoId,
-        AgendamentoCanceladoRequestDTO request
-    ) {
-        if (request == null) {
-            throw new RequisicaoInvalidaException("Requisição de cancelamento inválida.");
-        }
-
-        if (request.motivoCancelamento() == null || request.motivoCancelamento().trim().isEmpty()) {
-            throw new RequisicaoInvalidaException("O motivo do cancelamento é obrigatório.");
-        }
-
-        if (request.usuarioId() == null) {
-            throw new RequisicaoInvalidaException("O ID do usuário é obrigatório.");
-        }
-
+        AgendamentoCanceladoRequestDTO request) throws MessagingException {
+        
         Usuario usuarioCancelador = usuarioRepository.findById(request.usuarioId())
-            .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado."));
+            .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         Agendamento agendamentoOriginal = agendamentoRepository.findById(agendamentoId)
-            .orElseThrow(() -> new RecursoNaoEncontradoException("Agendamento não encontrado com ID: " + agendamentoId));
+            .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
+
+        AgendamentoAula agendamentoAula = agendamentoAulaRepository.findById(agendamentoId).orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
 
         String motivoCancelamento = request.motivoCancelamento();
 
@@ -149,10 +143,11 @@ public class AgendamentoService {
             usuarioCancelador,
             motivoCancelamento
         );
-
+        notificacaoService.notificarCancelamentoDeAula(agendamentoAula, motivoCancelamento, usuarioCancelador); 
         AgendamentoCancelado registroPersistido = agendamentoCanceladoRepository.save(registroCancelado);
-
+              
         agendamentoRepository.deleteById(agendamentoId);
+        
 
         return AgendamentoCanceladoResponseDTO.builder()
             .idCancelamento(registroPersistido.getId())
@@ -180,7 +175,6 @@ public class AgendamentoService {
             .canceladoPor(usuarioCancelador) 
             .sala(agendamentoOriginal.getSala())
             .janelasHorario(agendamentoOriginal.getJanelasHorario()) 
-            .recorrencia(agendamentoOriginal.getRecorrencia())
             .disciplina(null) 
             .evento(null);    
 
