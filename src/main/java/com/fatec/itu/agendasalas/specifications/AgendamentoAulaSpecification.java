@@ -7,11 +7,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaFilterDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
-import com.fatec.itu.agendasalas.entity.AgendamentoAula_;
-import com.fatec.itu.agendasalas.entity.Disciplina_;
-import com.fatec.itu.agendasalas.entity.JanelasHorario_;
-import com.fatec.itu.agendasalas.entity.Sala_;
-import com.fatec.itu.agendasalas.entity.Usuario_;
 
 public class AgendamentoAulaSpecification {
 
@@ -36,10 +31,10 @@ public class AgendamentoAulaSpecification {
                 return null;
             }
             if(usuariosIds.size()==1){
-                return builder.equal(root.get(AgendamentoAula_.USUARIO).get(Usuario_.ID), usuariosIds.get(0));
+                return builder.equal(root.get("usuario").get("id"), usuariosIds.get(0));
             }
 
-            return root.get(AgendamentoAula_.USUARIO).get(Usuario_.ID).in(usuariosIds);          
+            return root.get("usario").get("id").in(usuariosIds);          
         };
     }
 
@@ -50,10 +45,10 @@ public class AgendamentoAulaSpecification {
                 return null;
             }
             if(salasIds.size()==1){
-                return builder.equal(root.get(AgendamentoAula_.SALA).get(Sala_.ID), salasIds.get(0));
+                return builder.equal(root.get("sala").get("id"), salasIds.get(0));
             }
 
-            return root.get(AgendamentoAula_.SALA).get(Sala_.ID).in(salasIds);          
+            return root.get("sala").get("id").in(salasIds);          
         };
     } 
     
@@ -63,9 +58,9 @@ public class AgendamentoAulaSpecification {
                 return null;
             }
             if(disciplinasIds.size() == 1){
-                return builder.equal(root.get(AgendamentoAula_.DISCIPLINA).get(Disciplina_.ID), disciplinasIds.get(0));
+                return builder.equal(root.get("disciplina").get("id"), disciplinasIds.get(0));
             }
-            return root.get(AgendamentoAula_.DISCIPLINA).get(Disciplina_.ID).in(disciplinasIds);
+            return root.get("disciplina").get("id").in(disciplinasIds);
         };
     }
 
@@ -75,7 +70,7 @@ public class AgendamentoAulaSpecification {
                 return null;
             }
             return builder.between(
-                root.get(AgendamentoAula_.DATA),
+                root.get("data"),
                 dataInicio,
                 dataFim
             );
@@ -88,9 +83,9 @@ public class AgendamentoAulaSpecification {
                 return null;
             }
             if(janelasHorarioIds.size()==1){
-                return builder.equal(root.get(AgendamentoAula_.JANELAS_HORARIO).get(JanelasHorario_.ID), janelasHorarioIds.get(0));
+                return builder.equal(root.get("janelasHorario").get("id"), janelasHorarioIds.get(0));
             }
-            return root.get(AgendamentoAula_.JANELAS_HORARIO).get(JanelasHorario_.ID).in(janelasHorarioIds);
+            return root.get("janelasHorario").get("id").in(janelasHorarioIds);
         };
     }
 
