@@ -32,6 +32,7 @@ import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -66,8 +67,11 @@ public class AgendamentoEventoService {
         @Autowired
         private AgendamentoAulaService agendamentoAulaService;
 
+        @Autowired
+        private NotificacaoService notificacaoService;
+
         @Transactional
-        public void criar(AgendamentoEventoCreationDTO dto) {
+        public void criar(AgendamentoEventoCreationDTO dto) throws MessagingException {
                 Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
                                 () -> new EntityNotFoundException("Usuário não encontrado com ID: "
                                                 + dto.usuarioId()));
@@ -109,10 +113,10 @@ public class AgendamentoEventoService {
                 for (int i = 0; i < horariosEncontrados.size(); i++) {
                       AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId());
                         if(agendamentoAulaConflitante!=null){
-                            //aqui preciso cancelar a aula, por enquanto vou deixar para excluir
-                            //pra logica seria: definir o status como CANCELADO, criar um registro na tabela AGENDAMENTOS_CANCELADOS
-                            AgendamentoCanceladoRequestDTO request = new AgendamentoCanceladoRequestDTO(usuario.getId(), "EVENTO " + evento.getNome() + " está sobrescrevendo a sua aula");
+                           
+                            AgendamentoCanceladoRequestDTO request = new AgendamentoCanceladoRequestDTO(usuario.getId(), "O evento " + evento.getNome() + " está sobrescrevendo a sua aula");
                             agendamentoService.cancelarAgendamento(agendamentoAulaConflitante.getId(), request);
+                           
     
                         }
                         if(agendamentoConflitoService.existeEventoNoHorario(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId())){
@@ -149,6 +153,7 @@ public class AgendamentoEventoService {
                
         }
 
+    @Deprecated(since="07/12/2025", forRemoval=true)
     @Transactional
     public void criarAgendamentoEvento(DEVAgendamentoEventoCreationDTO agendamentoEventoCreationDTO){ 
        
@@ -236,10 +241,5 @@ public class AgendamentoEventoService {
         agendamentoEventoRepository.deleteById(agendamentoEventoId);
     }
 
-    public void deletarAgendamentoEventoPelaRecorrencia(Long recorrenciaId)
-    {
-        
-    }  
-
-    }
+}
 

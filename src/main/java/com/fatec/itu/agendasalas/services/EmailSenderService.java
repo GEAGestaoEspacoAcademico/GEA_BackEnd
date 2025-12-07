@@ -1,6 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -11,8 +12,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Usuario;
 
 import jakarta.mail.MessagingException;
@@ -468,6 +471,84 @@ public class EmailSenderService {
                     LocalDate.now().getYear()
                 );
         }
+
+    
+    @Async
+    public void enviarNotificacaoCancelamentoAula(Disciplina disciplina, AgendamentoAula aula, String motivo, Usuario usuarioCancelador) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        Professor professor = disciplina.getProfessor();    
+        
+        helper.setTo(professor.getEmail());
+        helper.setFrom(hostEmail);
+        helper.setSubject("Agendamento de Aula Cancelada");
+
+        String mensagem = montarMensagemCancelamentoAula(professor.getNome(), disciplina.getNome(), aula.getData(), aula.getJanelasHorario().getHoraInicio(), aula.getJanelasHorario().getHoraFim(), motivo, usuarioCancelador.getNome());
+        helper.setText(mensagem, true);
+        mailSender.send(message);
+    
+    }
+
+    private String montarMensagemCancelamentoAula(
+        String nomeProfessor,
+        String nomeDisciplina,
+        LocalDate data,
+        LocalTime horaInicio,
+        LocalTime horaFim,
+        String motivo,
+        String nomeCancelador) {
+
+        DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String dataFormatada = data != null ? data.format(dataFormatter) : "data não disponível";
+        String inicioFormatado = horaInicio != null ? horaInicio.format(horaFormatter) : "--:--";
+        String fimFormatado = horaFim != null ? horaFim.format(horaFormatter) : "--:--";
+        String motivoSafe = motivo != null ? motivo : "Não informado";
+        String canceladorSafe = nomeCancelador != null ? nomeCancelador : "Não informado";
+        String professorSafe = nomeProfessor != null ? nomeProfessor : "Professor";
+        String disciplinaSafe = nomeDisciplina != null ? nomeDisciplina : "Disciplina";
+
+        return """
+            <!doctype html>
+            <html lang="pt-BR">
+            <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <style>
+                body { font-family: Arial, Helvetica, sans-serif; line-height:1.4; color:#333; }
+                .container { max-width:600px; margin:20px auto; padding:20px; border:1px solid #e6e6e6; border-radius:8px; background:#fafafa; }
+                .header { font-size:18px; font-weight:700; margin-bottom:12px; }
+                .content { font-size:14px; }
+                .badge { display:inline-block; padding:6px 10px; background:#f2f2f2; border-radius:6px; margin:8px 0; }
+                .footer { margin-top:18px; font-size:12px; color:#666; }
+                .highlight { font-weight:700; }
+            </style>
+            </head>
+            <body>
+            <div class="container">
+                <div class="header">Olá, %s!</div>
+
+                <div class="content">
+                <p>Sua aula do dia <span class="highlight">%s</span> da disciplina <span class="highlight">%s</span> foi <strong>cancelada</strong> no seguinte horário:</p>
+
+                <p class="badge">%s - %s</p>
+
+                <p><strong>Motivo do cancelamento:</strong><br/>%s</p>
+
+                <p><strong>Usuário responsável pelo cancelamento:</strong><br/>%s</p>
+                </div>
+
+                <div class="footer">
+                <p>Se você acha que houve um engano, por favor entre em contato com a coordenação.</p>
+                </div>
+            </div>
+            </body>
+            </html>
+            """.formatted(professorSafe, dataFormatada, disciplinaSafe, inicioFormatado, fimFormatado, motivoSafe, canceladorSafe);
+    }
+
 
 
 }

@@ -21,6 +21,7 @@ public class AgendamentoConflitoService {
         AgendamentoRepository agendamentoRepository,
         AgendamentoEventoRepository agendamentoEventoRepository,
         AgendamentoAulaRepository agendamentoAulaRepository){
+            
         this.agendamentoRepository = agendamentoRepository;
         this.agendamentoEventoRepository = agendamentoEventoRepository;
         this.agendamentoAulaRepository = agendamentoAulaRepository;

@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -51,7 +52,7 @@ public class AgendamentoEventoController {
             schema = @Schema(implementation = AgendamentoEventoCreationDTO.class),
             examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                 value = "{ \"usuarioId\": 20, \"eventoNome\": \"Fórum de Tecnologia\", \"salaId\": 4, \"dias\": [ { \"dia\": \"2025-12-10\", \"horaInicio\": \"09:00\", \"horaFim\": \"12:00\" }, { \"dia\": \"2025-12-11\", \"horaInicio\": \"14:00\", \"horaFim\": \"17:00\" } ] }")))
-        @RequestBody @Valid AgendamentoEventoCreationDTO dto) {
+        @RequestBody @Valid AgendamentoEventoCreationDTO dto) throws MessagingException {
       
         agendamentoEventoService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();

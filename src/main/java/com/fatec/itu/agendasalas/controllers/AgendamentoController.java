@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
  
 
@@ -109,7 +110,7 @@ public class AgendamentoController {
     @PostMapping("/{id}/cancelar")
     public ResponseEntity<AgendamentoCanceladoResponseDTO> cancelarAgendamento(
         @Parameter(description = "ID do agendamento a ser cancelado") @PathVariable Long id,
-        @Valid @RequestBody AgendamentoCanceladoRequestDTO request) {
+        @Valid @RequestBody AgendamentoCanceladoRequestDTO request) throws MessagingException {
 
         AgendamentoCanceladoResponseDTO responseDTO = agendamentoService.cancelarAgendamento(id, request);
         return ResponseEntity.ok(responseDTO);

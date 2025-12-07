@@ -25,6 +25,7 @@ import com.fatec.itu.agendasalas.repositories.AgendamentoCanceladoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -42,6 +43,9 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoCanceladoRepository agendamentoCanceladoRepository;
     
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     @Autowired
     private com.fatec.itu.agendasalas.repositories.UsuarioRepository usuarioRepository;
 
@@ -122,13 +126,15 @@ public class AgendamentoService {
     @Transactional
     public AgendamentoCanceladoResponseDTO cancelarAgendamento(
         Long agendamentoId,
-        AgendamentoCanceladoRequestDTO request) {
+        AgendamentoCanceladoRequestDTO request) throws MessagingException {
         
         Usuario usuarioCancelador = usuarioRepository.findById(request.usuarioId())
             .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
 
         Agendamento agendamentoOriginal = agendamentoRepository.findById(agendamentoId)
             .orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
+
+        AgendamentoAula agendamentoAula = agendamentoAulaRepository.findById(agendamentoId).orElseThrow(() -> new EntityNotFoundException("Agendamento não encontrado com ID: " + agendamentoId));
 
         String motivoCancelamento = request.motivoCancelamento();
 
@@ -137,10 +143,11 @@ public class AgendamentoService {
             usuarioCancelador,
             motivoCancelamento
         );
-
+        notificacaoService.notificarCancelamentoDeAula(agendamentoAula, motivoCancelamento, usuarioCancelador); 
         AgendamentoCancelado registroPersistido = agendamentoCanceladoRepository.save(registroCancelado);
-
+              
         agendamentoRepository.deleteById(agendamentoId);
+        
 
         return AgendamentoCanceladoResponseDTO.builder()
             .idCancelamento(registroPersistido.getId())

@@ -35,7 +35,7 @@ VALUES
 -- Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'heber.martins@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'lucas.morais26@fatec.sp.gov.br', 3);
 -- senha: ss123
     
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)

@@ -1,7 +1,7 @@
 package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -10,21 +10,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoNotificacaoDTO;
-import com.fatec.itu.agendasalas.dto.notificações.NotificacaoCreationDTO;
-import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
-import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
-import com.fatec.itu.agendasalas.entity.Agendamento;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Notificacao;
-import com.fatec.itu.agendasalas.entity.NotificacaoEmail;
 import com.fatec.itu.agendasalas.entity.Recorrencia;
-import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ListaDeAulasVaziaNotificacaoException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
@@ -59,8 +50,6 @@ public class NotificacaoService {
         this.notificacaoRepository = notificacaoRepository;
     }
 
-  
-
     public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas) throws MessagingException{
         //var auth = SecurityContextHolder.getContext().getAuthentication();
         
@@ -75,7 +64,7 @@ public class NotificacaoService {
             throw new ListaDeAulasVaziaNotificacaoException();
         }
         //apenas para teste, deve ser: Usuario destinatario = aulas.get(0).getUsuario();
-        Usuario destinatario = usuarioRepository.findById(1L).orElse(null);
+        Usuario destinatario = aulas.get(0).getUsuario();
         
         Disciplina disciplina = aulas.get(0).getDisciplina();
         String diaDaSemana = aulas.get(0).getDiaDaSemana();
@@ -97,9 +86,23 @@ public class NotificacaoService {
             .sorted(Comparator.comparing(JanelasHorario::getHoraInicio))
             .collect(Collectors.toCollection(LinkedHashSet::new));
 
+        String nomeProfessor = aulas.get(0).getDisciplina().getProfessor().getNome();
+        String dataFormatada = diaInicial.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + diaFinal.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        Notificacao notificacao = Notificacao.builder()
+             .agendamentoId(aulas.get(0).getId())
+             .data(diaInicial)
+             .horaInicio(aulas.get(0).getJanelasHorario().getHoraInicio())
+             .horaFim(aulas.get(0).getJanelasHorario().getHoraFim())
+             .titulo("AGENDAMENTO REALIZADO")
+             .mensagem("AGENDAMENTO REALIZADO NOS DIAS: " + dataFormatada + " PARA O PROFESSOR: " + nomeProfessor)
+             .dataEnvio(LocalDate.now())
+             .usuarioRemetente(remetente)
+             .destinatario(destinatario)
+             .build();
         
+        notificacaoRepository.save(notificacao);
         emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario, diaDaSemana);
-        
     }
 
     
@@ -107,16 +110,34 @@ public class NotificacaoService {
         emailSenderService.enviarNotificacaoCadastro(usuario, primeiraSenha);
     }
 
+    public void notificarCancelamentoDeAula(AgendamentoAula aula, String motivo, Usuario usuarioCancelador) throws MessagingException{
+        String diaCancelado = aula.getData().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        Disciplina disciplina = aula.getDisciplina();
+        Notificacao notificacao = Notificacao.builder()
+        .agendamentoId(aula.getId())
+        .data(aula.getData())
+        .horaInicio(aula.getJanelasHorario().getHoraInicio())
+        .horaFim(aula.getJanelasHorario().getHoraFim())
+        .titulo("AGENDAMENTO CANCELADO")
+        .mensagem(
+        "AGENDAMENTO DO DIA: " 
+        + diaCancelado 
+        + " FOI CANCELADO PELO USUÁRIO: " 
+        + usuarioCancelador.getNome() 
+        + " MOTIVO: " 
+        + motivo
+        + " DISCIPLINA: " + disciplina.getNome())
+        .dataEnvio(LocalDate.now())
+        .usuarioRemetente(usuarioCancelador)
+        .destinatario(disciplina.getProfessor())
+        .build();
+        notificacaoRepository.save(notificacao);
 
-    public void notificarAoAlterarAgendamentoAula(AgendamentoAula aula){
-        
-        Usuario destinatario = aula.getUsuario();
-        NotificacaoEmail notificacao = new NotificacaoEmail();
-
+        emailSenderService.enviarNotificacaoCancelamentoAula(disciplina, aula, motivo, usuarioCancelador);
     }
 
-    
-
+/* 
+    @Deprecated
     @Transactional(readOnly = true)
     public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
         return notificacaoRepository.findAll().stream()
@@ -140,17 +161,18 @@ public class NotificacaoService {
             List<Usuario> destinatarios = usuarioRepository.findAllById(dto.destinatarios());
 
             Notificacao notificacao = new Notificacao();
-            notificacao.setAgendamento(agendamento);
+            notificacao.setAgendamentoId(agendamento.getId());
             notificacao.setTitulo(dto.notificacaoTitulo());
             notificacao.setMensagem(dto.notificacaoMensagem());
             notificacao.setDataEnvio(LocalDate.now());
             notificacao.setUsuarioRemetente(remetente);
-            notificacao.setDestinatarios(destinatarios);
+            notificacao.setDestinatario(destinatarios.get(0));
 
             notificacaoRepository.save(notificacao);
         }
     }
 
+    @Deprecated
     private NotificacaoResponseDTO converterParaResponseDTO(Notificacao notificacao) {
 
         UsuarioResumoDTO remetenteDTO = new UsuarioResumoDTO(
@@ -158,11 +180,10 @@ public class NotificacaoService {
             notificacao.getUsuarioRemetente().getNome()
         );
 
-        List<UsuarioResumoDTO> destinatariosDTO = notificacao.getDestinatarios().stream()
-                .map(dest -> new UsuarioResumoDTO(dest.getId(), dest.getNome()))
-                .collect(Collectors.toList());
+       UsuarioResumoDTO destinatarioDTO = new UsuarioResumoDTO(notificacao.getDestinatario().getId(), notificacao.getDestinatario().getNome());
+            
 
-        AgendamentoNotificacaoDTO agendamentoDTO = converterAgendamentoParaNotificacaoDTO(notificacao.getAgendamento());
+        AgendamentoNotificacaoDTO agendamentoDTO = converterAgendamentoParaNotificacaoDTO(notificacao.getAgendamentoId());
 
         return new NotificacaoResponseDTO(
             notificacao.getIdNotificacao(),
@@ -170,11 +191,13 @@ public class NotificacaoService {
             notificacao.getMensagem(),
             notificacao.getDataEnvio(),
             remetenteDTO,
-            destinatariosDTO,
+            destinatarioDTO,
             agendamentoDTO
         );
+        
     }
 
+    @Deprecated
     private AgendamentoNotificacaoDTO converterAgendamentoParaNotificacaoDTO(Agendamento agendamento) {
 
         Sala sala = agendamento.getSala();
@@ -194,20 +217,21 @@ public class NotificacaoService {
             horaFim
         );
     }
-    
+
+    @Deprecated
     public Notificacao enviarNotificacao(Notificacao notificacao) {
 
-        if (notificacao.getAgendamento() == null || notificacao.getAgendamento().getId() == null) {
+        if (notificacao.getAgendamentoId() == null) {
             throw new IllegalArgumentException("Agendamento inválido ou não informado");
         }
 
-        Agendamento agendamento = agendamentoRepository.findById(notificacao.getAgendamento().getId())
+        Agendamento agendamento = agendamentoRepository.findById(notificacao.getAgendamentoId())
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
 
-        notificacao.setAgendamento(agendamento);
+        notificacao.setAgendamentoId(agendamento.getId());
 
-        if (notificacao.getDestinatarios() == null || notificacao.getDestinatarios().isEmpty()) {
-            throw new IllegalArgumentException("A lista de destinatários não pode estar vazia");
+        if (notificacao.getDestinatario() == null) {
+            throw new IllegalArgumentException("O destinatario nao pode ser nulo");
         }
 
         if (notificacao.getDataEnvio() == null) {
@@ -216,4 +240,5 @@ public class NotificacaoService {
 
         return notificacaoRepository.save(notificacao);
     }
+    */
 }
