@@ -97,6 +97,11 @@ public class RestExceptionHandler {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(IntegridadeReferencialCoordenador.class)
+    public ResponseEntity<ApiError> handleIntegridadeReferencialCoordenador(IntegridadeReferencialCoordenador ex, HttpServletRequest request) {
+    return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(ListaVaziaException.class)
     public ResponseEntity<ApiError> handleListaVazia(ListaVaziaException ex, HttpServletRequest request){
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);

@@ -35,7 +35,7 @@ public class Agendamento implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="user_id", referencedColumnName = "id", nullable = true)
     private Usuario usuario;
 
     @ManyToOne
