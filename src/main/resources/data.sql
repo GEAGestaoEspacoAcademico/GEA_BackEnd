@@ -223,7 +223,7 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Cursos
 -- -----------------------------------------------------------------------------
-INSERT INTO CURSOS (nome_curso, sigla, coordenador_id, excluida)
+INSERT INTO CURSOS (nome_curso, sigla, coordenador_id, excluido)
 VALUES 
     ('Análise e Desenvolvimento de Sistemas', 'ADS', 10, FALSE),
     ('Gestão da Tecnologia da Informação', 'GTI', 13, FALSE),
@@ -236,9 +236,6 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
 -- -----------------------------------------------------------------------------
-
--- Adiciona coluna 'excluida' se não existir
-ALTER TABLE DISCIPLINAS ADD COLUMN IF NOT EXISTS excluida BOOLEAN DEFAULT FALSE;
 
 -- Disciplinas: Curso ADS (curso_id = 1)
 INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VALUES
