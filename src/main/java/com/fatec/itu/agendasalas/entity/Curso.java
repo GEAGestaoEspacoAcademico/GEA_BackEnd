@@ -48,6 +48,9 @@ public class Curso implements Serializable {
     @Column(name = "sigla", length = 10, nullable = false)
     private String sigla;
 
+    @Column(name = "excluido", nullable = false)
+    private boolean excluido = false;
+
     public void editarCurso(String novoNomeCurso, Coordenador novoCoordenador) {
         this.nomeCurso = novoNomeCurso;
         this.coordenador = novoCoordenador;
