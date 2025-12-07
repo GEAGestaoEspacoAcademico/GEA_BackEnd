@@ -21,6 +21,8 @@ import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Secretaria;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
+import com.fatec.itu.agendasalas.exceptions.NaoEPossivelExcluirSecretarioException;
+import com.fatec.itu.agendasalas.exceptions.SenhaInvalidaException;
 import com.fatec.itu.agendasalas.exceptions.SenhasNaoConferemException;
 import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDeletarAgendamentoException;
 import com.fatec.itu.agendasalas.exceptions.usuarios.FalhaAoDesvincularCursoException;
@@ -68,7 +70,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
         Usuario usuario = new Usuario(usuarioDTO.usuarioLogin(), usuarioDTO.usuarioEmail(), usuarioDTO.usuarioNome());
         usuario.setSenha(passwordEncryptService.criptografarSenha(usuarioDTO.usuarioSenha()));
-        Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new RuntimeException("CARGO USER NÃO ENCONTRADO"));
+        Cargo cargo = cargoRepository.findByNome("USER").orElseThrow(()-> new EntityNotFoundException("CARGO USER NÃO ENCONTRADO"));
         usuario.setCargo(cargo);
 
         usuarioRepository.save(usuario);
@@ -207,10 +209,10 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
 
     public void alterarSenha(Long usuarioId, UsuarioAlterarSenhaDTO dto) {
 
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         if (!passwordEncryptService.matches(dto.senhaAtual(), usuario.getSenha())) {
-            throw new RuntimeException("Senha atual incorreta");
+            throw new SenhaInvalidaException("Senha atual incorreta");
         }
 
         if (!dto.novaSenha().equals(dto.repetirNovaSenha())) {
@@ -220,7 +222,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         passwordEncryptService.validarSenha(dto.novaSenha());
 
         if (passwordEncryptService.matches(dto.novaSenha(), usuario.getSenha())){
-            throw new RuntimeException("A nova senha não pode ser igual à última utilizada.");
+            throw new SenhaInvalidaException("A nova senha não pode ser igual à última utilizada.");
         }
 
         usuario.setSenha(passwordEncryptService.criptografarSenha(dto.novaSenha()));
@@ -238,7 +240,7 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     passwordEncryptService.validarSenha(novaSenha);
 
     if (passwordEncryptService.matches(novaSenha, usuario.getSenha())) {
-        throw new RuntimeException("A nova senha não pode ser igual à senha atual.");
+        throw new SenhaInvalidaException("A nova senha não pode ser igual à senha atual.");
     }
 
     String senhaCriptografada = passwordEncryptService.criptografarSenha(novaSenha);
@@ -271,6 +273,14 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
     public void deletarUsuario(Long usuarioId){
         Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new EntityNotFoundException("Usuário de id " + usuarioId + " não encontrado"));
+
+        if((usuario.getCargo().getNome()).equals("SECRETARIA")){
+            Long totalSecretarios = usuarioRepository.countByCargoId(usuario.getCargo().getId());
+
+            if(totalSecretarios<=2){
+                throw new NaoEPossivelExcluirSecretarioException(totalSecretarios);
+            }
+        }
 
         List<com.fatec.itu.agendasalas.entity.Agendamento> agendamentos = agendamentoRepository.findByUsuarioId(usuarioId);
         if(agendamentos != null && !agendamentos.isEmpty()){

@@ -94,7 +94,10 @@ public class SecretariaService {
         return new SecretariaResponseDTO(secretaria.getId(), secretaria.getNome(), secretaria.getLogin(), secretaria.getEmail(), secretaria.getMatricula(), secretaria.getCargo().getId());
     }
 
+    @Deprecated(since="07/12/2025", forRemoval=true)
+    //use o metodo de usuarioService
     public void deletarSecretaria(Long id) {
+
         Secretaria secretaria = secretariaRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Secretaria com id " + id + " não encontrado"));
 

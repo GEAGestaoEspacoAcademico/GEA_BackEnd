@@ -177,6 +177,17 @@ VALUES
     ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5);
 -- senha: ls123
 
+INSERT INTO USUARIOS(nome, login, senha, email, cargo_id)
+VALUES
+('Jessica Carolina', 'jessica.carolina', '$2a$12$4KOlz6F7h1UkBZDCgtq8f.oY5tPM0GrL9x2.bVo44vkTj6OjJ2Bb.', 'jessica.carolina@fatc.sp.gov.br', 5);
+
+INSERT INTO SECRETARIA(user_id, matricula)
+VALUES
+(30, 101000),
+(31, 101001),
+(32, 101002),
+(33, 101003);
+
 
 INSERT INTO SEMESTRES (nome) VALUES ('1º semestre');
 INSERT INTO SEMESTRES (nome) VALUES ('2º semestre');
