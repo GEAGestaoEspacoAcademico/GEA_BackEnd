@@ -183,9 +183,8 @@ public class AgendamentoAulaController {
     })
     @GetMapping("/professor/{professorId}")
     public ResponseEntity<List<AgendamentoAulaResponseDTO>> buscarAgendamentosPorProfessor(
-            @Parameter(description = "ID do professor (usuário)") @PathVariable Integer professorId) {
-        List<AgendamentoAulaResponseDTO> agendamentos =
-                agendamentoAulaService.buscarPorProfessor(professorId);
+            @Parameter(description = "ID do professor (usuário)") @PathVariable Long professorId) {
+        List<AgendamentoAulaResponseDTO> agendamentos = agendamentoAulaService.buscarPorProfessor(professorId);
         return ResponseEntity.ok(agendamentos);
     }
 
@@ -322,5 +321,11 @@ public class AgendamentoAulaController {
             }
 
             return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarAgendamentosAulaPorFiltros(filtros, page, limit, sort)));
+        }
+
+        @DeleteMapping("/recorrencia/{recorrenciaId}")
+        public ResponseEntity<Void> deletarPelaRecorrenciaId(@PathVariable Long recorrenciaId){
+            agendamentoAulaService.cancelarAgendamentoPorRecorrencia(recorrenciaId);
+            return ResponseEntity.noContent().build();
         }
 }

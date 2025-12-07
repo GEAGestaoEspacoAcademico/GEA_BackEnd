@@ -26,6 +26,7 @@ import com.fatec.itu.agendasalas.dto.agendamentosDTO.AgendamentoAulaResponseDTO;
 import com.fatec.itu.agendasalas.entity.AgendamentoAula;
 import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.JanelasHorario;
+import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
@@ -38,6 +39,7 @@ import com.fatec.itu.agendasalas.exceptions.ProfessorJaPossuiAgendamentoEmOutraS
 import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.DisciplinaRepository;
 import com.fatec.itu.agendasalas.repositories.JanelasHorarioRepository;
+import com.fatec.itu.agendasalas.repositories.ProfessorRepository;
 import com.fatec.itu.agendasalas.repositories.RecorrenciaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
@@ -60,6 +62,9 @@ public class AgendamentoAulaService {
 
     @Autowired
     private DisciplinaRepository disciplinaRepository;
+
+    @Autowired
+    private ProfessorRepository professorRepository;
 
     @Autowired
     private JanelasHorarioRepository janelasHorarioRepository;
@@ -313,8 +318,9 @@ public class AgendamentoAulaService {
             .map(this::converterParaResponseDTO).collect(Collectors.toList());
     }
 
-    public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Integer professorId) {
-        return agendamentoAulaRepository.findByProfessorId(professorId).stream()
+    public List<AgendamentoAulaResponseDTO> buscarPorProfessor(Long professorId) {
+        Professor professor = professorRepository.findById(professorId).orElseThrow(()-> new EntityNotFoundException("Professor de id: " + professorId + " não encontrado"));
+        return agendamentoAulaRepository.findByProfessorId(professor.getId()).stream()
             .map(this::converterParaResponseDTO).collect(Collectors.toList());
     }
 
