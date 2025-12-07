@@ -65,7 +65,7 @@ public class AgendamentoAulaController {
             required = true,
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = AgendamentoAulaCreationDTO.class),
-                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 30, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
+                examples = @ExampleObject(value = "{ \"usuarioId\": 12, \"salaId\": 5, \"disciplinaId\": 3, \"quantidade\": 2, \"data\": \"2025-11-25\", \"janelasHorarioId\": 2, \"isEvento\": false }")))
         @RequestBody @Valid AgendamentoAulaCreationDTO dto) {
     
         Long idCriado = agendamentoAulaService.criar(dto);
@@ -321,6 +321,6 @@ public class AgendamentoAulaController {
                 }
             }
 
-            return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarDisciplinasPorFiltro(filtros, page, limit, sort)));
+            return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarAgendamentosAulaPorFiltros(filtros, page, limit, sort)));
         }
 }

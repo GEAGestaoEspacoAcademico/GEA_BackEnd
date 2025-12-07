@@ -74,7 +74,7 @@ public class AgendamentoAulaService {
     private NotificacaoService notificacaoService;
 
     @Transactional
-    //método para a tela Agendar Sala da Matéria dos ADS
+    //método para a tela Agendar Sala da Matéria da Secretaria
     public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO) throws MessagingException{
         List<AgendamentoAula> agendamentoAulasFeitos = new ArrayList<>();
         
@@ -125,6 +125,7 @@ public class AgendamentoAulaService {
                     agendamentoAula.preencherDiaDaSemana();
                     agendamentoAula.setIsEvento(false);
                     agendamentoAula.setStatus("ATIVO");
+                    agendamentoAula.setSolicitante("SECRETARIA");
                     recorrenciaSalva.addAgendamento(agendamentoAula);
                     agendamentoAulaRepository.save(agendamentoAula);
                     agendamentoAulasFeitos.add(agendamentoAula);
@@ -383,6 +384,9 @@ public class AgendamentoAulaService {
     );
 }
 
+
+    //Não use.
+    @Deprecated(since = "07/12/2025", forRemoval=true)
     @Transactional
     public AgendamentoAulaResponseDTO criarAgendamentoAula(AgendamentoAulaCreationDTO dto) {
         
@@ -421,7 +425,8 @@ public class AgendamentoAulaService {
         return converterParaResponseDTO(saved);
     }
 
-    public Page<AgendamentoAulaResponseDTO> listarDisciplinasPorFiltro(AgendamentoAulaFilterDTO filtros, int page, int limit, String sort) {
+
+    public Page<AgendamentoAulaResponseDTO> listarAgendamentosAulaPorFiltros(AgendamentoAulaFilterDTO filtros, int page, int limit, String sort) {
         Pageable pageable = PageRequest.of(page-1, limit, Sort.by(sort).ascending());
         Specification<AgendamentoAula> spec = AgendamentoAulaSpecification.porFiltros(filtros);
         
