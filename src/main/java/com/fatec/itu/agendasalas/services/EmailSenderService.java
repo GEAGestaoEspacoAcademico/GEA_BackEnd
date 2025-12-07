@@ -166,6 +166,7 @@ public class EmailSenderService {
       
     }
 
+
     private String formatarHorarios(Set<JanelasHorario> janelasHorarios){
         StringBuilder horarios = new StringBuilder();
         

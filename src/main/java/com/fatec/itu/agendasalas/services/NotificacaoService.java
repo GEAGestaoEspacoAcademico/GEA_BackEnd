@@ -50,7 +50,7 @@ public class NotificacaoService {
         this.notificacaoRepository = notificacaoRepository;
     }
 
-    public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas) throws MessagingException{
+    public void notificarAoCriarAgendamentoAulaRecorrente(Recorrencia recorrenciaAulas) throws MessagingException{
         //var auth = SecurityContextHolder.getContext().getAuthentication();
         
         //if(auth != null && auth.getPrincipal() instanceof Usuario){
@@ -95,7 +95,7 @@ public class NotificacaoService {
              .horaInicio(aulas.get(0).getJanelasHorario().getHoraInicio())
              .horaFim(aulas.get(0).getJanelasHorario().getHoraFim())
              .titulo("AGENDAMENTO REALIZADO")
-             .mensagem("AGENDAMENTO REALIZADO NOS DIAS: " + dataFormatada + " PARA O PROFESSOR: " + nomeProfessor)
+             .mensagem("AGENDAMENTO REALIZADO NOS DIAS: " + dataFormatada + " PARA O PROFESSOR: " + nomeProfessor + " PARA A DISCIPLINA DE: " + disciplina.getNome())
              .dataEnvio(LocalDate.now())
              .usuarioRemetente(remetente)
              .destinatario(destinatario)
@@ -113,20 +113,14 @@ public class NotificacaoService {
     public void notificarCancelamentoDeAula(AgendamentoAula aula, String motivo, Usuario usuarioCancelador) throws MessagingException{
         String diaCancelado = aula.getData().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         Disciplina disciplina = aula.getDisciplina();
+        String mensagem =  "AGENDAMENTO DO DIA: " + diaCancelado + " FOI CANCELADO PELO USUÁRIO: "  + usuarioCancelador.getNome()  + " MOTIVO: " + motivo + " DISCIPLINA: " + disciplina.getNome();
         Notificacao notificacao = Notificacao.builder()
         .agendamentoId(aula.getId())
         .data(aula.getData())
         .horaInicio(aula.getJanelasHorario().getHoraInicio())
         .horaFim(aula.getJanelasHorario().getHoraFim())
         .titulo("AGENDAMENTO CANCELADO")
-        .mensagem(
-        "AGENDAMENTO DO DIA: " 
-        + diaCancelado 
-        + " FOI CANCELADO PELO USUÁRIO: " 
-        + usuarioCancelador.getNome() 
-        + " MOTIVO: " 
-        + motivo
-        + " DISCIPLINA: " + disciplina.getNome())
+        .mensagem(mensagem)
         .dataEnvio(LocalDate.now())
         .usuarioRemetente(usuarioCancelador)
         .destinatario(disciplina.getProfessor())
@@ -135,6 +129,7 @@ public class NotificacaoService {
 
         emailSenderService.enviarNotificacaoCancelamentoAula(disciplina, aula, motivo, usuarioCancelador);
     }
+
 
 /* 
     @Deprecated

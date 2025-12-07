@@ -139,7 +139,7 @@ public class AgendamentoAulaService {
             }
             dataInicial = dataInicial.plusDays(1);
         }
-        notificacaoService.notificarAoCriarAgendamentoAula(recorrencia);
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
         return agendamentoAulasFeitos.stream()
         .map(this::converterParaResponseDTO)
         .toList();
@@ -149,7 +149,7 @@ public class AgendamentoAulaService {
 
     @Transactional
     //Esse método se refere ao Agendar Aula pelo AD
-    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaByAD(AgendamentoAulaCreationByAuxiliarDocenteDTO dto) {
+    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaByAD(AgendamentoAulaCreationByAuxiliarDocenteDTO dto) throws MessagingException {
         
         List<AgendamentoAula> agendamentosRealizados = new ArrayList<>();
         List<AgendamentoAulaResponseDTO> listaResposta = new ArrayList<>();
@@ -200,7 +200,7 @@ public class AgendamentoAulaService {
             AgendamentoAula saved = agendamentoAulaRepository.save(agendamento);
             agendamentosRealizados.add(saved);
         }
-
+        notificacaoService.notificarAoCriarAgendamentoAulaRecorrente(recorrencia);
         listaResposta = agendamentosRealizados
             .stream()
             .map(this::converterParaResponseDTO)
@@ -278,6 +278,7 @@ public class AgendamentoAulaService {
             novoAgendamento.setJanelasHorario(janela);
             novoAgendamento.setStatus("ATIVO");
             recorrencia.addAgendamento(novoAgendamento);
+            notificacaoService.notificarAoCriarAgendamentoAulaUnica(novoAgendamento);
             novoAgendamento = agendamentoAulaRepository.save(novoAgendamento);
 
             if (i == 0) {
