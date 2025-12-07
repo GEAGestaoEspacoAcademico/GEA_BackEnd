@@ -23,6 +23,7 @@ import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
 import com.fatec.itu.agendasalas.exceptions.ConflitoAoAgendarException;
+import com.fatec.itu.agendasalas.exceptions.ListaVaziaException;
 import com.fatec.itu.agendasalas.repositories.AgendamentoEventoRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.EventoRepository;
@@ -84,12 +85,12 @@ public class AgendamentoEventoService {
              LocalDate diaInicial = diasAgendadosDTO.stream()
             .map(AgendamentoEventoDiasAgendadosDTO::dia)
             .min(LocalDate::compareTo)
-            .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
+            .orElseThrow(()-> new ListaVaziaException("Lista de dias vazia. Envie uma lista de dias com pelo menos 1 dia."));
         
             LocalDate diaFinal = diasAgendadosDTO.stream()
             .map(AgendamentoEventoDiasAgendadosDTO::dia)
             .max(LocalDate::compareTo)
-            .orElseThrow(()-> new RuntimeException("Lista de dias vazia"));
+            .orElseThrow(()-> new ListaVaziaException("Lista de dias vazia. Envie uma lista de dias com pelo menos 1 dia."));
         
             Recorrencia recorrencia = recorrenciaRepository.save(new Recorrencia(diaInicial, diaFinal));
 
@@ -101,6 +102,9 @@ public class AgendamentoEventoService {
                 List<JanelasHorario> horariosEncontrados = janelasHorarioRepository
                                 .findByIntervaloIdHorarios(horaInicioDoDiaAgendado, horaFimDoDiaAgendado);
 
+                if(horariosEncontrados.size()==0){
+                    throw new ListaVaziaException("Lista de janelas de horário foi vazia, envie um periodo de tempo válido (contendo 1h40 no minimo), ex: 07h40 - 09h20");
+                }
 
                 for (int i = 0; i < horariosEncontrados.size(); i++) {
                       AgendamentoAula agendamentoAulaConflitante = agendamentoConflitoService.filtrarAulasConflitantes(sala.getId(), diaAgendado, horariosEncontrados.get(i).getId());
