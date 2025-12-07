@@ -92,10 +92,14 @@ public class RestExceptionHandler {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(NaoEPossivelExcluirSecretarioException.class)
+    public ResponseEntity<ApiError> handleNaoEPossivelExcluirSecreatarioException(NaoEPossivelExcluirSecretarioException ex, HttpServletRequest request){
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(ConflitoException.class)
     public ResponseEntity<ApiError> handleConflict(ConflitoException ex, HttpServletRequest request) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
 
