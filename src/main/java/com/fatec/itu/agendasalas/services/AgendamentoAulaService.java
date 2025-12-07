@@ -45,6 +45,8 @@ import com.fatec.itu.agendasalas.specifications.AgendamentoAulaSpecification;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import jakarta.mail.MessagingException;
+
 @Service
 public class AgendamentoAulaService {
 
@@ -69,9 +71,12 @@ public class AgendamentoAulaService {
     @Autowired
     private AgendamentoConflitoService agendamentoConflitoService;
 
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     @Transactional
     //método para a tela Agendar Sala da Matéria dos ADS
-    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO){
+    public List<AgendamentoAulaResponseDTO> criarAgendamentoAulaComRecorrencia(AgendamentoAulaCreationComRecorrenciaDTO agendamentoAulaCreationComRecorrenciaDTO) throws MessagingException{
         List<AgendamentoAula> agendamentoAulasFeitos = new ArrayList<>();
         
         LocalDate dataInicial = agendamentoAulaCreationComRecorrenciaDTO.dataInicio();
@@ -128,6 +133,7 @@ public class AgendamentoAulaService {
             }
             dataInicial = dataInicial.plusDays(1);
         }
+        notificacaoService.notificarAoCriarAgendamentoAula(recorrencia);
         return agendamentoAulasFeitos.stream()
         .map(this::converterParaResponseDTO)
         .toList();

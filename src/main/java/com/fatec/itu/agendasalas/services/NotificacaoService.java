@@ -2,7 +2,10 @@ package com.fatec.itu.agendasalas.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +18,21 @@ import com.fatec.itu.agendasalas.dto.notificações.NotificacaoResponseDTO;
 import com.fatec.itu.agendasalas.dto.salas.SalaResumoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResumoDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
+import com.fatec.itu.agendasalas.entity.AgendamentoAula;
+import com.fatec.itu.agendasalas.entity.Disciplina;
+import com.fatec.itu.agendasalas.entity.JanelasHorario;
 import com.fatec.itu.agendasalas.entity.Notificacao;
+import com.fatec.itu.agendasalas.entity.NotificacaoEmail;
+import com.fatec.itu.agendasalas.entity.Recorrencia;
 import com.fatec.itu.agendasalas.entity.Sala;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.exceptions.ListaDeAulasVaziaNotificacaoException;
+import com.fatec.itu.agendasalas.repositories.AgendamentoAulaRepository;
 import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.NotificacaoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class NotificacaoService {
@@ -33,10 +45,73 @@ public class NotificacaoService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private DisciplinaService disciplinaService;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
+
+    @Autowired
+    private AgendamentoAulaRepository agendamentoAulaRepository;
     
     public NotificacaoService(NotificacaoRepository notificacaoRepository) {
         this.notificacaoRepository = notificacaoRepository;
     }
+
+  
+
+    public void notificarAoCriarAgendamentoAula(Recorrencia recorrenciaAulas) throws MessagingException{
+        //var auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        //if(auth != null && auth.getPrincipal() instanceof Usuario){
+      //      remetente = (Usuario) auth.getPrincipal();
+      //  }
+
+      //NÃO APAGAR ESSAS LINHAS COMENTADAS, ELA SERÁ UTIL COM A JWT.
+
+        List<AgendamentoAula> aulas = agendamentoAulaRepository.findByRecorrenciaId(recorrenciaAulas.getId());
+        if(aulas.isEmpty()){
+            throw new ListaDeAulasVaziaNotificacaoException();
+        }
+        //apenas para teste, deve ser: Usuario destinatario = aulas.get(0).getUsuario();
+        Usuario destinatario = usuarioRepository.findById(1L).orElse(null);
+        
+        Disciplina disciplina = aulas.get(0).getDisciplina();
+        String diaDaSemana = aulas.get(0).getDiaDaSemana();
+        //Usuario remetente = null; isso deverá estar na primeira linha
+        Usuario remetente = destinatario;
+
+        LocalDate diaInicial = aulas.stream()
+            .map(AgendamentoAula::getData)
+            .min(Comparator.naturalOrder())
+            .orElseThrow(() -> new RuntimeException());
+
+        LocalDate diaFinal = aulas.stream()
+            .map(AgendamentoAula::getData)
+            .max(Comparator.naturalOrder())
+            .orElseThrow(() -> new RuntimeException());
+
+        Set<JanelasHorario> janelasHorarios = aulas.stream()
+            .map(AgendamentoAula::getJanelasHorario)
+            .sorted(Comparator.comparing(JanelasHorario::getHoraInicio))
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        
+        emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario, diaDaSemana);
+        
+        
+ 
+    }
+
+    public void notificarAoAlterarAgendamentoAula(AgendamentoAula aula){
+        
+        Usuario destinatario = aula.getUsuario();
+        NotificacaoEmail notificacao = new NotificacaoEmail();
+
+    }
+
+    
 
     @Transactional(readOnly = true)
     public List<NotificacaoResponseDTO> listarNotificacoesComoDTO() {
