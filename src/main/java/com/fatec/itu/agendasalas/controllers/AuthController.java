@@ -1,5 +1,6 @@
 package com.fatec.itu.agendasalas.controllers;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaPrimeiroAcessoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAuthenticationResponseDTO;
-import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRegisterDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.services.AuthService;
 import com.fatec.itu.agendasalas.services.UsuarioService;
@@ -50,11 +52,11 @@ public class AuthController {
                 description = "Dados para criação de um novo usuário",
                 required = true,
                 content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UsuarioRegisterDTO.class),
+                    schema = @Schema(implementation = UsuarioCreationDTO.class),
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
-                        value = "{ \"usuarioNome\": \"Felipa Elisélvisky\", \"usuarioEmail\": \"felipa.eliselvisky@exemplo.com\" }")))
-            @RequestBody UsuarioRegisterDTO usuarioRegisterDTO) {
-        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuarioPeloNomeEmail(usuarioRegisterDTO);
+                        value = "{ \"usuarioLogin\": \"ana.maria\", \"usuarioNome\": \"Ana Maria\", \"usuarioEmail\": \"ana.maria@fatec.edu.br\", \"usuarioSenha\": \"SenhaForte2025!\" }")))
+            @RequestBody UsuarioCreationDTO usuarioDTO) {
+        UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuario(usuarioDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -85,6 +87,29 @@ public class AuthController {
          } catch (Exception e) {
              throw new RuntimeException(e.getMessage());
          }
+    }
 
-     }
+    @Operation(summary = "Troca de senha obrigatória para primeiro acesso")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso, status de novo usuário removido"),
+        @ApiResponse(responseCode = "401", description = "Usuário não autenticado na sessão"),
+        @ApiResponse(responseCode = "400", description = "Senhas não conferem ou senha igual à padrão")
+    })
+    @PostMapping("primeiro-acesso")
+    public ResponseEntity<Void> primeiroAcesso(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Dados para alteração de senha",
+                required = true,
+                content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UsuarioAlterarSenhaPrimeiroAcessoDTO.class),
+                    examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                        value = "{ \"usuarioLogin\": \"joao.silva\", \"senhaAtual\": \"Mudar@123\", \"novaSenha\": \"MinhaNovaSenha@2025\", \"repetirNovaSenha\": \"MinhaNovaSenha@2025\" }")))
+            @RequestBody UsuarioAlterarSenhaPrimeiroAcessoDTO data,
+            Authentication authentication 
+    ) {
+  
+        usuarioService.completarPrimeiroAcesso(data);
+        
+        return ResponseEntity.ok().build(); 
+    }
 }
