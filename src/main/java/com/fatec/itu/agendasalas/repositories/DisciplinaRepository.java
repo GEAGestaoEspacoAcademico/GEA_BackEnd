@@ -11,4 +11,5 @@ import com.fatec.itu.agendasalas.entity.Disciplina;
 public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
   public List<Disciplina> findByProfessorId(Long professorId);
   public List<Disciplina> findByCursoId(Long cursoId);
+  public List<Disciplina> findByExcluidaFalse();
 }
