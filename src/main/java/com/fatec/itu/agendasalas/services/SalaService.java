@@ -9,9 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,14 +90,14 @@ public class SalaService {
       .toList();
   }
 
-  public Page<SalaDetailDTO> listarSalasComFiltro(String nome, Long pisoId, Long tipoSalaId, Boolean disponibilidade, int page, int limit, String sort) {
-    int paginaSolicitada = Math.max(page - 1, 0);
+  public List<SalaDetailDTO> listarSalasComFiltro(String nome, Long pisoId, Long tipoSalaId, Boolean disponibilidade, String sort) {
     String campoOrdenacao = (sort == null || sort.isBlank()) ? "id" : sort;
-    Pageable paginacao = PageRequest.of(paginaSolicitada, limit, Sort.by(campoOrdenacao));
 
     return salaRepository
-        .findAll(SalaSpecification.comFiltros(nome, pisoId, tipoSalaId, disponibilidade), paginacao)
-        .map(this::transformarSalaEmSalaDetailDTO);
+        .findAll(SalaSpecification.comFiltros(nome, pisoId, tipoSalaId, disponibilidade), Sort.by(campoOrdenacao))
+        .stream()
+        .map(this::transformarSalaEmSalaDetailDTO)
+        .toList();
   }
 
 

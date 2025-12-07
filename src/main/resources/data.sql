@@ -40,104 +40,104 @@ VALUES
     
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
+    ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso0@fatec.sp.gov.br', 3);
 -- senha: dc123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Fabricio Londero', 'fabricio.londero', '$2a$10$OwAk2OjM1HZBNEHKfB2kAu7D4Mu43isMphmvVVoZGqXrDKkksLk0u', 'fabricio.londero@fatec.sp.gov.br', 3);
+    ('Prof. Fabricio Londero', 'fabricio.londero', '$2a$10$OwAk2OjM1HZBNEHKfB2kAu7D4Mu43isMphmvVVoZGqXrDKkksLk0u', 'fabricio.londero0@fatec.sp.gov.br', 3);
 -- senha: fl123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Francisco Bianchi', 'francisco.bianchi', '$2a$10$qmciMRg4E9JbLc6vqI30zeBLBBoK8zfTjkI8dnknJOTL9Q92QnvSq', 'francisco.bianchi@fatec.sp.gov.br', 3);
+    ('Prof. Francisco Bianchi', 'francisco.bianchi', '$2a$10$qmciMRg4E9JbLc6vqI30zeBLBBoK8zfTjkI8dnknJOTL9Q92QnvSq', 'francisco.bianchi0@fatec.sp.gov.br', 3);
 -- senha: fb123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES
-    ('Prof. Luis dos Santos', 'luis.santos', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'luis.santos@fatec.sp.gov.br', 3);
+    ('Prof. Luis dos Santos', 'luis.santos', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'luis.santos0@fatec.sp.gov.br', 3);
 -- senha: ls123
 
 -- Coordenadores (usuários com cargo de coordenador)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Lucimar de Santi', 'lucimar.santi', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucimar.desanti@fatec.sp.gov.br', 4);
+    ('Coord. Lucimar de Santi', 'lucimar.santi', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucimar.desanti0@fatec.sp.gov.br', 4);
 -- senha: ls123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio@fatec.sp.gov.br', 4);
+    ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio0@fatec.sp.gov.br', 4);
 -- senha: ao123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Juliana Lima', 'juliana.lima', '$2b$10$17RkgaoI/nIF7iTOwaKFP.i7welZIKTNM9w7Wo.tCAT7l14ePJ5Pq', 'juliana.lima@fatec.sp.gov.br', 4);
+    ('Coord. Juliana Lima', 'juliana.lima', '$2b$10$17RkgaoI/nIF7iTOwaKFP.i7welZIKTNM9w7Wo.tCAT7l14ePJ5Pq', 'juliana.lima0@fatec.sp.gov.br', 4);
 -- senha: jl123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Jose Henrique', 'jose.henrique', '$2b$10$a6lEHhhCB5w.QD6oFNGhQOLAUSL.blqLEAGkyQhjz/6Lrfm1AlZn2', 'jose.henrique@fatec.sp.gov.br', 4);
+    ('Coord. Jose Henrique', 'jose.henrique', '$2b$10$a6lEHhhCB5w.QD6oFNGhQOLAUSL.blqLEAGkyQhjz/6Lrfm1AlZn2', 'jose.henrique0@fatec.sp.gov.br', 4);
 -- senha: jh123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Rosa Marciani', 'rosa.marciani', '$2b$10$SWvYMaztqjkqswabJ4L9wO9JB2hy8R4JuJ.Nknm5nV2rQb42.813.', 'rosa.marciani@fatec.sp.gov.br', 4);
+    ('Coord. Rosa Marciani', 'rosa.marciani', '$2b$10$SWvYMaztqjkqswabJ4L9wO9JB2hy8R4JuJ.Nknm5nV2rQb42.813.', 'rosa.marciani0@fatec.sp.gov.br', 4);
 -- senha: rm123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Paulo Macedo', 'paulo.macedo', '$2b$10$LIgfzaWEAgIxvr8DyLjQZuhMJb/jgd74mEnPTpcr7l/pm8rbhsPVq', 'paulo.macedo@fatec.sp.gov.br', 4);
+    ('Coord. Paulo Macedo', 'paulo.macedo', '$2b$10$LIgfzaWEAgIxvr8DyLjQZuhMJb/jgd74mEnPTpcr7l/pm8rbhsPVq', 'paulo.macedo0@fatec.sp.gov.br', 4);
 -- senha: pm123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Coord. Patricia Silva', 'patricia.silva', '$2b$10$DT.B5Udk.4xjq/x4Ky2s.u69mbqvcrhAGoRClQxpEZlpSWLaYEeRa', 'patricia.silva@fatec.sp.gov.br', 4);
+    ('Coord. Patricia Silva', 'patricia.silva', '$2b$10$DT.B5Udk.4xjq/x4Ky2s.u69mbqvcrhAGoRClQxpEZlpSWLaYEeRa', 'patricia.silva0@fatec.sp.gov.br', 4);
 -- senha: ps123
 
 -- Adição de Professores (usuários com cargo de professor)
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Glauco Todesco', 'glauco.todesco', '$2b$10$WvG0kVJflyTS92VSf3Y/Nul8hIjDbwZw.b.CX4ZDmtqMKEN8VQd8O', 'glauco.todesco@fatec.sp.gov.br', 3);
+    ('Prof. Glauco Todesco', 'glauco.todesco', '$2b$10$WvG0kVJflyTS92VSf3Y/Nul8hIjDbwZw.b.CX4ZDmtqMKEN8VQd8O', 'glauco.todesco0@fatec.sp.gov.br', 3);
 -- senha: gt123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Onei Junior', 'onei.junior', '$2b$10$uX8iarxMfrxrX098ycfld.29ARd7ZRpAerebW75yogzPp/tarHUyO', 'onei.junior@fatec.sp.gov.br', 3);
+    ('Prof. Onei Junior', 'onei.junior', '$2b$10$uX8iarxMfrxrX098ycfld.29ARd7ZRpAerebW75yogzPp/tarHUyO', 'onei.junior0@fatec.sp.gov.br', 3);
 -- senha: oj123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Marcos Araujo', 'marcos.araujo', '$2b$10$3NkwFH4IqK4vrw.GYFlXaurC0vas6m.xWzpH/tydelk9tTaFKu8Zi', 'marcos.araujo@fatec.sp.gov.br', 3);
+    ('Prof. Marcos Araujo', 'marcos.araujo', '$2b$10$3NkwFH4IqK4vrw.GYFlXaurC0vas6m.xWzpH/tydelk9tTaFKu8Zi', 'marcos.araujo0@fatec.sp.gov.br', 3);
 -- senha: ma123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Sergio Clauss', 'sergio.clauss', '$2b$10$KwNe5kvEl92Wn.TMAv4LeeZSmRAnrcwzYRaGx6OWUc7EyFG6sTf/a', 'sergio.clauss@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Clauss', 'sergio.clauss', '$2b$10$KwNe5kvEl92Wn.TMAv4LeeZSmRAnrcwzYRaGx6OWUc7EyFG6sTf/a', 'sergio.clauss0@fatec.sp.gov.br', 3);
 -- senha: sc123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Marcio Camargo', 'marcio.camargo', '$2b$10$59b6RtfU3fl0rY7FtBIGz.8P0xhlL3OSi6WcmzJYGoPBMrvj60/ii', 'marcio.camargo@fatec.sp.gov.br', 3);
+    ('Prof. Marcio Camargo', 'marcio.camargo', '$2b$10$59b6RtfU3fl0rY7FtBIGz.8P0xhlL3OSi6WcmzJYGoPBMrvj60/ii', 'marcio.camargo0@fatec.sp.gov.br', 3);
 -- senha: mc123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Bruno Henrique', 'bruno.henrique', '$2b$10$XuQ/0chQkfKsHeRJchQfmeMXV7LXVKX2aPIH4vkTixzSf4dt3XcrK', 'bruno.henrique@fatec.sp.gov.br', 3);
+    ('Prof. Bruno Henrique', 'bruno.henrique', '$2b$10$XuQ/0chQkfKsHeRJchQfmeMXV7LXVKX2aPIH4vkTixzSf4dt3XcrK', 'bruno.henrique0@fatec.sp.gov.br', 3);
 -- senha: bh123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Andre Egreggio', 'andre.egreggio', '$2b$10$aZHG/0z3dtSrbdqwbsN20Ok8lZYfbmRjwNHGbUE0HTjEwYuQqXOhO', 'andre.egreggio@fatec.sp.gov.br', 3);
+    ('Prof. Andre Egreggio', 'andre.egreggio', '$2b$10$aZHG/0z3dtSrbdqwbsN20Ok8lZYfbmRjwNHGbUE0HTjEwYuQqXOhO', 'andre.egreggio0@fatec.sp.gov.br', 3);
 -- senha: ae123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Ricardo Leme', 'ricardo.leme', '$2b$10$8lOnaLNjfjBs7PdHSQIjm.yfEHG8ao2fGjEjxHHqjCZNlSIGzwz42', 'ricardo.leme@fatec.sp.gov.br', 3);
+    ('Prof. Ricardo Leme', 'ricardo.leme', '$2b$10$8lOnaLNjfjBs7PdHSQIjm.yfEHG8ao2fGjEjxHHqjCZNlSIGzwz42', 'ricardo.leme0@fatec.sp.gov.br', 3);
 -- senha: rl123
 
 INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
 VALUES 
-    ('Prof. Levi Munhoz', 'levi.munhoz', '$2b$10$KzspyFMadrJvkxkK5kfWju0woWOWcEzWAcNlyD/.fYNH0Z3taCqpq', 'levi.munhoz@fatec.sp.gov.br', 3);
+    ('Prof. Levi Munhoz', 'levi.munhoz', '$2b$10$KzspyFMadrJvkxkK5kfWju0woWOWcEzWAcNlyD/.fYNH0Z3taCqpq', 'levi.munhoz0@fatec.sp.gov.br', 3);
 -- senha: lm123
 
 -- Adição de Alunos (usuários com cargo de aluno)
