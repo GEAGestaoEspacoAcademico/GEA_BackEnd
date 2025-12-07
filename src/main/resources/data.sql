@@ -8,24 +8,24 @@ VALUES ('USER'), ('AUXILIAR_DOCENTE'), ('PROFESSOR'), ('COORDENADOR'), ('SECRETA
 -- Alimenta o BD com usuarios
 -- -----------------------------------------------------------------------------
 -- Usuarios
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'aa', 1);
+    ('Lucas Silva', 'lucas.silva', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'aa', 1, true);
 -- senha: ls123
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Ana Costa', 'ana.costa', '$2a$10$6Zms2qpyZzQgw3LVLYZVfeTCnRWYdxqDlzDv9/8.hGNr.cdBYrfqS', 'ana.costa@exemplo.com', 1);
+    ('Ana Costa', 'ana.costa', '$2a$10$6Zms2qpyZzQgw3LVLYZVfeTCnRWYdxqDlzDv9/8.hGNr.cdBYrfqS', 'ana.costa@exemplo.com', 1, false);
 -- senha: ac123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Carlos Santos', 'carlos.santos', '$2a$10$73pE/Izz/N5IBmb7Q4nItuv6XkmEMzDMQJyCD.cSU.FoXzNz2A.X6', 'carlos.santos@exemplo.com', 1);
+    ('Carlos Santos', 'carlos.santos', '$2a$10$73pE/Izz/N5IBmb7Q4nItuv6XkmEMzDMQJyCD.cSU.FoXzNz2A.X6', 'carlos.santos@exemplo.com', 1, true);
 -- senha: cs123
 
 -- Administrador (usuários com cargo de Administrador)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2);
+    ('Auxiliar Docente', 'auxiliar.docente', '$2a$10$U8M2J3A0TyA810ahFKIaEe0QPWI0DFH829sxA.hluSMXf7TjWTWDO', 'admin@fatec.sp.gov.br', 2, false);
 -- senha: ad123
 
 INSERT INTO AUXILIAR_DOCENTES (area, user_id)
@@ -33,148 +33,148 @@ VALUES
 ('MECATRONICA', 4);
 
 -- Professores (usuários com cargo de professor)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'lucasmorais2214@gmail.com', 3);
+    ('Prof. Sergio Salgado', 'sergio.salgado', '$2a$10$81xa53sYNSE/uKa5AmIZ.ORh.2V/HkCsUjaiVqyYC.f7iEB7keNWC', 'lucasmorais2214@gmail.com', 3, false);
 -- senha: ss123
     
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3);
+    ('Prof. Dimas Cardoso', 'dimas.cardoso', '$2a$10$WuLoYakqJG0h7wuJx8kW0OD89VFf6MUBv3zYjw3NKNjf1CwYGLvtK', 'dimas.cardoso@fatec.sp.gov.br', 3, false);
 -- senha: dc123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Prof. Fabricio Londero', 'fabricio.londero', '$2a$10$OwAk2OjM1HZBNEHKfB2kAu7D4Mu43isMphmvVVoZGqXrDKkksLk0u', 'fabricio.londero@fatec.sp.gov.br', 3);
+    ('Prof. Fabricio Londero', 'fabricio.londero', '$2a$10$OwAk2OjM1HZBNEHKfB2kAu7D4Mu43isMphmvVVoZGqXrDKkksLk0u', 'fabricio.londero@fatec.sp.gov.br', 3, false);
 -- senha: fl123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Prof. Francisco Bianchi', 'francisco.bianchi', '$2a$10$qmciMRg4E9JbLc6vqI30zeBLBBoK8zfTjkI8dnknJOTL9Q92QnvSq', 'francisco.bianchi@fatec.sp.gov.br', 3);
+    ('Prof. Francisco Bianchi', 'francisco.bianchi', '$2a$10$qmciMRg4E9JbLc6vqI30zeBLBBoK8zfTjkI8dnknJOTL9Q92QnvSq', 'francisco.bianchi@fatec.sp.gov.br', 3, false);
 -- senha: fb123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Prof. Luis dos Santos', 'luis.santos', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'luis.santos@fatec.sp.gov.br', 3);
+    ('Prof. Luis dos Santos', 'luis.santos', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'luis.santos@fatec.sp.gov.br', 3, false);
 -- senha: ls123
 
 -- Coordenadores (usuários com cargo de coordenador)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Lucimar de Santi', 'lucimar.santi', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucimar.desanti@fatec.sp.gov.br', 4);
+    ('Coord. Lucimar de Santi', 'lucimar.santi', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'lucimar.desanti@fatec.sp.gov.br', 4, false);
 -- senha: ls123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio@fatec.sp.gov.br', 4);
+    ('Coord. Andre Olimpio', 'andre.olimpio', '$2a$10$VxhUleM0Ep5CCdCjffTBWeGD5jDWY8To/iyKKbt9gX.FFbl09rY8.', 'andre.olimpio@fatec.sp.gov.br', 4, false);
 -- senha: ao123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Juliana Lima', 'juliana.lima', '$2b$10$17RkgaoI/nIF7iTOwaKFP.i7welZIKTNM9w7Wo.tCAT7l14ePJ5Pq', 'juliana.lima@fatec.sp.gov.br', 4);
+    ('Coord. Juliana Lima', 'juliana.lima', '$2b$10$17RkgaoI/nIF7iTOwaKFP.i7welZIKTNM9w7Wo.tCAT7l14ePJ5Pq', 'juliana.lima@fatec.sp.gov.br', 4, false);
 -- senha: jl123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Jose Henrique', 'jose.henrique', '$2b$10$a6lEHhhCB5w.QD6oFNGhQOLAUSL.blqLEAGkyQhjz/6Lrfm1AlZn2', 'jose.henrique@fatec.sp.gov.br', 4);
+    ('Coord. Jose Henrique', 'jose.henrique', '$2b$10$a6lEHhhCB5w.QD6oFNGhQOLAUSL.blqLEAGkyQhjz/6Lrfm1AlZn2', 'jose.henrique@fatec.sp.gov.br', 4, false);
 -- senha: jh123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Rosa Marciani', 'rosa.marciani', '$2b$10$SWvYMaztqjkqswabJ4L9wO9JB2hy8R4JuJ.Nknm5nV2rQb42.813.', 'rosa.marciani@fatec.sp.gov.br', 4);
+    ('Coord. Rosa Marciani', 'rosa.marciani', '$2b$10$SWvYMaztqjkqswabJ4L9wO9JB2hy8R4JuJ.Nknm5nV2rQb42.813.', 'rosa.marciani@fatec.sp.gov.br', 4, false);
 -- senha: rm123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Paulo Macedo', 'paulo.macedo', '$2b$10$LIgfzaWEAgIxvr8DyLjQZuhMJb/jgd74mEnPTpcr7l/pm8rbhsPVq', 'paulo.macedo@fatec.sp.gov.br', 4);
+    ('Coord. Paulo Macedo', 'paulo.macedo', '$2b$10$LIgfzaWEAgIxvr8DyLjQZuhMJb/jgd74mEnPTpcr7l/pm8rbhsPVq', 'paulo.macedo@fatec.sp.gov.br', 4, false);
 -- senha: pm123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Coord. Patricia Silva', 'patricia.silva', '$2b$10$DT.B5Udk.4xjq/x4Ky2s.u69mbqvcrhAGoRClQxpEZlpSWLaYEeRa', 'patricia.silva@fatec.sp.gov.br', 4);
+    ('Coord. Patricia Silva', 'patricia.silva', '$2b$10$DT.B5Udk.4xjq/x4Ky2s.u69mbqvcrhAGoRClQxpEZlpSWLaYEeRa', 'patricia.silva@fatec.sp.gov.br', 4, false);
 -- senha: ps123
 
 -- Adição de Professores (usuários com cargo de professor)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Glauco Todesco', 'glauco.todesco', '$2b$10$WvG0kVJflyTS92VSf3Y/Nul8hIjDbwZw.b.CX4ZDmtqMKEN8VQd8O', 'glauco.todesco@fatec.sp.gov.br', 3);
+    ('Prof. Glauco Todesco', 'glauco.todesco', '$2b$10$WvG0kVJflyTS92VSf3Y/Nul8hIjDbwZw.b.CX4ZDmtqMKEN8VQd8O', 'glauco.todesco@fatec.sp.gov.br', 3, false);
 -- senha: gt123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Onei Junior', 'onei.junior', '$2b$10$uX8iarxMfrxrX098ycfld.29ARd7ZRpAerebW75yogzPp/tarHUyO', 'onei.junior@fatec.sp.gov.br', 3);
+    ('Prof. Onei Junior', 'onei.junior', '$2b$10$uX8iarxMfrxrX098ycfld.29ARd7ZRpAerebW75yogzPp/tarHUyO', 'onei.junior@fatec.sp.gov.br', 3, false);
 -- senha: oj123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Marcos Araujo', 'marcos.araujo', '$2b$10$3NkwFH4IqK4vrw.GYFlXaurC0vas6m.xWzpH/tydelk9tTaFKu8Zi', 'marcos.araujo@fatec.sp.gov.br', 3);
+    ('Prof. Marcos Araujo', 'marcos.araujo', '$2b$10$3NkwFH4IqK4vrw.GYFlXaurC0vas6m.xWzpH/tydelk9tTaFKu8Zi', 'marcos.araujo@fatec.sp.gov.br', 3, false);
 -- senha: ma123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Sergio Clauss', 'sergio.clauss', '$2b$10$KwNe5kvEl92Wn.TMAv4LeeZSmRAnrcwzYRaGx6OWUc7EyFG6sTf/a', 'sergio.clauss@fatec.sp.gov.br', 3);
+    ('Prof. Sergio Clauss', 'sergio.clauss', '$2b$10$KwNe5kvEl92Wn.TMAv4LeeZSmRAnrcwzYRaGx6OWUc7EyFG6sTf/a', 'sergio.clauss@fatec.sp.gov.br', 3, false);
 -- senha: sc123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Marcio Camargo', 'marcio.camargo', '$2b$10$59b6RtfU3fl0rY7FtBIGz.8P0xhlL3OSi6WcmzJYGoPBMrvj60/ii', 'marcio.camargo@fatec.sp.gov.br', 3);
+    ('Prof. Marcio Camargo', 'marcio.camargo', '$2b$10$59b6RtfU3fl0rY7FtBIGz.8P0xhlL3OSi6WcmzJYGoPBMrvj60/ii', 'marcio.camargo@fatec.sp.gov.br', 3, false);
 -- senha: mc123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Bruno Henrique', 'bruno.henrique', '$2b$10$XuQ/0chQkfKsHeRJchQfmeMXV7LXVKX2aPIH4vkTixzSf4dt3XcrK', 'bruno.henrique@fatec.sp.gov.br', 3);
+    ('Prof. Bruno Henrique', 'bruno.henrique', '$2b$10$XuQ/0chQkfKsHeRJchQfmeMXV7LXVKX2aPIH4vkTixzSf4dt3XcrK', 'bruno.henrique@fatec.sp.gov.br', 3, false);
 -- senha: bh123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Andre Egreggio', 'andre.egreggio', '$2b$10$aZHG/0z3dtSrbdqwbsN20Ok8lZYfbmRjwNHGbUE0HTjEwYuQqXOhO', 'andre.egreggio@fatec.sp.gov.br', 3);
+    ('Prof. Andre Egreggio', 'andre.egreggio', '$2b$10$aZHG/0z3dtSrbdqwbsN20Ok8lZYfbmRjwNHGbUE0HTjEwYuQqXOhO', 'andre.egreggio@fatec.sp.gov.br', 3, false);
 -- senha: ae123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Ricardo Leme', 'ricardo.leme', '$2b$10$8lOnaLNjfjBs7PdHSQIjm.yfEHG8ao2fGjEjxHHqjCZNlSIGzwz42', 'ricardo.leme@fatec.sp.gov.br', 3);
+    ('Prof. Ricardo Leme', 'ricardo.leme', '$2b$10$8lOnaLNjfjBs7PdHSQIjm.yfEHG8ao2fGjEjxHHqjCZNlSIGzwz42', 'ricardo.leme@fatec.sp.gov.br', 3, false);
 -- senha: rl123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Prof. Levi Munhoz', 'levi.munhoz', '$2b$10$KzspyFMadrJvkxkK5kfWju0woWOWcEzWAcNlyD/.fYNH0Z3taCqpq', 'levi.munhoz@fatec.sp.gov.br', 3);
+    ('Prof. Levi Munhoz', 'levi.munhoz', '$2b$10$KzspyFMadrJvkxkK5kfWju0woWOWcEzWAcNlyD/.fYNH0Z3taCqpq', 'levi.munhoz@fatec.sp.gov.br', 3, false);
 -- senha: lm123
 
 -- Adição de Alunos (usuários com cargo de aluno)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Caio Mortal', 'caio.mortal', '$2a$10$yQxY2f/Ti2kgkjB7F5Jw8Olq4r8yx2aXrYz6IVs9V/owC5Z3bMZcC', 'caio.mortal@exemplo.com', 1);
+    ('Caio Mortal', 'caio.mortal', '$2a$10$yQxY2f/Ti2kgkjB7F5Jw8Olq4r8yx2aXrYz6IVs9V/owC5Z3bMZcC', 'caio.mortal@exemplo.com', 1, false);
 -- senha: cm123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Jenivan Silva', 'jenivan.silva', '$2a$10$C4t7S0Vb9FnpK9kTHe2vqe0mN9m8jXcPv3/1GhJw3wUOZ4ypx2eKq', 'jenivan.silva@exemplo.com', 1);
+    ('Jenivan Silva', 'jenivan.silva', '$2a$10$C4t7S0Vb9FnpK9kTHe2vqe0mN9m8jXcPv3/1GhJw3wUOZ4ypx2eKq', 'jenivan.silva@exemplo.com', 1, false);
 -- senha: js123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Lucas Guerra', 'lucas.guerra', '$2a$10$8v2TbFQh0kN7V0qZqP6xH.6X/2KNcYQ8lD4/YcWx4fHhKJ9tWzGHy', 'lucas.guerra@exemplo.com', 1);
+    ('Lucas Guerra', 'lucas.guerra', '$2a$10$8v2TbFQh0kN7V0qZqP6xH.6X/2KNcYQ8lD4/YcWx4fHhKJ9tWzGHy', 'lucas.guerra@exemplo.com', 1, false);
 -- senha: lg123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES 
-    ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1);
+    ('Abner Renner', 'abner.renner', '$2a$10$Wb6LqYz2qH9T/1V4c0vP2u8k3sN4hLxjB5vYfM1OeF3pQ9xT1cHaC', 'abner.renner@exemplo.com', 1, false);
 -- senha: ar123
 
 -- Adição de secretários(as)
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Maria Oliveira', 'maria.oliveira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'maria.oliveira@fatec.sp.gov.br', 5);
+    ('Maria Oliveira', 'maria.oliveira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'maria.oliveira@fatec.sp.gov.br', 5, false);
 -- senha: ls123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('Beatriz Pereira', 'beatriz.pereira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'beatriz.pereira@fatec.sp.gov.br', 5);
+    ('Beatriz Pereira', 'beatriz.pereira', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'beatriz.pereira@fatec.sp.gov.br', 5, false);
 -- senha: ls123
 
-INSERT INTO USUARIOS (nome, login, senha, email, cargo_id)
+INSERT INTO USUARIOS (nome, login, senha, email, cargo_id, novo_usuario)
 VALUES
-    ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5);
+    ('João Almeida', 'joao.almeida', '$2a$10$UgpbUJfSlLwULfWnaBU3QusO78ip3iuq5uQWBiR08wrJFXvZIh.R2', 'joao.almeida@fatec.sp.gov.br', 5, false);
 -- senha: ls123
 
 
