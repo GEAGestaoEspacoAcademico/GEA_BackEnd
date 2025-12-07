@@ -74,7 +74,7 @@ public class DisciplinaService {
 
 
     public List<DisciplinaListDTO> listar() {
-        return converterParaDTO(disciplinaRepository.findAll());
+        return converterParaDTO(disciplinaRepository.findByExcluidaFalse());
     }
 
     public List<DisciplinaListDTO> listarDisciplinasPorProfessor(Long professorId) {
@@ -90,6 +90,10 @@ public class DisciplinaService {
     public DisciplinaListDTO buscarPorId(Long id) {
     Disciplina disciplina = disciplinaRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Disciplina de id: " + id + " não encontrada"));
+
+        if (disciplina.isExcluida() || disciplina.getCurso() == null || disciplina.getSemestre() == null) {
+            throw new EntityNotFoundException("Disciplina de id: " + id + " não encontrada ou desativada");
+        }
 
     return new DisciplinaListDTO(
         disciplina.getId(),

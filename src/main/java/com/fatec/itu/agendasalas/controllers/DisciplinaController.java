@@ -41,7 +41,9 @@ public class DisciplinaController {
                     +
                     "  \"disciplinaId\": 31,\n" +
                     "  \"disciplinaNome\": \"Computação Gráfica\",\n" +
-                    "  \"disciplinaSemestre\": \"2025.2\",\n" +
+                    "  \"semestreId\": 2,\n" +
+                    "  \"semestreNome\": \"2025.2\",\n" +
+                    "  \"cursoId\": 1,\n" +
                     "  \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\"\n" +
                     "}")))
     })
@@ -71,7 +73,7 @@ public class DisciplinaController {
             description = "Disciplina encontrada",
             content = @Content(mediaType = "application/json",
                 schema = @Schema(implementation = DisciplinaListDTO.class),
-                examples = @ExampleObject(value = "[ { \"disciplinaId\": 1, \"disciplinaNome\": \"Engenharia de Software III\", \"disciplinaSemestre\": \"2025.2\", \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" } ]"))),
+                examples = @ExampleObject(value = "[ { \"disciplinaId\": 1, \"disciplinaNome\": \"Engenharia de Software III\", \"disciplinaSemestre\": \"2025.2\", \"cursoId\": 1, \"cursoNome\": \"Análise e Desenvolvimento de Sistemas\" } ]"))),
         @ApiResponse(responseCode = "404", 
             description = "Disciplina não encontrada",
             content = @Content(mediaType = "application/json",
@@ -102,7 +104,9 @@ public class DisciplinaController {
                         {
                           "disciplinaId": 1,
                           "disciplinaNome": "Computação em Nuvem",
-                          "disciplinaSemestre": "2025.1",
+                          "semestreId": 1,
+                          "semestreNome": "2025.1",
+                          "cursoId": 2,
                           "cursoNome": "Gestão da Tecnologia da Informação"
                         }
                         """
