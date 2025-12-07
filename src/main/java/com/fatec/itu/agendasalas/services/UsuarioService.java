@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaDTO;
+import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioAlterarSenhaPrimeiroAcessoDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioCreationDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioFuncionarioDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioRedefinirSenhaByAdDTO;
@@ -310,5 +311,34 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
         }catch(Exception e){
             throw new RuntimeException("Falha ao deletar usuário id=" + usuarioId, e);
         }
+    }
+
+    public void completarPrimeiroAcesso(UsuarioAlterarSenhaPrimeiroAcessoDTO dto) {
+
+        Usuario usuario = usuarioRepository.findByLogin(dto.usuarioLogin())
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        if (!usuario.isNovoUsuario()) {
+            throw new RuntimeException("Este usuário já realizou o primeiro acesso e redefiniu a senha.");
+        }
+
+        if (!passwordEncryptService.matches(dto.senhaAtual(), usuario.getSenha())) {
+            throw new RuntimeException("A senha atual informada está incorreta.");
+        }
+
+        if (!dto.novaSenha().equals(dto.repetirNovaSenha())) {
+            throw new SenhasNaoConferemException();
+        }
+
+        passwordEncryptService.validarSenha(dto.novaSenha());
+
+        if (passwordEncryptService.matches(dto.novaSenha(), usuario.getSenha())) {
+            throw new RuntimeException("A nova senha deve ser diferente da senha padrão.");
+        }
+
+        usuario.setSenha(passwordEncryptService.criptografarSenha(dto.novaSenha()));
+        usuario.setNovoUsuario(false); 
+        
+        usuarioRepository.save(usuario);
     }
 }
