@@ -1,5 +1,7 @@
 package com.fatec.itu.agendasalas.exceptions;
 
+import java.util.stream.Collectors;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,12 +115,22 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request){
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        String errorMessage = ex.getBindingResult()
+                                .getAllErrors()
+                                .stream()
+                                .map(error -> error.getDefaultMessage())
+                                .collect(Collectors.joining("\n"));
+                                
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, request);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest request){
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        String errorMessage = ex.getConstraintViolations()
+                                .stream()
+                                .map(violation -> violation.getMessage())
+                                .collect(Collectors.joining("\n"));
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, errorMessage, request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
