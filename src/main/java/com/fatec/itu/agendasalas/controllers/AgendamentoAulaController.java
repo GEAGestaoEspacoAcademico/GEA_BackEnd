@@ -323,8 +323,12 @@ public class AgendamentoAulaController {
             return ResponseEntity.ok(PageableResponseDTO.fromPage(agendamentoAulaService.listarAgendamentosAulaPorFiltros(filtros, page, limit, sort)));
         }
 
+
+        @Operation(summary = "Deleta um agendamento de aula pelo id da recorrencia")
+        @ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Agendamento deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Recorrencia não encontrado") })
         @DeleteMapping("/recorrencia/{recorrenciaId}")
-        public ResponseEntity<Void> deletarPelaRecorrenciaId(@PathVariable Long recorrenciaId){
+        public ResponseEntity<Void> deletarPelaRecorrenciaId(@Parameter(description="Id da recorrencia")@PathVariable Long recorrenciaId){
             agendamentoAulaService.cancelarAgendamentoPorRecorrencia(recorrenciaId);
             return ResponseEntity.noContent().build();
         }

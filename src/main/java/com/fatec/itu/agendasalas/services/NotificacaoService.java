@@ -65,10 +65,10 @@ public class NotificacaoService {
         //var auth = SecurityContextHolder.getContext().getAuthentication();
         
         //if(auth != null && auth.getPrincipal() instanceof Usuario){
-      //      remetente = (Usuario) auth.getPrincipal();
-      //  }
+        //      remetente = (Usuario) auth.getPrincipal();
+         //  }
 
-      //NÃO APAGAR ESSAS LINHAS COMENTADAS, ELA SERÁ UTIL COM A JWT.
+        //NÃO APAGAR ESSAS LINHAS COMENTADAS, ELA SERÁ UTIL COM A JWT.
 
         List<AgendamentoAula> aulas = agendamentoAulaRepository.findByRecorrenciaId(recorrenciaAulas.getId());
         if(aulas.isEmpty()){
@@ -100,9 +100,13 @@ public class NotificacaoService {
         
         emailSenderService.enviarNotificacaoAgendamento(diaInicial, diaFinal, janelasHorarios, disciplina, remetente, destinatario, diaDaSemana);
         
-        
- 
     }
+
+    
+    public void notificarCadastro(Usuario usuario, String primeiraSenha) throws MessagingException{
+        emailSenderService.enviarNotificacaoCadastro(usuario, primeiraSenha);
+    }
+
 
     public void notificarAoAlterarAgendamentoAula(AgendamentoAula aula){
         

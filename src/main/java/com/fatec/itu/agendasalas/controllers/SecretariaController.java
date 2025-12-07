@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +28,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -106,8 +106,8 @@ public class SecretariaController {
                 )
             )
         )
-        @Valid @RequestBody SecretariaCreationDTO secretariaCreationDTO){
-        SecretariaResponseDTO secretariaResponseDTO = secretariaService.cadastrarSecretaria(secretariaCreationDTO);
+        @Valid @RequestBody SecretariaCreationDTO secretariaCreationDTO) throws MessagingException{
+        SecretariaResponseDTO secretariaResponseDTO = secretariaService.cadastrarUsuario(secretariaCreationDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(secretariaResponseDTO.usuarioId()).toUri();
 
@@ -145,7 +145,8 @@ public class SecretariaController {
     }
 
 
-     @Operation(summary = "Deleta uma secretaria pelo ID")
+    /* 
+    @Operation(summary = "Deleta uma secretaria pelo ID")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Secretaria deletada com sucesso"),
         @ApiResponse(responseCode = "404", description = "Secretaria não encontrada")
@@ -155,4 +156,5 @@ public class SecretariaController {
         secretariaService.deletarSecretaria(id);
         return ResponseEntity.noContent().build();
     }
+    */
 }

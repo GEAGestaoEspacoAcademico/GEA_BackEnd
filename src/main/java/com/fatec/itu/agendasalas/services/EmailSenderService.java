@@ -339,5 +339,136 @@ public class EmailSenderService {
             );
     }
 
+    @Async
+    public void enviarNotificacaoCadastro(Usuario destinatario, String primeiraSenha) throws MessagingException {
+        
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+        helper.setTo(destinatario.getEmail());
+        helper.setFrom(hostEmail);
+        helper.setSubject("Cadastro Realizado com Sucesso");
+
+        String mensagem = montarMensagemCadastro(destinatario, destinatario.getLogin(), primeiraSenha);
+        helper.setText(mensagem, true);
+        mailSender.send(message);
+      
+    }
+
+    private String montarMensagemCadastro(Usuario usuario, String login, String senhaInicial) {
+
+        String nome = usuario != null ? usuario.getNome() : "Usuário";
+
+        return """
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            margin: 0;
+                            padding: 20px;
+                            background-color: #f8f9fa;
+                        }
+                        .email-container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: white;
+                            padding: 30px;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        .header {
+                            text-align: center;
+                            padding-bottom: 20px;
+                            border-bottom: 2px solid #2b7a0b;
+                            margin-bottom: 25px;
+                        }
+                        .header h3 {
+                            color: #2c3e50;
+                            margin: 0;
+                        }
+                        .section-title {
+                            background-color: #2b7a0b;
+                            color: white;
+                            padding: 10px 15px;
+                            border-radius: 5px;
+                            margin-bottom: 15px;
+                            font-weight: bold;
+                        }
+                        .info-grid {
+                            display: grid;
+                            grid-template-columns: 130px 1fr;
+                            gap: 10px;
+                            margin-bottom: 10px;
+                        }
+                        .label {
+                            font-weight: bold;
+                            color: #555;
+                        }
+                        .value {
+                            color: #333;
+                        }
+                        .alerta {
+                            margin-top: 20px;
+                            background-color: #fff3cd;
+                            padding: 15px;
+                            border-left: 4px solid #ffca2c;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            color: #856404;
+                        }
+                        .footer {
+                            margin-top: 30px;
+                            padding-top: 20px;
+                            border-top: 1px solid #ddd;
+                            font-size: 12px;
+                            color: #777;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="email-container">
+                        <div class="header">
+                            <h3>Cadastro Realizado com Sucesso</h3>
+                        </div>
+                        
+                        <p><strong>Olá, %s!</strong></p>
+                        <p>Seu cadastro no sistema foi concluído com sucesso.</p>
+
+                        <div class="section-title">🔐 DADOS DE ACESSO</div>
+                        <div class="info-grid">
+                            <div class="label">Login:</div>
+                            <div class="value">%s</div>
+
+                            <div class="label">Senha inicial:</div>
+                            <div class="value">%s</div>
+                        </div>
+
+                        <div class="alerta">
+                            ⚠️ Ao realizar seu primeiro login, não se esqueça de alterar sua senha!
+                        </div>
+
+                        <div class="footer">
+                            <p>Esta é uma mensagem automática, por favor não responder.</p>
+                            <p>Sistema GEA Fatec Itu • %s</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """.formatted(
+                    nome,
+                    login,
+                    senhaInicial,
+                    LocalDate.now().getYear()
+                );
+        }
+
+
 }
 

@@ -13,14 +13,16 @@ import com.fatec.itu.agendasalas.entity.Secretaria;
 import com.fatec.itu.agendasalas.exceptions.EmailJaCadastradoException;
 import com.fatec.itu.agendasalas.exceptions.MatriculaDuplicadaSecretariaException;
 import com.fatec.itu.agendasalas.exceptions.SecretariaNaoEncontradoException;
+import com.fatec.itu.agendasalas.interfaces.UsuarioCadastravel;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.SecretariaRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class SecretariaService {
+public class SecretariaService implements UsuarioCadastravel<SecretariaCreationDTO, SecretariaResponseDTO> {
 
     @Autowired
     private SecretariaRepository secretariaRepository;
@@ -34,6 +36,9 @@ public class SecretariaService {
     @Autowired
     private PasswordEncryptService passwordEncryptService;
 
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     public List<SecretariaResponseDTO> listarSecretarios() {
         return secretariaRepository.findAll().stream()
         .map(this::converterParaResponseDTO)
@@ -46,33 +51,7 @@ public class SecretariaService {
         return converterParaResponseDTO(secretaria);
     }
 
-    public SecretariaResponseDTO cadastrarSecretaria(SecretariaCreationDTO dto) {
-        
-        if(secretariaRepository.existsByMatricula(dto.matricula())) {
-            throw new MatriculaDuplicadaSecretariaException(dto.matricula());
-        }
-        if(usuarioRepository.existsByEmail(dto.email())){
-            throw new EmailJaCadastradoException(dto.email());
-        }
-        String[] nomeSeparado = dto.nome().split(" ");
-        String login = nomeSeparado[0].toLowerCase() + "." + nomeSeparado[nomeSeparado.length-1].toLowerCase();  
-        String senha = nomeSeparado[0].toLowerCase()+"123";
-        Secretaria secretaria = new Secretaria();
-        secretaria.setLogin(login);
-        secretaria.setNome(dto.nome());
-        secretaria.setSenha(passwordEncryptService.criptografarSenha(senha));
-        secretaria.setEmail(dto.email());
-        secretaria.setMatricula(dto.matricula());
-
-        Cargo cargo = cargoRepository.findByNome("SECRETARIA")
-            .orElseThrow(() -> new EntityNotFoundException("Cargo de nome: SECRETARIA não encontrado"));
-        secretaria.setCargo(cargo);
-
-        secretariaRepository.save(secretaria);
-
-        return converterParaResponseDTO(secretaria);
-    }
-
+  
     public SecretariaResponseDTO atualizarSecretaria(Long id, SecretariaUpdateDTO dto) {
         Secretaria secretaria = secretariaRepository.findById(id)
             .orElseThrow(() -> new SecretariaNaoEncontradoException(id));
@@ -104,5 +83,43 @@ public class SecretariaService {
         secretariaRepository.delete(secretaria);
     }
 
+
+    private String gerarNovoLoginCasoJaExista(String login){
+        String baseLogin = login;
+        int suffix = 1;
+        while (usuarioRepository.findByLogin(login).isPresent()) {
+            suffix++;
+            login = baseLogin + suffix;
+        }
+        return login;
+    }
+
+    @Override
+    public SecretariaResponseDTO cadastrarUsuario(SecretariaCreationDTO dto) throws MessagingException {
+        
+        if(secretariaRepository.existsByMatricula(dto.matricula())) {
+            throw new MatriculaDuplicadaSecretariaException(dto.matricula());
+        }
+        if(usuarioRepository.existsByEmail(dto.email())){
+            throw new EmailJaCadastradoException(dto.email());
+        }
+       
+        String login = gerarNovoLoginCasoJaExista(dto.login());
+        Secretaria secretaria = new Secretaria();
+        secretaria.setLogin(login);
+        secretaria.setNome(dto.nome());
+        secretaria.setSenha(passwordEncryptService.criptografarSenha(dto.senha()));
+        secretaria.setEmail(dto.email());
+        secretaria.setMatricula(dto.matricula());
+
+        Cargo cargo = cargoRepository.findByNome("SECRETARIA")
+            .orElseThrow(() -> new EntityNotFoundException("Cargo de nome: SECRETARIA não encontrado"));
+        secretaria.setCargo(cargo);
+
+        secretariaRepository.save(secretaria);
+        notificacaoService.notificarCadastro(secretaria, dto.senha());
+
+        return converterParaResponseDTO(secretaria);
+    }
     
 }
