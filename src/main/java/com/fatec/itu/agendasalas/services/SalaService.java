@@ -9,6 +9,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,7 @@ import com.fatec.itu.agendasalas.repositories.PisoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoRepository;
 import com.fatec.itu.agendasalas.repositories.RecursoSalaRepository;
 import com.fatec.itu.agendasalas.repositories.SalaRepository;
+import com.fatec.itu.agendasalas.specifications.SalaSpecification;
 import com.fatec.itu.agendasalas.dto.salas.RecomendacaoResponseDTO;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -87,6 +92,17 @@ public class SalaService {
       .map(this::transformarSalaEmSalaDetailDTO)
       .toList();
   }
+
+  public Page<SalaDetailDTO> listarSalasComFiltro(String nome, Long pisoId, Long tipoSalaId, Boolean disponibilidade, int page, int limit, String sort) {
+    int paginaSolicitada = Math.max(page - 1, 0);
+    String campoOrdenacao = (sort == null || sort.isBlank()) ? "id" : sort;
+    Pageable paginacao = PageRequest.of(paginaSolicitada, limit, Sort.by(campoOrdenacao));
+
+    return salaRepository
+        .findAll(SalaSpecification.comFiltros(nome, pisoId, tipoSalaId, disponibilidade), paginacao)
+        .map(this::transformarSalaEmSalaDetailDTO);
+  }
+
 
   public List<SalaDetailDTO> listarSalasCandidatas(RequisicaoDeSalaDTO requisicao){
     List<Long> salasParaExcluir =

@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fatec.itu.agendasalas.dto.paginacaoDTO.PageableResponseDTO;
 import com.fatec.itu.agendasalas.dto.recursos.RecursoSalaUpdateQuantidadeDTO;
 import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListaCreationDTO;
 import com.fatec.itu.agendasalas.dto.recursosSalasDTO.RecursoSalaListagemRecursosDTO;
@@ -46,16 +48,62 @@ public class SalaController {
 
  
     @GetMapping
-    @Operation(summary = "Lista todas as salas")
+    @Operation(summary = "Lista salas com filtros e paginação")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
-            description = "Lista de salas encontrada",
+            description = "Lista de salas filtrada",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(type = "array", implementation = SalaDetailDTO.class),
-                examples = @ExampleObject(value = "{ \"salaId\": 7, \"salaNome\": \"Sala 101\", \"capacidade\": 40, \"disponibilidade\": false, \"tipoSalaId\": 1, \"tipoSala\": \"Sala de Aula\", \"pisoId\": 1, \"piso\": \"1º Andar\", \"salaObservacoes\": \"Sala com projetor e ar condicionado\" }")))
+                schema = @Schema(implementation = PageableResponseDTO.class),
+                examples = @ExampleObject(value = """
+                    {
+                      \"conteudo\": [
+                        {
+                          \"salaId\": 7,
+                          \"salaNome\": \"Sala 101\",
+                          \"capacidade\": 40,
+                          \"disponibilidade\": false,
+                          \"tipoSalaId\": 1,
+                          \"tipoSala\": \"Sala de Aula\",
+                          \"pisoId\": 1,
+                          \"piso\": \"1º Andar\",
+                          \"salaObservacoes\": \"Sala com projetor e ar condicionado\"
+                        }
+                      ],
+                      \"numeroDaPagina\": 0,
+                      \"tamanhoDaPagina\": 10,
+                      \"totalDeElementos\": 1,
+                      \"totalDePaginas\": 1,
+                      \"ultimaPagina\": true
+                    }
+                """)))
     })
-    public ResponseEntity<List<SalaDetailDTO>> listarTodas() {
-        return ResponseEntity.ok(salaService.listarTodasAsSalas());
+    public ResponseEntity<PageableResponseDTO<SalaDetailDTO>> listarTodas(
+            @Parameter(description = "Filtra por nome (contém)", example = "Lab")
+            @RequestParam(required = false) String nome,
+
+            @Parameter(description = "Filtra por piso (id)", example = "1")
+            @RequestParam(required = false) Long pisoId,
+
+            @Parameter(description = "Filtra por tipo de sala (id)", example = "2")
+            @RequestParam(required = false) Long tipoSalaId,
+
+            @Parameter(description = "Filtra por disponibilidade", example = "true")
+            @RequestParam(required = false) Boolean disponibilidade,
+
+            @Parameter(description = "Número da página (começa em 1)", example = "1")
+            @RequestParam(required = false, defaultValue = "1") int page,
+
+            @Parameter(description = "Quantidade de registros por página", example = "10")
+            @RequestParam(required = false, defaultValue = "10") int limit,
+
+            @Parameter(description = "Campo para ordenação", example = "nome")
+            @RequestParam(required = false, defaultValue = "nome") String sort) {
+
+        return ResponseEntity.ok(
+            PageableResponseDTO.fromPage(
+                salaService.listarSalasComFiltro(nome, pisoId, tipoSalaId, disponibilidade, page, limit, sort)
+            )
+        );
     }
 
     @GetMapping("/{salaId}")
