@@ -223,15 +223,15 @@ VALUES
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Cursos
 -- -----------------------------------------------------------------------------
-INSERT INTO CURSOS (nome_curso, sigla, coordenador_id)
+INSERT INTO CURSOS (nome_curso, sigla, coordenador_id, excluida)
 VALUES 
-    ('Análise e Desenvolvimento de Sistemas', 'ADS', 10),
-    ('Gestão da Tecnologia da Informação', 'GTI', 13),
-    ('Mecatrônica Industrial', 'MEC', 11),
-    ('Eventos', 'EVE', 12),
-    ('Gestão Empresarial', 'GE', 14),
-    ('Gestão Empresarial EAD', 'GE-EAD', 15),
-    ('AMS Processos Gerenciais', 'AMS-PG', 16);
+    ('Análise e Desenvolvimento de Sistemas', 'ADS', 10, FALSE),
+    ('Gestão da Tecnologia da Informação', 'GTI', 13, FALSE),
+    ('Mecatrônica Industrial', 'MEC', 11, FALSE),
+    ('Eventos', 'EVE', 12, FALSE),
+    ('Gestão Empresarial', 'GE', 14, FALSE),
+    ('Gestão Empresarial EAD', 'GE-EAD', 15, FALSE),
+    ('AMS Processos Gerenciais', 'AMS-PG', 16, FALSE);
 
 -- -----------------------------------------------------------------------------
 -- Alimenta o BD com Disciplinas
