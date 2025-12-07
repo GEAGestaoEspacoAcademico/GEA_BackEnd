@@ -32,7 +32,7 @@
 
 	<properties>
 		<java.version>17</java.version>
-	</properties>
+		<hibernate.jpamodelgen.useJPAMetamodel>true</hibernate.jpamodelgen.useJPAMetamodel>	</properties>
 
 	<dependencies>
 
@@ -68,6 +68,12 @@
     	</dependency>
 
 		<dependency>
+			<groupId>jakarta.data</groupId>
+			<artifactId>jakarta.data-api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -76,7 +82,8 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
-			 <scope>provided</scope>
+			<version>6.5.2.Final</version>
+			<scope>provided</scope>
 		</dependency>	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -99,8 +106,7 @@
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>			
-			<scope>provided</scope>
+			<artifactId>lombok</artifactId>		
 		</dependency>
 
 		<dependency>
@@ -123,7 +129,30 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
+      		</plugin>
+			  <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+
+				
+					<annotationProcessorPaths>
+							<path>
+								<groupId>org.hibernate.orm</groupId>
+								<artifactId>hibernate-jpamodelgen</artifactId>
+								<version>6.5.2.Final</version>
+							</path>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

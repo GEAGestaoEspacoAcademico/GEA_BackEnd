@@ -73,6 +73,8 @@ public class Usuario implements UserDetails{
         return java.util.Collections.singletonList(new SimpleGrantedAuthority(nome));
     }
 
+    
+
     @Override
     public String getPassword() {
         return senha;

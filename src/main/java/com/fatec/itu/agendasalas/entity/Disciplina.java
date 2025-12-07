@@ -39,6 +39,9 @@ public class Disciplina implements Serializable {
     @JoinColumn(name = "semestre_id")
     private Semestre semestre;
 
+    @Column(name = "excluida", nullable = false)
+    private boolean excluida = false;
+
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable=true)
     private Professor professor;

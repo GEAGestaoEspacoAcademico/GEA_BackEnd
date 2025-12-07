@@ -199,69 +199,77 @@ public class AgendamentoAulaService {
     }
 
     @Transactional
-    public void criar(AgendamentoAulaCreationDTO dto) {
-
-       
+    public Long criar(AgendamentoAulaCreationDTO dto) {
 
         Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow(
                 () -> new EntityNotFoundException("Usuário com id: " + dto.usuarioId() + " não encontrado"));
 
-        if(agendamentoConflitoService.dataNoPassado(dto.data())){
+        if (agendamentoConflitoService.dataNoPassado(dto.data())) {
             throw new DataNoPassadoException(dto.data());
         }
 
-                Sala sala = salaRepository.findById(dto.salaId())
-                                .orElseThrow(() -> new EntityNotFoundException("Sala com id: " + dto.salaId() + " não encontrado"));
+        Sala sala = salaRepository.findById(dto.salaId())
+                .orElseThrow(() -> new EntityNotFoundException("Sala com id: " + dto.salaId() + " não encontrado"));
 
-                Disciplina disciplina = disciplinaRepository.findById(dto.disciplinaId())
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Disciplina não encontrada com ID: "
-                                                                + dto.disciplinaId()));
+        Disciplina disciplina = disciplinaRepository.findById(dto.disciplinaId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Disciplina não encontrada com ID: " + dto.disciplinaId()));
 
-                List<JanelasHorario> horariosDisponiveis =
-                                janelasHorarioRepository.findDisponiveisPorData(dto.data(), dto.salaId());
+        List<JanelasHorario> horariosDisponiveis =
+                janelasHorarioRepository.findDisponiveisPorData(dto.data(), dto.salaId());
 
-                Set<Long> idsDesejados = LongStream
-                                .range(dto.janelasHorarioId(),
-                                                dto.janelasHorarioId() + dto.quantidade())
-                                .boxed().collect(Collectors.toSet());
+        Set<Long> idsDesejados = LongStream
+                .range(dto.janelasHorarioId(), dto.janelasHorarioId() + dto.quantidade())
+                .boxed()
+                .collect(Collectors.toSet());
 
-                Set<Long> idsDisponiveis = horariosDisponiveis.stream()
-                                .map(JanelasHorario::getId)
-                                .collect(Collectors.toSet());
+        Set<Long> idsDisponiveis = horariosDisponiveis.stream()
+                .map(JanelasHorario::getId)
+                .collect(Collectors.toSet());
 
-                boolean sequenciaEstaDisponivel = idsDisponiveis.containsAll(idsDesejados);
+        boolean sequenciaEstaDisponivel = idsDisponiveis.containsAll(idsDesejados);
 
-                if (!sequenciaEstaDisponivel) {
-                        throw new AgendamentoComHorarioIndisponivelException(
-                                "Horário indisponível para esse agendamento.");
-                }
-                
-                Recorrencia recorrencia = new Recorrencia(dto.data(), dto.data());
-                recorrencia = recorrenciaRepository.save(recorrencia);
-                
-                int quantidadeAulasRestantes = dto.quantidade() - 1;
-
-                for (int i = 0; i <= quantidadeAulasRestantes; i++) {
-                        long idDesejado = dto.janelasHorarioId() + i;
-                        JanelasHorario janela = horariosDisponiveis.stream()
-                                        .filter(j -> j.getId().longValue() == idDesejado)
-                                        .findFirst()
-                                        .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
-                                                        "Janela de horário inválida: " + idDesejado));
-
-                        AgendamentoAula proximoAgendamento = new AgendamentoAula();
-
-                        proximoAgendamento.setUsuario(usuario);
-                        proximoAgendamento.setSala(sala);
-                        proximoAgendamento.setDisciplina(disciplina);
-                        proximoAgendamento.setData(dto.data());
-                        proximoAgendamento.setIsEvento((dto.isEvento()));
-                        proximoAgendamento.setJanelasHorario(janela);
-                        proximoAgendamento.setRecorrencia(recorrencia);                                
-                        agendamentoAulaRepository.save(proximoAgendamento);
-                        } 
+        if (!sequenciaEstaDisponivel) {
+            throw new AgendamentoComHorarioIndisponivelException(
+                 "Horário indisponível para esse agendamento.");
         }
+
+        Recorrencia recorrencia = new Recorrencia(dto.data(), dto.data());
+        recorrencia = recorrenciaRepository.save(recorrencia);
+
+        int quantidadeAulasRestantes = dto.quantidade() - 1;
+
+        Long idPrimeiroAgendamento = null;
+
+        for (int i = 0; i <= quantidadeAulasRestantes; i++) {
+            long idDesejado = dto.janelasHorarioId() + i;
+
+            JanelasHorario janela = horariosDisponiveis.stream()
+                    .filter(j -> j.getId() == idDesejado)
+                    .findFirst()
+                    .orElseThrow(() -> new AgendamentoComHorarioIndisponivelException(
+                            "Janela de horário inválida: " + idDesejado));
+
+            AgendamentoAula novoAgendamento = new AgendamentoAula();
+
+            novoAgendamento.setUsuario(usuario);
+            novoAgendamento.setSala(sala);
+            novoAgendamento.setDisciplina(disciplina);
+            novoAgendamento.setData(dto.data());
+            novoAgendamento.setIsEvento(dto.isEvento());
+            novoAgendamento.setJanelasHorario(janela);
+            novoAgendamento.setRecorrencia(recorrencia);
+
+            novoAgendamento = agendamentoAulaRepository.save(novoAgendamento);
+
+            if (i == 0) {
+                idPrimeiroAgendamento = novoAgendamento.getId();
+            }
+        }   
+
+        return idPrimeiroAgendamento;
+    }
+
 
         public List<AgendamentoAulaResponseDTO> listarTodos() {
                 return agendamentoAulaRepository.findAll().stream()

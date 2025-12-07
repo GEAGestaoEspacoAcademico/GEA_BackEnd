@@ -131,15 +131,22 @@ public class DisciplinaController {
         return ResponseEntity.ok(disciplinaService.atualizar(disciplinaId, novaDisciplina));
     }      
 
-    @Operation(summary = "Deleta uma disciplina pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Disciplina excluída com sucesso"), // Retorna 200 ou 204
+    @Operation(
+        summary = "Desativa uma disciplina pelo ID",
+        description = "Desativa a disciplina informada, desfazendo vínculos com curso e professor, e convertendo agendamentos de aula em cancelados. A disciplina não é removida fisicamente do banco, apenas marcada como excluída.",
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Disciplina desativada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Disciplina não encontrada")
-    })
+        }
+    )
     @DeleteMapping("{disciplinaId}")
     public ResponseEntity<Void> excluirDisciplina(
-            @Parameter(description = "ID da disciplina a ser excluída") @PathVariable Long disciplinaId) {
-        disciplinaService.excluir(disciplinaId);
-        return ResponseEntity.noContent().build();
+        @Parameter(description = "ID da disciplina a ser desativada") @PathVariable Long disciplinaId) {
+        try {
+            disciplinaService.excluir(disciplinaId);
+            return ResponseEntity.noContent().build();
+        } catch (jakarta.persistence.EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

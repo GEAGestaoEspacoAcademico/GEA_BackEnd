@@ -2,7 +2,8 @@ package com.fatec.itu.agendasalas.dto.professores;
 
 import java.util.List;
 
-import jakarta.validation.constraints.Email;
+import com.fatec.itu.agendasalas.validators.EmailValido;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,7 +12,7 @@ public record ProfessorCreateDTO(
     @NotEmpty(message = "Nome é obrigatório")
     String nome,
 
-    @Email(message="Envie um e-mail válido", regexp = "^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,}$")
+    @EmailValido(message="Envie um e-mail válido")
     @NotEmpty(message = "E-mail é obrigatório")
     String email,
 

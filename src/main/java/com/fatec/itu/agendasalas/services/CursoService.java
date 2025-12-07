@@ -3,15 +3,13 @@ package com.fatec.itu.agendasalas.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.fatec.itu.agendasalas.dto.cursos.CursoCreateDTO;
 import com.fatec.itu.agendasalas.dto.cursos.CursoListDTO;
 import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Curso;
+import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
 import com.fatec.itu.agendasalas.repositories.CursoRepository;
 
@@ -21,17 +19,18 @@ import jakarta.persistence.EntityNotFoundException;
 public class CursoService {
 
     private final CursoRepository cursoRepository;
+    private final CoordenadorRepository coordenadorRepository;
+    private final DisciplinaService disciplinaService;
 
-    @Autowired
-    private CoordenadorRepository coordenadorRepository;
+    public CursoService(CursoRepository cursoRepository, CoordenadorRepository coordenadorRepository, DisciplinaService disciplinaService) {
+        this.cursoRepository = cursoRepository;
+        this.coordenadorRepository = coordenadorRepository;
+        this.disciplinaService = disciplinaService;
+    }
 
     private CursoListDTO converteCursoParaDTO(Curso curso) {
         return new CursoListDTO(curso.getId(), curso.getNomeCurso(), curso.getCoordenador().getId(), curso.getSigla(), curso.getCoordenador().getId(),
                 curso.getCoordenador().getNome());
-    }
-
-    public CursoService(CursoRepository cursoRepository) {
-        this.cursoRepository = cursoRepository;
     }
 
     public CursoListDTO criar(CursoCreateDTO curso) {
@@ -77,9 +76,16 @@ public class CursoService {
     }
 
     public void excluir(Long id) {
-        if (!cursoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Curso de id: " + id + " não encontrado");
+        Curso curso = cursoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Curso de id: " + id + " não encontrado"));
+        
+        curso.setCoordenador(null);
+        
+        for (Disciplina disciplina : curso.getDisciplinas()) {
+            disciplinaService.excluir(disciplina.getId());
         }
-        cursoRepository.deleteById(id);
+        
+        curso.setExcluido(true);
+        cursoRepository.save(curso);
     }
 }

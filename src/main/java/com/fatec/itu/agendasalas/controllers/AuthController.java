@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -53,7 +54,7 @@ public class AuthController {
                     schema = @Schema(implementation = UsuarioRegisterDTO.class),
                     examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
                         value = "{ \"usuarioNome\": \"Felipa Elisélvisky\", \"usuarioEmail\": \"felipa.eliselvisky@exemplo.com\" }")))
-            @RequestBody UsuarioRegisterDTO usuarioRegisterDTO) {
+           @Valid @RequestBody UsuarioRegisterDTO usuarioRegisterDTO) {
         UsuarioResponseDTO responseDTO = usuarioService.cadastrarUsuarioPeloNomeEmail(usuarioRegisterDTO);
         return ResponseEntity.ok(responseDTO);
     }
