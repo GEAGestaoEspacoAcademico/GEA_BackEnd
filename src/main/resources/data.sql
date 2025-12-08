@@ -315,18 +315,18 @@ VALUES
 -- CORRIGIDO: Adicionada a coluna 'observacoes' para combinar com os valores fornecidos
 INSERT INTO SALAS (nome, capacidade, disponibilidade, id_tipo_sala, piso_id, observacoes)
 VALUES 
-    ('Lab 301', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
-    ('Lab 302', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
-    ('Lab 303', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Lab 301', 30, TRUE, 2, 3, 'Laboratório com 30 computadores'),
+    ('Lab 302', 25, TRUE, 2, 3, 'Laboratório de redes e infraestrutura'),
+    ('Lab 303', 30, TRUE, 2, 3, 'Laboratório com computadores high-end'),
     ('Lab 304', 30, FALSE, 2, 3, 'Laboratório com 30 computadores'),
     ('Lab 305', 25, FALSE, 2, 3, 'Laboratório de redes e infraestrutura'),
-    ('Lab 306', 30, FALSE, 2, 3, 'Laboratório com computadores high-end'),
-    ('Sala 101', 40, FALSE, 1, 1, 'Sala com projetor e ar condicionado'),
-    ('Sala 102', 40, FALSE, 1, 1, 'Sala com lousa digital'),
-    ('Sala 201', 50, FALSE, 1, 2, 'Auditório pequeno'),
-    ('Sala 202', 35, FALSE, 2, 2, 'Sala com projetor'),
+    ('Lab 306', 30, TRUE, 2, 3, 'Laboratório com computadores high-end'),
+    ('Sala 101', 40, TRUE, 1, 1, 'Sala com projetor e ar condicionado'),
+    ('Sala 102', 40, TRUE, 1, 1, 'Sala com lousa digital'),
+    ('Sala 201', 50, TRUE, 1, 2, 'Auditório pequeno'),
+    ('Sala 202', 35, TRUE, 2, 2, 'Sala com projetor'),
     ('Sala 103', 40, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'),
-    ('Sala 104', 35, TRUE, 1, 1, 'Sala de aula padrão com lousa branca'), 
+    ('Sala 104', 35, FALSE, 1, 1, 'Sala de aula padrão com lousa branca'), 
     ('Sala 203', 50, TRUE, 1, 2, 'Sala ampla com duas lousas');
 
 
