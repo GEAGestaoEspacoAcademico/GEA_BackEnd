@@ -479,7 +479,7 @@ public class EmailSenderService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        Professor professor = disciplina.getProfessor();    
+        Usuario professor = disciplina.getProfessor();    
         
         helper.setTo(professor.getEmail());
         helper.setFrom(hostEmail);

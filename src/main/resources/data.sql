@@ -265,7 +265,11 @@ INSERT INTO DISCIPLINAS (nome, semestre_id, professor_id, curso_id, excluida) VA
     ('Banco de Dados', 2, 24, 1, FALSE),
     ('Contabilidade', 2, 23, 1, FALSE),
     ('Engenharia de Software I', 2, 25, 1, FALSE),
-    ('Linguagem de Programação', 2, 24, 1, FALSE);
+    ('Linguagem de Programação', 2, 24, 1, FALSE),
+    ('Ingles I', 1, 10, 1, FALSE),
+    ('Ingles II', 2, 10, 1, FALSE),
+    ('Ingles III', 3, 10, 1, FALSE),
+    ('Ingles IV', 4, 10, 1, FALSE);
 
 
 

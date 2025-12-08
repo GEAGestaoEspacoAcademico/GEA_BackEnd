@@ -44,7 +44,7 @@ public class Disciplina implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable=true)
-    private Professor professor;
+    private Usuario professor;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
