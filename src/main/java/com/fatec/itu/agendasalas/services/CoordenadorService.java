@@ -2,16 +2,25 @@ package com.fatec.itu.agendasalas.services;
 
 import java.util.List;
 
+
+import com.fatec.itu.agendasalas.exceptions.IntegridadeReferencialCoordenador;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorCreationDTO;
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorResponseDTO;
+import com.fatec.itu.agendasalas.entity.Agendamento;
+import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Coordenador;
+import com.fatec.itu.agendasalas.entity.Curso;
+import com.fatec.itu.agendasalas.entity.Disciplina;
 import com.fatec.itu.agendasalas.entity.Usuario;
+import com.fatec.itu.agendasalas.repositories.AgendamentoRepository;
 import com.fatec.itu.agendasalas.repositories.CargoRepository;
 import com.fatec.itu.agendasalas.repositories.CoordenadorRepository;
+import com.fatec.itu.agendasalas.repositories.CursoRepository;
 import com.fatec.itu.agendasalas.repositories.UsuarioRepository;
 
 import jakarta.persistence.EntityManager;
@@ -30,8 +39,13 @@ public class CoordenadorService {
 	@Autowired
 	private CargoRepository cargoRepository;
 
+	@Autowired
+	private CursoRepository cursoRepository;
+
+
     @PersistenceContext
     private EntityManager entityManager;
+	
 
 	@Transactional
 	public CoordenadorResponseDTO promoverParaCoordenador(CoordenadorCreationDTO dto) {
@@ -70,18 +84,25 @@ public class CoordenadorService {
 		return toResponseDTO(coordenador);
 	}
 
-
 	@Transactional
-	public void despromoverCoordenador(Long id) {
-		coordenadorRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Coordenador de id: " + id + " não encontrado"));
-		Usuario usuario = usuarioRepository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Usuário de id: " + id + " não encontrado"));
-		usuario.setCargo(cargoRepository.findByNome("USER")
-				.orElseThrow(() -> new EntityNotFoundException("Cargo USER não encontrado")));
-		usuarioRepository.save(usuario);
-		coordenadorRepository.deleteById(id);
-	}
+        public void despromoverCoordenador(Long id) {
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        Cargo cargoProfessor = cargoRepository.findByNome("PROFESSOR")
+                .orElseThrow(() -> new EntityNotFoundException("Cargo PROFESSOR não encontrado"));
+        usuario.setCargo(cargoProfessor);
+
+        Curso curso = cursoRepository.findByCoordenadorId(id);
+
+        if (curso != null) {
+                curso.setCoordenador(null);
+                cursoRepository.save(curso);
+        }
+
+        usuarioRepository.save(usuario);
+        }
 
 	
     private CoordenadorResponseDTO toResponseDTO(Coordenador c) {

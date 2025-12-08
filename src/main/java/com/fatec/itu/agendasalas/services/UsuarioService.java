@@ -16,6 +16,7 @@ import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioResponseDTO;
 import com.fatec.itu.agendasalas.dto.usersDTO.UsuarioUpdateAdminDTO;
 import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Coordenador;
+import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.PasswordResetToken;
 import com.fatec.itu.agendasalas.entity.Professor;
 import com.fatec.itu.agendasalas.entity.Secretaria;
@@ -300,17 +301,16 @@ public class UsuarioService implements UsuarioCadastravel<UsuarioCreationDTO, Us
             }
         }
 
-        List<com.fatec.itu.agendasalas.entity.Curso> cursos = cursoRepository.findByCoordenadorId(usuarioId);
-        if(cursos != null && !cursos.isEmpty()){
-            try{
-                for(com.fatec.itu.agendasalas.entity.Curso c : cursos){
-                    c.setCoordenador(null);
-                }
-                cursoRepository.saveAll(cursos);
-            }catch(Exception e){
+        Curso curso = cursoRepository.findByCoordenadorId(usuarioId);
+        if (curso != null) {
+            try {
+                curso.setCoordenador(null);
+                cursoRepository.save(curso);
+            } catch (Exception e) {
                 throw new FalhaAoDesvincularCursoException(usuarioId, e);
             }
         }
+
 
         try{
             usuarioRepository.delete(usuario);
