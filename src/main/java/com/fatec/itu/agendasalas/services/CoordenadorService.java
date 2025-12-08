@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorCreationDTO;
 import com.fatec.itu.agendasalas.dto.coordenadores.CoordenadorResponseDTO;
 import com.fatec.itu.agendasalas.entity.Agendamento;
+import com.fatec.itu.agendasalas.entity.Cargo;
 import com.fatec.itu.agendasalas.entity.Coordenador;
 import com.fatec.itu.agendasalas.entity.Curso;
 import com.fatec.itu.agendasalas.entity.Disciplina;
@@ -41,8 +42,6 @@ public class CoordenadorService {
 	@Autowired
 	private CursoRepository cursoRepository;
 
-        @Autowired
-        private AgendamentoRepository agendamentoRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -85,37 +84,25 @@ public class CoordenadorService {
 		return toResponseDTO(coordenador);
 	}
 
-
-
 	@Transactional
-public void despromoverCoordenador(Long id) {
+        public void despromoverCoordenador(Long id) {
 
-    Coordenador coordenador = coordenadorRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Coordenador de id: " + id + " não encontrado"));
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-    Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Usuário de id: " + id + " não encontrado"));
+        Cargo cargoProfessor = cargoRepository.findByNome("PROFESSOR")
+                .orElseThrow(() -> new EntityNotFoundException("Cargo PROFESSOR não encontrado"));
+        usuario.setCargo(cargoProfessor);
 
-    List<Curso> cursos = cursoRepository.findByCoordenadorId(id);
-    for (Curso curso : cursos) {
-        curso.setCoordenador(null);
-        cursoRepository.save(curso);
-    }
+        Curso curso = cursoRepository.findByCoordenadorId(id);
 
-    List<Agendamento> agendamentos = agendamentoRepository.findByUsuarioId(id);
-    for (Agendamento ag : agendamentos) {
-        ag.setUsuario(null);         
-        agendamentoRepository.save(ag);
-    }
+        if (curso != null) {
+                curso.setCoordenador(null);
+                cursoRepository.save(curso);
+        }
 
-    usuario.setCargo(
-            cargoRepository.findByNome("USER")
-                    .orElseThrow(() -> new EntityNotFoundException("Cargo USER não encontrado"))
-    );
-    usuarioRepository.save(usuario);
-
-    coordenadorRepository.deleteById(id);
-}
+        usuarioRepository.save(usuario);
+        }
 
 	
     private CoordenadorResponseDTO toResponseDTO(Coordenador c) {
